@@ -12,7 +12,10 @@ class MerchantsController extends AppController {
 	var $uses = array('Merchant', 'Mail', 'Reward','Location');
 	//var $facebook;
 	//var $twitter_id;
+	
+	
 
+	
 	function _login($username=null, $password=null)
 	{
 		if ($username && $password){
@@ -169,7 +172,9 @@ class MerchantsController extends AppController {
 		$this->set('reward_list',$rewards[0]['Reward']);
 		$locations = $this->Location->getLocations($this->Auth->getUserId());
 		$this->set('location_list',$locations);
-		//$client = new Services_SimpleGeo('ZJNHYqVpyus8vEwG357mRa8Eh7gwq4WN','yzgWLLsY8QqAB3c2bDhNSCSbDDERaV8E');
+		
+		 //, $errorCorrectionLevel, $matrixPointSize, 2);    
+		 //$client = new Services_SimpleGeo('ZJNHYqVpyus8vEwG357mRa8Eh7gwq4WN','yzgWLLsY8QqAB3c2bDhNSCSbDDERaV8E');
 			
 	}
 	function locations(){
@@ -197,6 +202,13 @@ class MerchantsController extends AppController {
 			$this->data['Location']['long']=$long;
 			
 			$this->data['Location']['zip']=$zip;
+			$hash_key = $this->__randomString(5,5).(string)time();
+			$url = ROOT_URL.'/beta/'.$hash_key;
+			// generate the QR Code
+			$qr_path = 'img/qrcodes/QRCode_'.$hash_key.'.png';
+			QRcode::png($url,$qr_path);
+			$qr_link = explode('/',$qr_path);
+			$this->data['Location']['qr_path']=$qr_link[2];
 			$this->set(compact('lat'));
 			$this->set(compact('long'));
 			$this->set('confirm','true');
@@ -262,9 +274,36 @@ class MerchantsController extends AppController {
 		
 		
 	}
+	
+	private  function __randomString($minlength = 20, $maxlength = 20, $useupper = true, $usespecial = false, $usenumbers = true){
+        $charset = "abcdefghijklmnopqrstuvwxyz";
+        if ($useupper) $charset .= "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        if ($usenumbers) $charset .= "0123456789";
+        if ($usespecial) $charset .= "~@#$%^*()_+-={}|][";
+        if ($minlength > $maxlength) $length = mt_rand ($maxlength, $minlength);
+        else $length = mt_rand ($minlength, $maxlength);
+        $key = '';
+        for ($i=0; $i<$length; $i++){
+            $key .= $charset[(mt_rand(0,(strlen($charset)-1)))];
+        }
+        return $key;
+    }
+	
+	function qr_refresh($id=null){
+			$this->Location->read(null, $id);
+			$hash_key = $this->__randomString(5,5).(string)time();
+			$url = ROOT_URL.'/beta/'.$hash_key;
+			$qr_path = 'img/qrcodes/QRCode_'.$hash_key.'.png';
+			QRcode::png($url,$qr_path);
+			$qr_link = explode('/',$qr_path);
+			$this->Location->set('qr_path',$qr_link[2]);
+			$this->Location->save();
+			$results = $this->Location->read(null,$id);
+			$this->set('new_link',$qr_link[2]);
+	}
+	
 	function edit_location($id=null){
 		if (!empty($this->data)){
-			$parent = $this->Auth->getUserInfo();
 			$name = $this->data['Location']['Description'];
 			$address_raw = $this->data['Location']['Address'];
 			$zip=$this->data['Location']['Zip'];
@@ -816,19 +855,7 @@ function expressCheckout($step=1,$amt=99.95,$type='co'){
 				$this->redirect('/');
 			}
 		}
-	private  function __randomString($minlength = 20, $maxlength = 20, $useupper = true, $usespecial = false, $usenumbers = true){
-        $charset = "abcdefghijklmnopqrstuvwxyz";
-        if ($useupper) $charset .= "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        if ($usenumbers) $charset .= "0123456789";
-        if ($usespecial) $charset .= "~@#$%^*()_+-={}|][";
-        if ($minlength > $maxlength) $length = mt_rand ($maxlength, $minlength);
-        else $length = mt_rand ($minlength, $maxlength);
-        $key = '';
-        for ($i=0; $i<$length; $i++){
-            $key .= $charset[(mt_rand(0,(strlen($charset)-1)))];
-        }
-        return $key;
-    }
+	
 
 	
 	

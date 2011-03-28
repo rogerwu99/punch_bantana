@@ -9,7 +9,7 @@
 			
 			if ($reward_list[$key]['deleted']==0):
 			?>
-            <tr><td> <?php $div_name = 'div_'.$reward_list[$key]['id']; ?>
+            <tr><td> <?php $div_name = 'rewdiv_'.$reward_list[$key]['id']; ?>
  			<div id="<? echo $div_name; ?>">
             
             <? echo $reward_list[$key]['description'];
@@ -22,10 +22,11 @@
 	endif;
 	}?></table>
               <table><tr><th>LOCATIONS <? echo $html->link('(Add)', array('controller'=>'merchants','action'=>'locations')); ?></th></tr>     
+             <? $location_list_copy = $location_list; ?>
                <?php foreach ($location_list as $key=>$value){
 				   if ($location_list[$key]['Location']['deleted']==0):
 			?>
-            <tr><td><?php $div_name = 'div_'.$location_list[$key]['Location']['id']; ?>
+            <tr><td><?php $div_name = 'locdiv_'.$location_list[$key]['Location']['id']; ?>
  			<div id="<? echo $div_name; ?>">
             <? echo $location_list[$key]['Location']['address'];
 			echo $location_list[$key]['Location']['zip'];
@@ -34,7 +35,26 @@
 	<?	endif;
 	}?></table>
     
-                 <table><tr><th>MY QR CODES </th></tr>     
+                 <table><tr><th>MY QR CODES </th></tr>  
+            <tr>     
+                   <?php foreach ($location_list_copy as $key=>$value){
+				   if ($location_list_copy[$key]['Location']['deleted']==0):
+			?>
+            <td>
+				<?php $div_name = 'qrdiv_'.$location_list_copy[$key]['Location']['id']; ?>
+             	<?	echo $location_list_copy[$key]['Location']['description']; ?>
+				<div id="<? echo $div_name; ?>">
+				<? echo $html->image('qrcodes/'.$location_list_copy[$key]['Location']['qr_path'], array('alt'=>'QR_Code', 'width'=>'87', 'height'=>'87'));
+	?>			</div>
+    		<? echo $ajax->link('Refresh',array('controller'=>'merchants','action'=>'qr_refresh',$location_list_copy[$key]['Location']['id']), array('update'=>$div_name));?></td>
+	<?	endif;
+	}?></tr>
+                 
+                 
+                 
+                 
+                 
+                    
  </table>
     
                 

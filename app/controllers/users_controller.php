@@ -6,9 +6,11 @@ class UsersController extends AppController {
 	var $name = 'Users';
 	var $helpers = array('Html', 'Form', 'Ajax');
 	var $components = array('Auth', 'Email','Paypal');//,'Ssl');
-	var $uses = array('User', 'Mail', 'Reward');
+	var $uses = array('User', 'Mail', 'Reward','Punch');
 	var $facebook;
 	var $twitter_id;
+
+
 
 	function _login($username=null, $password=null)
 	{
@@ -134,9 +136,10 @@ class UsersController extends AppController {
 		$this->set(compact('results'));
 		$disc_array=array();
 		$disc_desc=array();
-		$db_results=$this->Reward->find('all',array('conditions'=>array('Reward.id'=>$id)));
+	//	$db_results=$this->Punch->find('all',array('conditions'=>array('Punch.user_id'=>$this->Auth->getUserId())));
 		if (!empty($db_results)) {
 			foreach ($db_results as $key=>$value){
+				var_dump($db_results);
 				/*if ($db_results[$key]['Redeem']['hidden']!=1){
 					//$disc_results = $this->Discount->findById($db_results[$key]['Redeem']['disc_id']);
 					$disc_user = $this->User->findById($disc_results['Discount']['user_id']);

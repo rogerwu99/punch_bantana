@@ -12,7 +12,7 @@
 			
 		<?php if (!$_Auth['User']['start_date']): ?>
         <span class="bodycopy"><strong>
-				<?php echo $html->link($_Auth['User']['name'], array('controller'=>'beta','action'=>'view_my_profile')); ?> | 
+				<?php echo $html->link($_Auth['User']['name'], array('controller'=>'users','action'=>'view_my_profile')); ?> | 
 			</strong></span>	
 			<?php echo $html->link('My Spots', array('controller'=>'users','action'=>'my_spots')); ?>  		
 			<span class="bodycopy"><strong>|</strong></span>

@@ -1,0 +1,1 @@
+<? echo $html->image('qrcodes/'.$new_link, array('alt'=>'QR_Code', 'width'=>'87', 'height'=>'87')); ?>		
