@@ -10,11 +10,6 @@ class MerchantsController extends AppController {
 	var $helpers = array('Html', 'Form', 'Ajax');
 	var $components = array('Auth', 'Email','Paypal');//,'Ssl');
 	var $uses = array('Merchant', 'Mail', 'Reward','Location');
-	//var $facebook;
-	//var $twitter_id;
-	
-	
-
 	
 	function _login($username=null, $password=null)
 	{
@@ -39,6 +34,7 @@ class MerchantsController extends AppController {
 		if(!is_null($this->Auth->getUserId())){
         	$this->redirect('/');  	
 		}
+		else {
 		if (!empty($this->data)){
 			$email = $this->data['Merchant']['email'];
 			$name=$this->data['Merchant']['name'];
@@ -72,7 +68,7 @@ class MerchantsController extends AppController {
 			$this->render();
 		}
 	}
-	
+	}
 	function logout()
 	{
 		$user=$this->Auth->getUserInfo();
@@ -84,37 +80,8 @@ class MerchantsController extends AppController {
 		    $this->Auth->logout();
 		}
 	}
-	private function createConsumer() {
-        return new OAuth_Consumer('3PnqSPtc9vf4jj9sXehROw', 'eY8760Xe74NupOEq4Ey9wzp1rahNo85QCXQ8dAtNCq8');
-    }
-	private function createFacebook(){
-		return new Facebook(array(
-			'appId'=>'175485662472361',
-			'secret'=>'4b66d239e574be89813bba4457b97a36',
-			'cookie'=>true
-		));
-	}
-	function getRequestURL(){
-		$consumer=$this->createConsumer();
-		$requestToken = $consumer->getRequestToken('http://twitter.com/oauth/request_token', ROOT_URL.'/users/twitterCallback');
-  		$this->Session->write('twitter_request_token', $requestToken);
-		$this->redirect('http://twitter.com/oauth/authenticate?oauth_token='.$requestToken->key);
-		exit();
-	}
 	
-	function twitterCallback() {
-		$requestToken = $this->Session->read('twitter_request_token');
-		$consumer = $this->createConsumer();
-		$accessToken = $consumer->getAccessToken('http://twitter.com/oauth/access_token', $requestToken);
-		$this->Session->write('twitter_access_token',$accessToken);
-		$db_results = $this->User->find('first', array('conditions' => (array('User.tw_access_key'=>$accessToken->key)), 'fields'=>(array('User.username', 'User.password'))));
-		if (!empty($db_results)) {
-			$this->_login($db_results['User']['username'],$db_results['User']['password']);
-			$this->redirect('/');
-		}
-		$this->layout = 'about';
-	}
-	 function code(){
+	function code(){
 		if (!empty($this->data)) {
 			if ($this->data['DC']['text']=="2011SPR"){
 				$this->set('starting','false');
@@ -126,73 +93,38 @@ class MerchantsController extends AppController {
 		$this->render('/elements/pay');
 	
 	}
-	function view_my_profile(){
-		$root_url =ROOT_URL;
-		$id = $this->Auth->getUserId();
-        $results = $this->User->find('first', array('conditions' => (array('User.id'=>$id))));
-		$image_link = ''; 
-		$image_can_change = false;
-		if ($results['User']['fb_pic_url']==''){
-			$image_link=$root_url.'/img/uploads/'.$results['User']['path'];
-			$image_can_change = true;
-		}
-		else {
-			$image_link = $results['User']['fb_pic_url'];
-		}
-		$this->set('image_can_change', $image_can_change);
-		$this->set('image_link', $image_link);
-		$this->set(compact('results'));
-		$disc_array=array();
-		$disc_desc=array();
-		$db_results=$this->Reward->find('all',array('conditions'=>array('Reward.id'=>$id)));
-		if (!empty($db_results)) {
-			foreach ($db_results as $key=>$value){
-				/*if ($db_results[$key]['Redeem']['hidden']!=1){
-					//$disc_results = $this->Discount->findById($db_results[$key]['Redeem']['disc_id']);
-					$disc_user = $this->User->findById($disc_results['Discount']['user_id']);
-					array_push($disc_array,$disc_results);
-					array_push($disc_desc,$disc_user);
-			
-				}*/
-			}
-			//$this->set('d_desc',$disc_desc);
-			//$this->set('d_results',$disc_array);
-		}
-		else {
-			$this->set('none',true);
-		}
-		$this->render();
-	}
-	
+
 	function dashboard(){
 		if(is_null($this->Auth->getUserId())){
         	Controller::render('/deny');
         }
-		$rewards = $this->Reward->getRewards($this->Auth->getUserId());
-		$this->set('reward_list',$rewards[0]['Reward']);
-		$locations = $this->Location->getLocations($this->Auth->getUserId());
-		$this->set('location_list',$locations);
-		
-		 //, $errorCorrectionLevel, $matrixPointSize, 2);    
-		 //$client = new Services_SimpleGeo('ZJNHYqVpyus8vEwG357mRa8Eh7gwq4WN','yzgWLLsY8QqAB3c2bDhNSCSbDDERaV8E');
-			
+		else {
+			$rewards = $this->Reward->getRewards($this->Auth->getUserId());
+			$this->set('reward_list',$rewards[0]['Reward']);
+			$locations = $this->Location->getLocations($this->Auth->getUserId());
+			$this->set('location_list',$locations);
+		}	
 	}
 	function locations(){
 		if(is_null($this->Auth->getUserId())){
           	Controller::render('/deny');
         }
-		if (!empty($this->data)){
+		else {
+			if (!empty($this->data)){
+		//	echo 'ih';
 			$parent = $this->Auth->getUserInfo();
 			$address_raw = $this->data['Merchant']['Address'];
 			$address1 = urlencode($this->data['Merchant']['Address']);
 			$city = $this->data['Merchant']['City'];
 			$state = $this->data['Merchant']['State'];
 			$name=$this->data['Merchant']['name'];
+			$max_visits = $this->data['Merchant']['max_visits'];
 			$this->data=array();
 			$this->Location->create();
 			$this->data['Location']['description']=$name;
 			$this->data['Location']['address']=$address_raw;
 			$this->data['Location']['merchant_id']=$this->Auth->getUserId();
+			$this->data['Location']['max_visits']=$max_visits;
 			$url = "http://where.yahooapis.com/geocode?line1=".$address1."&line2=".urlencode($city).",+".$state."&gflags=L&flags=J&appid=cENXMi4g";
 			$address = json_decode(file_get_contents($url));
 			$lat = $address->ResultSet->Results[0]->latitude;
@@ -200,10 +132,9 @@ class MerchantsController extends AppController {
 			$zip = $address->ResultSet->Results[0]->uzip;
 			$this->data['Location']['lat']=$lat;
 			$this->data['Location']['long']=$long;
-			
 			$this->data['Location']['zip']=$zip;
 			$hash_key = $this->__randomString(5,5).(string)time();
-			$url = ROOT_URL.'/beta/'.$hash_key;
+			$url = ROOT_URL.'/beta/v/'.$hash_key;
 			// generate the QR Code
 			$qr_path = 'img/qrcodes/QRCode_'.$hash_key.'.png';
 			QRcode::png($url,$qr_path);
@@ -269,10 +200,10 @@ class MerchantsController extends AppController {
 							"WY"=>"WY"
 							);
 			$this->set(compact('states'));
+			
 			$this->render();
 		}	
-		
-		
+	}
 	}
 	
 	private  function __randomString($minlength = 20, $maxlength = 20, $useupper = true, $usespecial = false, $usenumbers = true){
@@ -290,16 +221,15 @@ class MerchantsController extends AppController {
     }
 	
 	function qr_refresh($id=null){
-			$this->Location->read(null, $id);
-			$hash_key = $this->__randomString(5,5).(string)time();
-			$url = ROOT_URL.'/beta/'.$hash_key;
-			$qr_path = 'img/qrcodes/QRCode_'.$hash_key.'.png';
-			QRcode::png($url,$qr_path);
-			$qr_link = explode('/',$qr_path);
-			$this->Location->set('qr_path',$qr_link[2]);
-			$this->Location->save();
-			$results = $this->Location->read(null,$id);
-			$this->set('new_link',$qr_link[2]);
+		$this->Location->read(null, $id);
+		$hash_key = $this->__randomString(5,5).(string)time();
+		$url = ROOT_URL.'/beta/v/'.$hash_key;
+		$qr_path = 'img/qrcodes/QRCode_'.$hash_key.'.png';
+		QRcode::png($url,$qr_path);
+		$qr_link = explode('/',$qr_path);
+		$this->Location->set('qr_path',$qr_link[2]);
+		$this->Location->save();
+		$this->set('new_link',$qr_link[2]);
 	}
 	
 	function edit_location($id=null){
@@ -307,7 +237,7 @@ class MerchantsController extends AppController {
 			$name = $this->data['Location']['Description'];
 			$address_raw = $this->data['Location']['Address'];
 			$zip=$this->data['Location']['Zip'];
-		
+			$max_visits = $this->data['Location']['max_visits'];
 			$this->data=array();
 			$this->Location->read(null, $id);
 			$url = "http://where.yahooapis.com/geocode?line1=".urlencode($address_raw)."&line2=".$zip."&gflags=L&flags=J&appid=cENXMi4g";
@@ -320,7 +250,8 @@ class MerchantsController extends AppController {
 									   'address'=> $address_raw,
 									   'zip'=>$zip,
 									   'lat'=>$lat,
-									   'long'=>$long
+									   'long'=>$long,
+									   'max_visits'=>$max_visits
 									   ));
 			$this->Location->save();
 			$results = $this->Location->read(null,$id);
@@ -334,28 +265,28 @@ class MerchantsController extends AppController {
 			$this->set(compact('results'));
 			$this->render();
 		}	
-		
 	}
 	function delete_location($id=null){
-	 		if(is_null($this->Auth->getUserId())){
+	 	if(is_null($this->Auth->getUserId())){
               Controller::render('/deny');
-         }
-		 else {
-			// should make sure that the user_id matches the owner_id
-	
-		$this->Location->read(null, $id);
-		$this->data['Location']['deleted']=1;
-			$this->Location->save($this->data);
-		$this->redirect(array('action'=>'dashboard'));
-	} 
-		}
+        }
+		else {
+			$loc_data=$this->Location->read('merchant_id', $id);
+			if ($this->Auth->getUserId()==$loc_data['Location']['merchant_id']){
+				$this->data['Location']['deleted']=1;
+				$this->Location->save($this->data);
+			}
+			$this->redirect(array('action'=>'dashboard'));
+		} 
+	}
 	
 	function rewards(){
 		if(is_null($this->Auth->getUserId())){
           	Controller::render('/deny');
         }
+		else {
 		if (!empty($this->data)){
-			var_dump($this->data);
+			//var_dump($this->data);
 			$parent = $this->Auth->getUserInfo();
 			$reward = $this->data['Merchant']['reward'];
 			$points = $this->data['Merchant']['points'];
@@ -367,7 +298,6 @@ class MerchantsController extends AppController {
 			$expire_month=$this->data['Merchant']['emonth'];
 			$expire_date=$this->data['Merchant']['edate']+1;
 			$expire_year=$this->data['Merchant']['eyear']+date('Y');
-			
 			$this->data=array();
 			$this->Reward->create();
 			$this->data['Reward']['description']=$reward;
@@ -376,15 +306,17 @@ class MerchantsController extends AppController {
 			if ($start=="Now") $starting = date('Ymd');
 			else $starting = date('Ymd',$start_year.'-'.$start_month.'-'.$start_date);
 			$this->data['Reward']['start_date']=$starting;
-	
 			if ($expire!="No") $this->data['Reward']['end_date'] = $expire_year.' '.$expire_month.' '.$expire_date;
-			var_dump($this->data);
 			$this->set('confirm','true');
 			$this->Reward->save($this->data, false);
-			
+			$results = $this->Reward->read(null,$this->Reward->id);
+	//		var_dump($results);
+			$this->set(compact('results'));
+			$this->set('saved',true);
 		}
 		else {
-				$months = array(
+		//	echo 'in here';
+			$months = array(
 							"Jan"=>"Jan",
 							"Feb"=>"Feb",
 							"Mar"=>"Mar",
@@ -398,42 +330,43 @@ class MerchantsController extends AppController {
 							"Nov"=>"Nov",
 							"Dec"=>"Dec"
 							);
-				$this->set(compact('months'));
-				$this->set('dates',range(1,31));
-				$this->set('years',range((int)date('Y'),2020));
-				
-				
-				$this->render();
-			}	
-		}
-		function edit_reward($id=null){
-			if (!empty($this->data)){
-				$start_month=$this->data['Reward']['smonth'];
-				$start_date=(int)$this->data['Reward']['sdate']+1;
-				$start_year=$this->data['Reward']['syear']+date('Y');
-				$expire=$this->data['Reward']['expires'];
-				$expire_month=$this->data['Reward']['emonth'];
-				$expire_date=$this->data['Reward']['edate']+1;
-				$expire_year=$this->data['Reward']['eyear']+date('Y');
-				$this->Reward->read(null, $id);
+			$this->set(compact('months'));
+			$this->set('dates',range(1,31));
+			$this->set('years',range((int)date('Y'),2020));
+			$this->render();
+		}	
+	}
+	}
+	function edit_reward($id=null){
+		if (!empty($this->data)){
+			$start_month=$this->data['Reward']['smonth'];
+			$start_date=(int)$this->data['Reward']['sdate']+1;
+			$start_year=$this->data['Reward']['syear']+date('Y');
+			$expire=$this->data['Reward']['expires'];
+			$expire_month=$this->data['Reward']['emonth'];
+			$expire_date=$this->data['Reward']['edate']+1;
+			$expire_year=$this->data['Reward']['eyear']+date('Y');
+			$rew_data = $this->Reward->read(null, $id);
+			if ($this->Auth->getUserId()==$rew_data['Merchant'][0]['id']){
 				$starting = date('Ymd',strtotime($start_date.' '.$start_month.' '.$start_year));
 				if ($expire!="No") $end_date = $expire_year.' '.$expire_month.' '.$expire_date;
 				$this->Reward->set(array(
-									   'description'=> $this->data['Reward']['description'],
-									   'threshold'=> $this->data['Reward']['threshold'],
-									   'start_date'=>$starting,
-									   'end_date'=>$end_date
-									   ));
+								   'description'=> $this->data['Reward']['description'],
+								   'threshold'=> $this->data['Reward']['threshold'],
+								   'start_date'=>$starting,
+								   'end_date'=>$end_date
+								   ));
 				$this->Reward->save();
-				$results = $this->Reward->read(null,$id);
-				$this->set(compact('results'));
-				$this->set('editing',false);		
 			}
-			else {
-				$this->set('editing', true);
-				$this->set('div_id',$id);
-				$results = $this->Reward->read(null, $id);
-				$months = array(
+			$results = $this->Reward->read(null,$id);
+			$this->set(compact('results'));
+			$this->set('editing',false);		
+		}
+		else {
+			$this->set('editing', true);
+			$this->set('div_id',$id);
+			$results = $this->Reward->read(null, $id);
+			$months = array(
 							"Jan"=>"Jan",
 							"Feb"=>"Feb",
 							"Mar"=>"Mar",
@@ -447,31 +380,47 @@ class MerchantsController extends AppController {
 							"Nov"=>"Nov",
 							"Dec"=>"Dec"
 							);
-				$this->set(compact('months'));
-				$this->set('dates',range(1,31));
-				$this->set('years',range((int)date('Y'),2020));
-				$this->set(compact('results'));
-				$this->render();
-			}	
-		
-		}
-		
-		
-		
-		function delete_reward($id=null){
-	 		if(is_null($this->Auth->getUserId())){
-              Controller::render('/deny');
-         }
-		 else {
-			// should make sure that the user_id matches the owner_id
-	
-		$this->Reward->read(null, $id);
-		$this->data['Reward']['deleted']=1;
-			$this->Reward->save($this->data);
-		$this->redirect(array('action'=>'dashboard'));
-	} 
-		}
+			$this->set(compact('months'));
+			$this->set('dates',range(1,31));
+			$this->set('years',range((int)date('Y'),2020));
+			$this->set(compact('results'));
+			$this->render();
+		}	
+	}
+	function delete_reward($id=null){
+	 	if(is_null($this->Auth->getUserId())){
+             Controller::render('/deny');
+        }
+		else {
+			$rew_data = $this->Reward->read(null, $id);
+			if ($this->Auth->getUserId()==$rew_data['Merchant'][0]['id']){
+				$this->data['Reward']['deleted']=1;
+				$this->Reward->save($this->data);
+			}
+			$this->redirect(array('action'=>'dashboard'));
+		} 
+	}
 	function edit(){}
+	function merchant_feedback(){
+		$message = $this->data['Feedback']['description'];
+		$customer = $this->Auth->getUserInfo();
+		$this->Email->to = 'rogerwu99@yahoo.com';
+        $this->Email->replyTo = 'roger@alumni.upenn.edu';
+		$this->Email->subject = 'Merchant Feedback!';
+        $this->Email->from = 'Bantana <rogerwu99@bantana.com>';
+        $this->Email->template = 'feedback';
+	    $this->set(compact('customer'));
+		$this->set(compact('message'));
+		$this->set('mail_sent',true);
+		$this->set('user_type','Merchant');
+		$this->Email->send();
+		unset($this->data['Feedback']['description']);
+		    	
+		$this->render('/elements/feedback');
+	}
+	function data(){
+	}
+	
 	
 function expressCheckout($step=1,$amt=99.95,$type='co'){
  // $this->Ssl->force();

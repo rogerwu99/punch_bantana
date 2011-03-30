@@ -36,5 +36,5 @@
  * ...and connect the rest of 'Pages' controller's urls.
  */
 	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
-	Router::connect('/beta/*', array('controller'=>'beta','action'=>'index'));
+	Router::connect('/beta/v/*', array('controller'=>'beta','action'=>'index'));
 ?>

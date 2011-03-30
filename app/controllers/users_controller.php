@@ -26,10 +26,14 @@ class UsersController extends AppController {
 	
 	function login(){
 		$this->_login($this->data['Auth']['username'],$this->Auth->hasher($this->data['Auth']['password']));
-		$this->redirect('/');
+		if ($this->Session->check('hash_value')){
+			$this->redirect(array('controller'=>'beta','action'=>'index',$this->Session->read('hash_value')));
+		}
+		else {
+			$this->redirect(array('action'=>'view_my_profile'));
+		}
 	}
 	function register(){
-		//var_dump($this->data);
 		if (!empty($this->data)){
 			$email = $this->data['User']['email'];
 			$name=$this->data['User']['name'];
@@ -60,11 +64,7 @@ class UsersController extends AppController {
 		else {
 			$this->render();
 		}
-	
 	}
-	
-	
-	
 	
 	
 	function logout()
@@ -77,7 +77,6 @@ class UsersController extends AppController {
 
 		$this->Session->destroy();
 		
-// when i logout with twitter only, i get redirected to facebook?
 
 		if(!empty($session)){
 			$facebook->setSession(null);
@@ -176,8 +175,27 @@ class UsersController extends AppController {
 	
 	        $this->redirect(array( 'action'=>'view_my_profile'));
 		}
-		$user = $this->Auth->getUserInfo();
-		$this->set(compact('user'));
+		else {
+			$user = $this->Auth->getUserInfo();
+			$this->set(compact('user'));
+			$months = array(
+							"Jan"=>"Jan",
+							"Feb"=>"Feb",
+							"Mar"=>"Mar",
+							"Apr"=>"Apr",
+							"May"=>"May",
+							"Jun"=>"Jun",
+							"Jul"=>"Jul",
+							"Aug"=>"Aug",
+							"Sep"=>"Sep",
+							"Oct"=>"Oct",
+							"Nov"=>"Nov",
+							"Dec"=>"Dec"
+							);
+			$this->set(compact('months'));
+			$this->set('dates',range(1,31));
+			$this->set('years',range(1900,(int)date('Y')-18));
+		}
 	}
 	function my_rewards(){
 	}

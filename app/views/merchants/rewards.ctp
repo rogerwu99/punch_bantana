@@ -1,15 +1,16 @@
-                <div id="leftcolumn">
-          
-                    <div class="bodycopy">Add a Reward:</div>
-                 <? echo '<div class="bodycopy" style="color:red">'.$form->error('User.accept').'</div><br />'; ?>
-			<? $session->flash(); ?>
-		<?php $points=range(0,100); 
-		 echo $form->create(null, array('url' => array('controller'=>'merchants','action' => 'rewards'))); ?>
-                    <div class="bodycopy">Description (required)</div>
-                  <div class='bodycopy' style='color:red'><?php echo $form->input('reward', array('label'=>false, 'class'=>'required', 'style'=>'width:217px')); ?></div>
-                  <div class="bodycopy"># of Points needed</div>
-                  <div class='bodycopy' style='color:red'><?php echo $form->input('points',array('label'=>false,'type'=>'select','options'=>$points)); ?>
-</div>
+             <table border>  <tr><td>
+         <? if (!$saved): ?>
+           <?php $points=range(0,100); 
+		// echo  $ajax->form('Merchant',array('type' => 'post', 'update'=>'new_reward','options' => array('url' => array('controller' => 'merchants','action' => 'rewards')))); 
+		echo $form->create('Merchant');//,array('url'=>array('controller'=>'merchants','action'=>'rewards'))); 
+		 ?>
+                    Description (required)
+                  <?php echo $form->input('reward', array('label'=>false, 'class'=>'required', 'style'=>'width:217px')); ?><br />
+               # of Points needed
+                  <?php //echo $form->input('points',array('label'=>false,'type'=>'select','options'=>$points)); 
+				  echo $form->select('points',$points);
+				  
+				  ?><br />
 
 Start Date
  <? $options=array('Now'=>'Now','Later'=>'Later');
@@ -19,9 +20,7 @@ Start Date
     <? echo $form->select('smonth', $months);?>
 	    <? echo $form->select('sdate', $dates);?>
 	    <? echo $form->select('syear', $years);?>
-	
-    
-     <br />
+	<br />
      Expires
      <? $options=array('Yes'=>'Yes','No'=>'No');
 		$attributes = array('legend'=>false,'value'=>'No');
@@ -30,22 +29,22 @@ Start Date
         <? echo $form->select('emonth', $months);?>
 	    <? echo $form->select('edate', $dates);?>
 	    <? echo $form->select('eyear', $years);?>
-	    
-           
+	                      
                       
-                      
-                      
-                    <div class="content1">
-                    <div class="content18">
-                      <div class="floatleft"><? echo $html->image("create_my_account_button.jpg", array('alt'=>'Create my account', 'width'=>'205', 'height'=>'38')); ?></div><div class="floatleft"><?php echo $form->submit('submit_now_button.jpg');?></div>
-                    </div></div>
+                  <?php echo $ajax->submit('Add',array('url'=>array('controller'=>'merchants','action'=>'rewards'),'update'=>'new_reward')); ?>
+                  <?php //echo $form->submit('Add');//,array('url'=>array('controller'=>'merchants','action'=>'rewards'))); ?>
+                   
 		<?php echo $form->end(); ?>
-                  
-                  
-                  
-                </div>
-                <div id="rightcolumn">
-                </div>
-
-
-
+         <?php echo $html->link('Cancel',array('controller'=>'merchants','action'=>'dashboard')); ?>
+         <? else: ?>
+        <? 
+//		var_dump($results);
+		echo $results['Reward']['description'];
+			echo $results['Reward']['threshold'];
+			echo $results['Reward']['start_date'];
+			echo $results['Reward']['end_date'];
+?>		
+    
+    
+         <? endif; ?>
+</td></tr></table>

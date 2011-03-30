@@ -15,7 +15,7 @@
 	<?php echo $html->css('grid_fluid.css'); ?>
 	<?php echo $html->css('layout.css'); ?>
 	<?php echo $html->css('nav.css'); ?>
-
+	<?php echo $html->css('table-in-css.css'); ?>
 	
 	<?php print $html->charset('UTF-8'); ?>
 	<?php print $javascript->link('prototype'); ?>

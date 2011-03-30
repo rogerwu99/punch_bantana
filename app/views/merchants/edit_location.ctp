@@ -14,7 +14,13 @@
     <tr><td colspan=3>
 	<?php echo $form->input('Zip',array('type'=>'text','label'=>'Zip','value'=>$results['Location']['zip'])); ?>
 	</td></tr>
-
+<? $max_visits = range(1,10); ?>
+        	  
+              <div class="bodycopy">Maximum Visits Per Day(required)</div>
+        
+        <div class='bodycopy' style='color:red'><?php echo $form->input('max_visits',array('type' =>'select', 'label'=>false, 'options' => $max_visits,'selected' => $results['Location']['max_visits'])); ?>
+</div>
+   
 <tr><td   colspan=2>
 	<?php echo $ajax->submit('Change',array('url'=>array('controller'=>'merchants','action'=>'edit_location',$results['Location']['id']),'update'=>$div_name)); ?>
 	</td><td  colspan=2 align='right'>

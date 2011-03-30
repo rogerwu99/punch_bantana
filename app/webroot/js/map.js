@@ -52,7 +52,14 @@ if (navigator.geolocation) {
 */
 
 
+var initialLocation;
+var siberia = new google.maps.LatLng(60, 105);
+var simplegeolat = document.getElementById("simplegeolat").value;
+var simplegeolong = document.getElementById("simplegeolong").value;
+
+var start = new google.maps.LatLng(simplegeolat,simplegeolong);
  	
+var browserSupportFlag =  new Boolean();
 var map;
 window.onload=function() {
 	 var mapcanvas = document.createElement('div');
@@ -60,26 +67,17 @@ window.onload=function() {
   		 mapcanvas.style.height = '400px';
   		 mapcanvas.style.width = '500px';
 	 document.querySelector('article').appendChild(mapcanvas);
-	alert(latLng);
+	
+
 	 var myOptions = {
-     	zoom: 1,
-		center:latLng,
+     	zoom: 15,
+		center:start,
     	mapTypeId: google.maps.MapTypeId.ROADMAP
   	 };
   	map = new google.maps.Map(document.getElementById("mapcanvas"), myOptions);
   
-	 var marker = new google.maps.Marker({
-										 position: latLng,
-										 map: map,
-										 title: 'You are here!'
-										 
-										 });
-	
-	
-
-	
   
- /* 	if (geo_position_js.init()){
+  	if (geo_position_js.init()){
 	
 		var settings = {
 				enableHighAccuracy: true
@@ -90,7 +88,7 @@ window.onload=function() {
 	else {
 		alert('Geo not available');
 	}
-  */
+  alert("Click Share Location to make sure we credit your correct punchcard!");
   // Try W3C Geolocation (Preferred)
   	/* if(navigator.geolocation) {
 		browserSupportFlag = true;
@@ -130,24 +128,12 @@ window.onload=function() {
 										 
 										 });
 	map.setCenter(latLng);
-	document.getElementById("myLat").value = position.coords.latitude;
-document.getElementById("myLong").value = position.coords.longitude;
-		document.getElementById("disc_div").style.display="block";
-		/*new Ajax.Request('http://locahost:8888/beta/getLocation/'+position.coords.latitude+'/'+position.coords.longitude, { 
-						method:'get',
-						 onComplete: function(transport) {
-    						alert(transport.responseText);
-	    						alert(transport.headerJSON);
-							alert('in here');
-						 }
-						});
-	*/
+		
 	var eDiv=document.getElementById("status");
 	while (eDiv.hasChildNodes()) {
 			eDiv.removeChild(eDiv.lastChild);
 		}
-
-	new Ajax.Updater('status','http://www.bantana.com/beta/getLocation/',{method: 'get', parameters: { latitude: position.coords.latitude, longitude: position.coords.longitude }});
+	 new Ajax.Updater('status','http://localhost:8888/beta/send',{method: 'get', parameters: { latitude: position.coords.latitude, longitude: position.coords.longitude }});
 
 	
 	alert("Found You");

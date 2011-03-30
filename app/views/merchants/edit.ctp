@@ -36,7 +36,7 @@
 		<div class="corp_signup" style="display:block">
 		
 <?
-	echo $form->create('Merhcant', array('type' => 'file',
+	echo $form->create('Merchant', array('type' => 'file',
 									'action'=>'edit_pic'));
 echo $form->file('photo', array('style'=>'height:25px;'));
 ?>

@@ -1,8 +1,5 @@
-Hey <? echo $user['User']['name']; ?>,
+Hey <? var_dump($user); ?>,
 
-Your real time deal from <? echo $discount['Discount']['name']; ?> - <? echo $discount['Discount']['text']; ?> is ready.  
-
-To redeem your deal - you can show the merchant at <? echo $discount['Discount']['name']; ?> this email.
 
 They will also have your name so make sure you have an ID as well.  
 

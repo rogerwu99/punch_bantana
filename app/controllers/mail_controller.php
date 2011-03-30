@@ -2,7 +2,7 @@
 class MailController extends AppController 
 {
     var $name = 'Mail';
-    var $uses = array('User','Discount');//, 'Error', 'ErrorCode', 'Alert');
+    var $uses = array('User','Merchant');//, 'Error', 'ErrorCode', 'Alert');
     var $components = array('Email');
     
     function send_new_registrant($email, $name) 
@@ -55,8 +55,20 @@ class MailController extends AppController
 		//discount_name
 		//discount_text
 		$this->Email->send();
-		$this->redirect(array('controller'=>'discounts','action'=>'show',$discount['Discount']['id']));
+		//$this->redirect(array('controller'=>'discounts','action'=>'show',$discount['Discount']['id']));
 
+	}
+	function send_feedback($type,$user_id){
+		$user = $this->User->findById($user_id);
+		$this->Email->to = 'rogerwu99@gmail.com';
+        if ($type=='Merchant') $this->Email->subject = 'Merchant Feedback!';
+        else $this->Email->subject = 'User Feedback!';
+		$this->Email->from = 'Bantana <rogerwu99@bantana.com>';
+        $this->Email->template = 'feedback';
+        $this->set(compact('user'));
+		$this->set('mail_sent',true);
+		$this->set('user_type',$type);
+		$this->render('/elements/feedback');
 	}
 }
 ?>

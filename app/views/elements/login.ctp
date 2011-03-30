@@ -36,7 +36,7 @@
 					echo 'Data';
 				}
 				else {
-					echo $html->link('Data', array('controller'=>'merchants','action'=>'rewards'));  		
+					echo $html->link('Data', array('controller'=>'merchants','action'=>'data'));  		
             	}
             ?>
             <span class="bodycopy"><strong>|</strong></span>
@@ -55,16 +55,7 @@
 		<? endif; ?>		
 	</div>
 	
-	<div class="smallercopy" style="margin-left:100px;float:right;"> 
-		<?php if (!$_Auth['User']['start_date']): ?>	
-		<?php if(empty($_Auth['User']['fb_uid'])):
-			echo $html->link($html->image("signin_facebook.gif", array('alt'=>'Login With FB', 'width'=>'150', 'height'=>'22', 'border'=>'0')),array('controller'=>'users', 'action'=>'facebookLogin'), array('escape'=>false));?>	<!--	<br><br>  -->
-			<?php elseif(empty($_Auth['User']['tw_uid'])): 
-			echo $html->link($html->image("signin_twitter.gif", array('alt'=>'Login With Twitter', 'width'=>'150', 'height'=>'22', 'border'=>'0')),array('controller'=>'users', 'action'=>'getRequestURL'),array('escape'=>false));?>	<!--	<br><br>   -->
-		<?php endif;?>
-		<?php endif;?>
-	</div>
-    
+	
     
 	</div>
 <?php endif; ?>	

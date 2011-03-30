@@ -877,3 +877,34 @@ pointer: cursor;
 
 }
 
+.table
+{
+background:#333;
+
+}
+.table ul
+{
+float:left;
+margin:0;
+padding:0;
+border:1px solid #C9C9C9;
+}
+.table ul li
+{
+list-style:none;
+padding:5px 10px;
+}
+.table ul li.title
+{
+font-weight:bold;
+background:#333;
+color:#fff;
+}
+.table ul li.even
+{
+background:#fff
+}
+.table ul li.odd
+{
+background:#FFFFE6
+}

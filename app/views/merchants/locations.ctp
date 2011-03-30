@@ -1,31 +1,24 @@
-<div id="leftcolumn">
+<div id="nww_location"><table border>
 <? if (!$confirm): ?>          
-                    <div class="bodycopy">Add a Location:</div>
-                 <? echo '<div class="bodycopy" style="color:red">'.$form->error('User.accept').'</div><br />'; ?>
-			<? $session->flash(); ?>
-		<?php echo $form->create(null, array('url' => array('controller'=>'merchants','action' => 'locations'))); ?>
-                   <div class="bodycopy">Name / Description (i.e. Chelsea, Manhattan loc)(optional)</div>
-                  <div class='bodycopy' style='color:red'><?php echo $form->input('name', array('label'=>false, 'class'=>'required', 'style'=>'width:217px')); ?></div>
+  	<tr><td><?php echo $form->create('Merchant');//, //array('url' => array('controller'=>'merchants','action' => 'locations'))); ?>
+                   Name / Description (i.e. Chelsea, Manhattan loc)(required)
+                  <?php echo $form->input('name', array('label'=>false, 'class'=>'required', 'style'=>'width:217px')); ?><br>
                   
-                  <div class="bodycopy">Address (required)</div>
-                  <div class='bodycopy' style='color:red'><?php echo $form->input('Address', array('label'=>false, 'class'=>'required', 'style'=>'width:217px')); ?></div>
-                  <div class="bodycopy">City(required)</div>
-                  <div class='bodycopy' style='color:red'><?php echo $form->input('City', array('label'=>false, 'class'=>'required', 'style'=>'width:217px')); ?></div>
-        	  <div class="bodycopy">State(required)</div>
-                  <div class='bodycopy' style='color:red'><? echo $form->select('State', $states);?>
-</div>	
-        
-                 
-                      
-                      
-                    <div class="content1">
-                    <div class="content18">
-                      <div class="floatleft"><? echo $html->image("create_my_account_button.jpg", array('alt'=>'Add this location', 'width'=>'205', 'height'=>'38')); ?></div><div class="floatleft"><?php echo $form->submit('submit_now_button.jpg');?></div>
-                    </div></div>
-		<?php echo $form->end(); ?>
-                
+                  Address (required)
+                  <?php echo $form->input('Address', array('label'=>false, 'class'=>'required', 'style'=>'width:217px')); ?><br>
+                  City(required)<?php echo $form->input('City', array('label'=>false, 'class'=>'required', 'style'=>'width:217px')); ?><br>
+        	  State(required)<? echo $form->select('State', $states);?><br>	
+<? $max_visits = range(1,10); ?>
+        Maximum Visits Per Day(required)
+        <?php echo $form->input('max_visits',array('type' =>'select', 'label'=>false, 'options' => $max_visits,'selected' => 0)); ?>
+<br /><?php echo $ajax->submit('Add',array('url'=>array('controller'=>'merchants','action'=>'locations'),'update'=>'new_location'));
+?>
+	<?php echo $form->end(); ?>
+    <?php echo $html->link('Cancel',array('controller'=>'merchants','action'=>'dashboard')); ?>
+         </td>
+</tr>                
 <? else: ?>
- <?php 
+<tr><td> <?php 
 		echo $javascript->link('http://maps.google.com/maps/api/js?sensor=false');
      	?>
 
@@ -33,10 +26,9 @@
 	<article>
       <p>Your location: <span id="status">
 	</span></p>
-   	<div id="right_col" style="float:right;width:200px;height:400px;"></div>
-	
+   	
    </article>
-   
+   <? echo $lat; ?>, <? echo $long; ?>
    
    
    <script type="text/javascript">   
@@ -47,8 +39,8 @@
 		 var latLng = new google.maps.LatLng(<? echo $lat; ?>, <? echo $long; ?>);
 		 var mapcanvas = document.createElement('div');
   		 mapcanvas.id = 'mapcanvas';
-  		 mapcanvas.style.height = '400px';
-  		 mapcanvas.style.width = '500px';
+  		 mapcanvas.style.height = '200px';
+  		 mapcanvas.style.width = '300px';
 	 	document.querySelector('article').appendChild(mapcanvas);
 		var myOptions = {
      		zoom: 15,
@@ -67,8 +59,8 @@
 	}
     </script>
 
-	
+	</td></tr>
 <? endif; ?>              
-</div>  
-
+</table>  
+</div>
 

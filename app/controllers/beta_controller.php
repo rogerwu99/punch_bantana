@@ -3,7 +3,7 @@ App::import('Vendor', 'simplegeo', array('file' => 'SimpleGeo.php'));
 class BetaController extends AppController 
 {
     var $name = 'Beta';
-    var $uses = array('User', 'Mail','Reward','Location','Merchant','Punch'); 
+    var $uses = array('User', 'Mail','Reward','Location','Merchant','Punch','Punchcards'); 
     var $helpers = array('Html', 'Form', 'Javascript', 'Xml', 'Crumb', 'Ajax');
     var $components = array('Utils', 'Email', 'RequestHandler');
    
@@ -21,44 +21,98 @@ class BetaController extends AppController
 				$this->redirect(array('action'=>'view_my_profile'));
 	 		}
 		}
+		
 		else {
+			$this->Session->write('hash_value',$id);
 			if(is_null($this->Auth->getUserId())){
-				echo 'yes id, not logged in';
-         		$this->Session->write('hash_value',$id);
-				$this->redirect(array('controller'=>'users','action'=>'checkinlogin'));
+		//		echo 'yes id, not logged in';
+         		
+				$this->redirect(array('/'));
 			
 				// create a login screen for mobile only
 			}
 			else {
 				echo $id;
-				
 				//echo 'yes id, yes logged in';
-				$picture_name = 'QRCode_'.$id.'.png';
-				$db_results = $this->Location->find('first',array('conditions'=>array('Location.qr_path'=>$picture_name)));
-			//	var_dump($db_results);
-				if (!empty($db_results)){
-				
+			
 				//do the lat long check
 				// redirect you back to another function
 				
-				// assuming you pass
-				//$this->redirect(array('action'=>'record_punch'));
-					$this->Punch->create();
-					$this->data['Punch']['user_id']=$this->Auth->getUserId();
-					$this->data['Punch']['location_id']=$db_results['Location']['id'];
-					$this->Punch->save($this->data);
+				$client = new Services_SimpleGeo('ZJNHYqVpyus8vEwG357mRa8Eh7gwq4WN','yzgWLLsY8QqAB3c2bDhNSCSbDDERaV8E');
+				$ip=$_SERVER['REMOTE_ADDR'];
+				if ($ip=='::1') {
+					$results = $client->getContextFromIPAddress();
 				}
 				else {
-					echo 'that venue does not exist';
+					$results = $client->getContextFromIPAddress($ip);
 				}
+				$url = "http://where.yahooapis.com/geocode?q=".$results->query->latitude.",".$results->query->longitude."&gflags=R&flags=J&appid=cENXMi4g";
+				$address = json_decode(file_get_contents($url));
+				$full_address = $address->ResultSet->Results[0]->line1." ".$address->ResultSet->Results[0]->line2;
+				$this->set('simplegeo_address',$full_address);
+				$this->set('simplegeo_lat',$results->query->latitude);
+				$this->set('simplegeo_long',$results->query->longitude);
+				$this->Session->write('my_lat',$results->query->latitude);
+				$this->Session->write('my_long',$results->query->longitude);
+				$this->Session->write('my_address',$full_address);
 			}
+			
 		}
 	}
-    function record_punch(){
+    function send()
+	{
+		$results = $this->params['url'];
+		$lat=$results['latitude'];
+		$long=$results['longitude'];
 		
+		$id = $this->Session->read('hash_value');
+		$picture_name = 'QRCode_'.$id.'.png';
+		$db_results = $this->Location->find('first',array('conditions'=>array('Location.qr_path'=>$picture_name)));
+		
+		if (!empty($db_results)){
+			$earth_radius = 6371;
+			$lat_center = $db_results['Location']['lat'];
+			$long_center = $db_results['Location']['long'];
+			$delta_lat = deg2rad($lat - $lat_center);
+			$delta_long = deg2rad($long - $long_center);
+			$a = sin($delta_lat/2) * sin($delta_lat/2) + cos(deg2rad($lat)) * cos(deg2rad($lat_center)) * sin($delta_long/2) * sin($delta_long/2);
+			$c = 2 * atan2(sqrt($a),sqrt(1-$a));
+			$distance = $earth_radius * $c;
+			$this->set('distance',sprintf("%.4f",$distance));
+			$this->set('lat',sprintf("%.4f",$lat));
+			$this->set('long',sprintf("%.4f",$long));
+			$this->set('lat_center',sprintf("%.4f",$lat_center));
+			$this->set('long_center',sprintf("%.4f",$long_center));
+			
+			if ($distance <= 0.25){
+				
+				$db_results1 = $this->Punchcards->find('first',array('conditions'=>array('Punchcards.user_id'=>$this->Auth->getUserId(),
+																						 'Punchcards.location_id'=>$db_results['Location']['id']
+																						 )));
+				if (!empty($db_results1)){
+					var_dump($db_results1);	
+				// get from punch summary the last visit and how many today
+				// store last visit as UTC time
+				// if ($db_results['Location']['max_visits'])	
+				
+				}
+				
+			
+				$this->Punch->create();
+				$this->data['Punch']['user_id']=$this->Auth->getUserId();
+				$this->data['Punch']['location_id']=$db_results['Location']['id'];
+				$this->Punch->save($this->data);
+				
+				$this->set('message','Your visit has been successfully recorded!');
+			}
+			else {
+				$this->set('message','There was an error, please contact us with the codes below (#200)');
+			}
+		}
+		else {
+			$this->set('message','There was an error, please contact us with the codes below (#100)');
+		}
 	}
-    
-    
 }
 
 ?>
