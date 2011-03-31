@@ -69,6 +69,7 @@ class BetaController extends AppController
 		$picture_name = 'QRCode_'.$id.'.png';
 		$db_results = $this->Location->find('first',array('conditions'=>array('Location.qr_path'=>$picture_name)));
 		
+		
 		if (!empty($db_results)){
 			$earth_radius = 6371;
 			$lat_center = $db_results['Location']['lat'];
@@ -83,33 +84,51 @@ class BetaController extends AppController
 			$this->set('long',sprintf("%.4f",$long));
 			$this->set('lat_center',sprintf("%.4f",$lat_center));
 			$this->set('long_center',sprintf("%.4f",$long_center));
-			
+			$db_results2 = $this->Merchant->find('first',array('conditions'=>array('Merchant.id'=>$db_results['Location']['merchant_id'])));
 			if ($distance <= 0.25){
 				
 				$db_results1 = $this->Punchcards->find('first',array('conditions'=>array('Punchcards.user_id'=>$this->Auth->getUserId(),
 																						 'Punchcards.location_id'=>$db_results['Location']['id']
 																						 )));
+				$legal = false;
 				if (!empty($db_results1)){
-					var_dump($db_results1);	
-				// get from punch summary the last visit and how many today
-				// store last visit as UTC time
-				// if ($db_results['Location']['max_visits'])	
-				
+					
+					//var_dump($db_results);
+					//var_dump($db_results1);	
+					if (date('d',$db_results1['Punchcards']['current_punch_at'])==date('d')){
+						
+						// simple for now -> just more than one visit is illegal
+						if ($db_results['Location']['max_visits']>1){
+							$legal = true;
+						}
+					}
 				}
-				
+				if ($legal){		
+					$this->Punch->create();
+					$this->data['Punch']['user_id']=$this->Auth->getUserId();
+					$this->data['Punch']['location_id']=$db_results['Location']['id'];
+					$this->Punch->save($this->data);
+					$this->set('message','Your visit has been successfully recorded!');
+					$this->set('num_punches',$db_results1['Punchcards']['current_punch']+1); //+1 because we are reading the DB prior to writing it
 			
-				$this->Punch->create();
-				$this->data['Punch']['user_id']=$this->Auth->getUserId();
-				$this->data['Punch']['location_id']=$db_results['Location']['id'];
-				$this->Punch->save($this->data);
-				
-				$this->set('message','Your visit has been successfully recorded!');
+				}
+				else {
+					$this->set('num_punches',$db_results1['Punchcards']['current_punch']); 
+					$this->set('message','This location only allows a maximum number of rewards per day, come back tomorrow!');
+				}
 			}
-			else {
+			
+			else { // too far away
 				$this->set('message','There was an error, please contact us with the codes below (#200)');
 			}
+			
+			//var_dump($db_results2);
+			$this->set('merchant',$db_results2['Merchant']['name']);
+			$this->set('name',$db_results['Location']['description']);
+			$this->set('address',$db_results['Location']['address']);
+			
 		}
-		else {
+		else { // venue doesn't exist
 			$this->set('message','There was an error, please contact us with the codes below (#100)');
 		}
 	}

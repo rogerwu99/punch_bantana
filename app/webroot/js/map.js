@@ -64,8 +64,8 @@ var map;
 window.onload=function() {
 	 var mapcanvas = document.createElement('div');
   		 mapcanvas.id = 'mapcanvas';
-  		 mapcanvas.style.height = '400px';
-  		 mapcanvas.style.width = '500px';
+  		 mapcanvas.style.height = '200px';
+  		 mapcanvas.style.width = '300px';
 	 document.querySelector('article').appendChild(mapcanvas);
 	
 

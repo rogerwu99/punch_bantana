@@ -6,7 +6,7 @@ class UsersController extends AppController {
 	var $name = 'Users';
 	var $helpers = array('Html', 'Form', 'Ajax');
 	var $components = array('Auth', 'Email','Paypal');//,'Ssl');
-	var $uses = array('User', 'Mail', 'Reward','Punch');
+	var $uses = array('User', 'Mail', 'Reward','Punch','Punchcard','Location','Merchant');
 	var $facebook;
 	var $twitter_id;
 
@@ -119,37 +119,31 @@ class UsersController extends AppController {
 	
 	function view_my_profile(){
 		$root_url =ROOT_URL;
-		$id = $this->Auth->getUserId();
-        $results = $this->User->find('first', array('conditions' => (array('User.id'=>$id))));
+		$user = $this->Auth->getUserInfo();
 		$image_link = ''; 
 		$image_can_change = false;
-		if ($results['User']['fb_pic_url']==''){
-			$image_link=$root_url.'/img/uploads/'.$results['User']['path'];
+		if ($user['fb_pic_url']==''){
+			$image_link=$root_url.'/img/uploads/'.$user['path'];
 			$image_can_change = true;
 		}
 		else {
-			$image_link = $results['User']['fb_pic_url'];
+			$image_link = $user['fb_pic_url'];
 		}
-		$this->set('image_can_change', $image_can_change);
+	$this->set('image_can_change', $image_can_change);
 		$this->set('image_link', $image_link);
 		$this->set(compact('results'));
-		$disc_array=array();
-		$disc_desc=array();
-	//	$db_results=$this->Punch->find('all',array('conditions'=>array('Punch.user_id'=>$this->Auth->getUserId())));
+		$loc_array=array();
+		$mer_array=array();
+		$db_results=$this->Punchcard->find('all',array('conditions'=>array('Punchcard.user_id'=>$user['id'])));
 		if (!empty($db_results)) {
 			foreach ($db_results as $key=>$value){
-				var_dump($db_results);
-				/*if ($db_results[$key]['Redeem']['hidden']!=1){
-					//$disc_results = $this->Discount->findById($db_results[$key]['Redeem']['disc_id']);
-					$disc_user = $this->User->findById($disc_results['Discount']['user_id']);
-					array_push($disc_array,$disc_results);
-					array_push($disc_desc,$disc_user);
-			
-				}*/
-			echo 'hi';
+				$loc = $this->Location->find('first',array('conditions'=>array('Location.id'=>$db_results[$key]['Punchcard']['location_id'])));
+				$mer = $this->Merchant->find('first',array('conditions'=>array('Merchant.id'=>$loc['Location']['merchant_id'])));
+				array_push($loc_array,$loc);
+				array_push($mer_array,$mer);
 			}
-			//$this->set('d_desc',$disc_desc);
-			//$this->set('d_results',$disc_array);
+			$this->set('loc_array',$loc_array);
+			$this->set('mer_array',$mer_array);
 		}
 		else {
 			$this->set('none',true);

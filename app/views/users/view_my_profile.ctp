@@ -9,14 +9,30 @@
 	<br>
 	   </fieldset>
 	<fieldset>
- 		<legend>My Rewards</legend>
-        	<?php echo $html->link('My Rewards', array('controller'=>'users', 'action'=>'my_rewards')); ?>
+ 		<legend><?php echo $html->link('My Rewards', array('controller'=>'users', 'action'=>'my_rewards')); ?></legend>
+        	<? foreach ($mer_array as $key=>$value){
+				echo $mer_array[$key]['Merchant']['name'];
+				foreach ($mer_array[$key]['Reward'] as $key1=>$value1){
+			?> &nbsp;&nbsp;&nbsp;<?		echo $mer_array[$key]['Reward'][$key1]['threshold'];?> <br />
+                
+	           &nbsp;&nbsp;&nbsp;    <? echo $mer_array[$key]['Reward'][$key1]['description'];
+				}
+			
+			} ?>
 	<br>
 	</fieldset>
 	<fieldset>
- 		<legend>My Spots</legend>
-        	<?php echo $html->link('My Spots', array('controller'=>'users', 'action'=>'my_spots')); ?>
-	<br>
+ 		<legend>    	<?php echo $html->link('My Spots', array('controller'=>'users', 'action'=>'my_spots')); ?></legend>
+    
+    	<? foreach ($loc_array as $key=>$value){
+				echo $loc_array[$key]['Location']['description'];
+				echo $mer_array[$key]['Merchant']['name'];
+				}
+				?>
+    
+    
+    
+    <br>
 	</fieldset>
 
 </div>

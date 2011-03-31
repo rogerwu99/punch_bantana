@@ -18,7 +18,9 @@
 	
    </article>
 	
-	
+	<? echo $html->link('Continue to My Rewards',array('controller'=>'users','action'=>'view_my_profile')); ?>
+    
+    
 	</div>
 	</div>
 <div class="clear"></div>
