@@ -109,12 +109,24 @@ class UsersController extends AppController {
 		$consumer = $this->createConsumer();
 		$accessToken = $consumer->getAccessToken('http://twitter.com/oauth/access_token', $requestToken);
 		$this->Session->write('twitter_access_token',$accessToken);
-		$db_results = $this->User->find('first', array('conditions' => (array('User.tw_access_key'=>$accessToken->key)), 'fields'=>(array('User.username', 'User.password'))));
-		if (!empty($db_results)) {
-			$this->_login($db_results['User']['username'],$db_results['User']['password']);
-			$this->redirect('/');
+		if(is_null($this->Auth->getUserId())){
+        	$db_results = $this->User->find('first', array('conditions' => (array('User.tw_access_key'=>$accessToken->key)), 'fields'=>(array('User.username', 'User.password'))));
+			if (!empty($db_results)) {
+				$this->_login($db_results['User']['username'],$db_results['User']['password']);
+				$this->redirect('/');
+			}
+			$this->layout = 'about';
 		}
-		$this->layout = 'about';
+		else {
+			$updated_id = $this->Auth->getUserId();
+			$this->User->read(null,$updated_id);
+			$content=$consumer->get($accessToken->key,$accessToken->secret,'http://twitter.com/account/verify_credentials.xml', array());
+			$user = simplexml_load_string($content);
+			$this->data['User']['tw_uid'] = (int) $user->id;
+			$this->data['User']['tw_access_key'] =  $accessToken->key;
+			$this->data['User']['tw_access_secret'] =  $accessToken->secret;
+			$this->User->save($this->data);
+		}
 	}
 	
 	function view_my_profile(){

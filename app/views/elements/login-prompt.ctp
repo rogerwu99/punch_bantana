@@ -47,31 +47,26 @@ $page = 'home';
  <?  elseif ($page == 'business'): ?>   
     
    <div style="float:right;">
-	<?	echo $html->link('Sign up','/merchants/register'); ?>
-	|
-	<?	echo $html->link('Log In','#',array('onClick'=>'Effect.SlideDown(\'logging_in\'); return false;', 'class'=>'bodyblue')); ?>
+	<?	//echo $html->link('Sign up','/merchants/register'); ?>
+	<!-- | -->
+	<?	//echo $html->link('Log In','#',array('onClick'=>'Effect.SlideDown(\'logging_in\'); return false;', 'class'=>'bodyblue')); ?>
     
     
-    <div id="logging_in" style="display:none">
+    <div id="logging_in" style="display:block">
 	<span class="bodycopy">
 		<?php 
 			//echo $form->create('Auth',array('url'=>substr($this->here,strlen($this->base)))); 
 			echo $form->create('Merchant',array('controller'=>'merchants','action'=>'login')); 
     	 	?>
-	</span>
-			Email:<br>
-			<?
-			echo $form->input('Auth.username', array('label'=>false, 'style'=>'width:217px')); 
-		 	?>
-			Password:
-			<?
-			echo $form->input('Auth.password', array('type' => 'password', 'label'=>false, 'style'=>'width:217px'));
-			?>
+			Email: <? echo $form->input('Auth.username', array('div'=>false, 'error'=>false,'label'=>false, 'style'=>'width:100px')); ?>
+			Password:<? echo $form->input('Auth.password', array('div'=>false,'error'=>false,'type' => 'password', 'label'=>false, 'style'=>'width:100px'));?>
 			<? 
-			echo $form->submit('Login!', array('name'=>'submit', 'div'=>'rightbutton'));
+			echo $form->submit('Sign In!', array('div'=>false,'name'=>'submit'));
 			echo $form->end();
 		?>
-	</div>
+	</span>
+		
+    </div>
 
     
 	</div>

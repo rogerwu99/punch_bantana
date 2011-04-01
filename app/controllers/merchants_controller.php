@@ -61,11 +61,13 @@ class MerchantsController extends AppController {
 				$this->set('errors', $this->Merchant->validationErrors);
 				unset($this->data['Merchant']['new_password']);
 		    	unset($this->data['Merchant']['confirm_password']);
+						$this->render('/pages/business');
+	
 			}
 		}
 		else {
 			$this->set('starting',false);
-			$this->render();
+			$this->render('/pages/business');
 		}
 	}
 	}

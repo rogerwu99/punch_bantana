@@ -79,6 +79,14 @@
 	letter-spacing:-1px;
 	color: #414142;
 }
+.smallercopy_reg {
+	width:260px;
+	vertical-align:sub;
+	font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px;
+	letter-spacing:-1px;
+	color: #414142;
+	margin-left:10px;
+}
 .smallercopy1 {
 	vertical-align:sub;
 	font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px;

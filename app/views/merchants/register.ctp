@@ -1,4 +1,3 @@
-<?php $javascript->link('validation.js', false); ?>
                 <div id="leftcolumn">
 
                 

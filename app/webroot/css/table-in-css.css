@@ -2,16 +2,26 @@
 /* for the CSS table design example, starts here */
 
 DIV.base-layer {
-  background: none #cc9966; border: solid #333333 1px; color: #000000;
+  background: #9fc5f8; border: solid #333333 1px; color: #000000;
   margin: 0.5em 12px 0.5em 12px; padding: 0; text-align: center; width: auto;
 }
 
-DIV.table-row {
-  background: none #ffffcc; border: solid #000000 1px; color: #000000;
+DIV.table-row-head{
+  background: #ffffff; border: solid #000000 1px; color: #000000;
+  margin-top: 0;  margin-bottom: 0; margin-left: 12px;
+  padding: 0; text-align: center; width: 759px; font-weight: bold;
+}
+
+DIV.table-row-odd{
+  background: #b6b6b6; border: solid #000000 1px; color: #000000;
   margin-top: 0; margin-right: auto; margin-bottom: 0; margin-left: auto;
   padding: 0; text-align: center; width: 96%;
 }
-
+DIV.table-row-even{
+  background: #cccccc; border: solid #000000 1px; color: #000000;
+  margin-top: 0; margin-right: auto; margin-bottom: 0; margin-left: auto;
+  padding: 0; text-align: center; width: 96%;
+}
 /* Style rules for the 3 x 2 table example */
 
 DIV.left-container2 {
@@ -46,10 +56,35 @@ DIV.left-layer11 {
   border: none; float: left; margin: 0; padding: 0; width: 80%;
 }
 DIV.left-layer12 {
-  border: none; float: left; margin: 0; padding: 0; width: 10%;
+  border: none; float: left; margin: 0; padding: 0; width: 14%;
+}
+DIV.left-layer13 {
+  border: none; float: left; margin: 0; padding: 0; width: 100px;
+}
+DIV.left-layer14 {
+  border: none; float: left; margin: 0; padding: 0; width: 200px;
+}
+DIV.left-layer15 {
+  border: none; float: left; margin: 0; padding: 0; width: 150px;
 }
 DIV.right-layer11 {
-  border: none; float: right; margin: 0; padding: 0; width: 10%;
+  border: none; float: right; margin: 0; padding: 0; width: 12%;
+}
+
+
+DIV.left-layer22 {
+  border: none; float: left; margin: 0; padding: 0; width: 80px; 
+}
+
+
+
+
+
+
+
+
+DIV.table-top{
+	width:759px; height:150px; overflow-y:auto;
 }
 
 /* Watch out for this DIV... rule, it appears every now and then */
@@ -63,7 +98,7 @@ DIV.space-line {
 H4.table-caption {
   background: transparent; color: #3333cc; font-family: sans-serif;
   font-size: 1em; font-style: italic; font-weight: bold; margin: 0;
-  padding: 0.3em; text-align: center; width: auto;
+  padding: 0.3em; text-align: center; width: 850px;
 }
 
 H5.colhdr {
