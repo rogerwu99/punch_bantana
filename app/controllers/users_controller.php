@@ -11,6 +11,16 @@ class UsersController extends AppController {
 	var $twitter_id;
 
 
+	function index()
+	{
+		if(is_null($this->Auth->getUserId())){
+       		Controller::render('/deny');
+        }
+		else {
+			$this->redirect(array('controller'=>'users','action'=>'view_my_profile'));
+		}
+		
+	}
 
 	function _login($username=null, $password=null)
 	{
@@ -33,36 +43,42 @@ class UsersController extends AppController {
 			$this->redirect(array('action'=>'view_my_profile'));
 		}
 	}
-	function register(){
-		if (!empty($this->data)){
-			$email = $this->data['User']['email'];
-			$name=$this->data['User']['name'];
-			$password = $this->data['User']['new_password'];
-			$confirm =$this->data['User']['confirm_password'];
-			$accept = $this->data['User']['accept'];
-			$this->data=array();
-			$this->User->create();
-			$this->data['User']['name']=$name;
-			$this->data['User']['email'] = (string) $email;
-			$this->data['User']['new_password']=$password;
-			$this->data['User']['confirm_password']=$confirm;
-			$this->data['User']['accept']=$accept;
-			$password = $this->data['User']['password'] = $this->Auth->hasher($password); 
-			$username = $this->data['User']['username']= (string) $email;
-			$this->data['User']['path']='default.png';
-			$this->User->set($this->data);
-			if ($this->User->validates()){
-				$this->User->save();
-				$this->_login($username,$password);
+	function register($id=null){
+		if (is_null($id)){
+			if (!empty($this->data)){
+				$email = $this->data['User']['email'];
+				$name=$this->data['User']['name'];
+				$password = $this->data['User']['new_password'];
+				$confirm =$this->data['User']['confirm_password'];
+				$accept = $this->data['User']['accept'];
+				$this->data=array();
+				$this->User->create();
+				$this->data['User']['name']=$name;
+				$this->data['User']['email'] = (string) $email;
+				$this->data['User']['new_password']=$password;
+				$this->data['User']['confirm_password']=$confirm;
+				$this->data['User']['accept']=$accept;
+				$password = $this->data['User']['password'] = $this->Auth->hasher($password); 
+				$username = $this->data['User']['username']= (string) $email;
+				$this->data['User']['path']='default.png';
+				$this->User->set($this->data);
+				if ($this->User->validates()){
+					$this->User->save();
+					$this->_login($username,$password);
+					$this->set('intro',true);
+				}
+				else {
+					$this->set('errors', $this->User->validationErrors);
+					unset($this->data['User']['new_password']);
+		    		unset($this->data['User']['confirm_password']);
+				}
 			}
 			else {
-				$this->set('errors', $this->User->validationErrors);
-				unset($this->data['User']['new_password']);
-		    	unset($this->data['User']['confirm_password']);
+				
 			}
 		}
 		else {
-			$this->render();
+			$this->redirect(array('action'=>'view_my_profile'));
 		}
 	}
 	
@@ -130,37 +146,80 @@ class UsersController extends AppController {
 	}
 	
 	function view_my_profile(){
-		$root_url =ROOT_URL;
-		$user = $this->Auth->getUserInfo();
-		$image_link = ''; 
-		$image_can_change = false;
-		if ($user['fb_pic_url']==''){
-			$image_link=$root_url.'/img/uploads/'.$user['path'];
-			$image_can_change = true;
-		}
+		if(is_null($this->Auth->getUserId())){
+       		Controller::render('/deny');
+        }
 		else {
-			$image_link = $user['fb_pic_url'];
-		}
-	$this->set('image_can_change', $image_can_change);
-		$this->set('image_link', $image_link);
-		$this->set(compact('results'));
-		$loc_array=array();
-		$mer_array=array();
-		$db_results=$this->Punchcard->find('all',array('conditions'=>array('Punchcard.user_id'=>$user['id'])));
-		if (!empty($db_results)) {
-			foreach ($db_results as $key=>$value){
-				$loc = $this->Location->find('first',array('conditions'=>array('Location.id'=>$db_results[$key]['Punchcard']['location_id'])));
-				$mer = $this->Merchant->find('first',array('conditions'=>array('Merchant.id'=>$loc['Location']['merchant_id'])));
-				array_push($loc_array,$loc);
-				array_push($mer_array,$mer);
+			$root_url =ROOT_URL;
+			$user = $this->Auth->getUserInfo();
+			$image_link = ''; 
+			$image_can_change = false;
+			if ($user['fb_pic_url']==''){
+				$image_link=$root_url.'/img/uploads/'.$user['path'];
+				$image_can_change = true;
 			}
-			$this->set('loc_array',$loc_array);
-			$this->set('mer_array',$mer_array);
+			else {
+				$image_link = $user['fb_pic_url'];
+			}
+			$this->set('image_can_change', $image_can_change);
+			$this->set('image_link', $image_link);
+			$this->set(compact('user'));
+			$loc_array=array();
+			$mer_array=array();
+			$mer_id_array=array();
+			$mer_array_no_dupes = array();
+			$num_points = array();
+			$dupe= false;
+			$db_results=$this->Punchcard->find('all',array('conditions'=>array('Punchcard.user_id'=>$user['id'])));
+			if (!empty($db_results)) {
+				foreach ($db_results as $key=>$value){
+					$loc = $this->Location->find('first',array('conditions'=>array('Location.id'=>$db_results[$key]['Punchcard']['location_id'])));
+					$mer = $this->Merchant->find('first',array('conditions'=>array('Merchant.id'=>$loc['Location']['merchant_id'])));
+					$loc['Location']['visits']=$db_results[$key]['Punchcard']['current_punch'];
+					array_push($loc_array,$loc);
+					array_push($mer_array,$mer);
+					if (empty($mer_id_array)){
+						array_push($mer_id_array,$mer['Merchant']['id']);
+						array_push($mer_array_no_dupes,$mer);
+						$visits->merchant_id = $mer['Merchant']['id'];
+						$visits->number = $db_results[$key]['Punchcard']['current_punch'];
+						$visits->location_id = $db_results[$key]['Punchcard']['location_id'];
+						array_push($num_points,$visits);
+					}
+					else {
+						for ($i=0;$i<sizeof($mer_id_array);$i++){
+							if ($mer['Merchant']['id']==$mer_id_array[$i]){
+								for ($j=0;$j<sizeof($num_points);$j++){
+									if ($num_points[$j]->merchant_id == $mer['Merchant']['id']){
+										$num_points[$j]->number += $db_results[$key]['Punchcard']['current_punch']; 
+										break;
+									}
+								}
+								$dupe = true;
+								break;
+							}
+						}
+						if (!$dupe) {
+							array_push($mer_id_array,$mer['Merchant']['id']);
+							array_push($mer_array_no_dupes,$mer);
+							$visits->merchant_id = $mer['Merchant']['id'];
+							$visits->number = $db_results[$key]['Punchcard']['current_punch']; 
+							$visits->location_id = $db_results[$key]['Punchcard']['location_id'];
+							array_push($num_points,$visits);
+						}
+					}
+					$dupe = false;
+				}
+				$this->set('num_points',$num_points);
+				$this->set('loc_array',$loc_array);
+				$this->set('mer_array',$mer_array);
+				$this->set('mer_array_no_dupes',$mer_array_no_dupes);
+			}
+			else {
+				$this->set('none',true);
+			}
+			$this->render();
 		}
-		else {
-			$this->set('none',true);
-		}
-		$this->render();
 	}
 	function edit(){
 	 	if(is_null($this->Auth->getUserId())){

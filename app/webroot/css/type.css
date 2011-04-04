@@ -4,6 +4,12 @@
 	letter-spacing:-1px;
 	color: #414142;
 }
+.bodycopy_reg {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 15px;
+	letter-spacing:-1px;
+	color: #414142;
+	text-align:center;
+	font-weight:bold;
+}
 
 .bodycopy a:link {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 15px;
 	letter-spacing:-1px;
@@ -87,11 +93,61 @@
 	color: #414142;
 	margin-left:10px;
 }
+.smallercopy_err {
+	width:260px;
+	vertical-align:sub;
+	font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10px;
+	letter-spacing:-1px;
+	color: #414142;
+	margin-left:10px;
+}
 .smallercopy1 {
 	vertical-align:sub;
 	font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px;
 	letter-spacing:-1px;
 	color: #414142;
+}
+.smallercopy_nav {
+	width:100%;
+	vertical-align:sub;
+	font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10px;
+	letter-spacing:-1px;
+	color: #414142;
+	margin-left:40px;
+	text-align:center;
+}
+.smallercopy_nav a:link {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10px;
+	letter-spacing:-1px;
+	color: #0099FF;
+	text-decoration: underline;
+}
+.smallercopy_nav a:visited {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10px;
+	letter-spacing:-1px;
+	color: #0099FF;
+	text-decoration: underline;
+}
+
+.smallercopy_nav_sel {
+	width:260px;
+	font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 11px; font-weight:bold;
+	letter-spacing:-1px;
+	color: #414142;
+	margin-left:10px;
+}
+.smallercopy_cap {
+	vertical-align:super;
+	font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10px;
+	letter-spacing:-1px;
+	color: #414142;
+	margin-left:10px;
+	text-align:center;
+}
+.smallercopy_user_home {
+	font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 11px;
+	line-height: 0.25;
+	letter-spacing:-1px;
+	color: #414142;
+	text-align:left;
 }
 
 .smallercopy a:link {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px;

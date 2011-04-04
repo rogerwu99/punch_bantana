@@ -1,26 +1,30 @@
 <?php if(!empty($_Auth['User'])): ?>
 	<div class="sidebar5" id="logged_in">
-	<div style="float:right;padding-top:2px;"class="smallercopywhite">
-		<span style="margin-top:-25px;margin-left:-50px;"><?php 
+	<div style="float:right;padding-top:2px;"class="bodycopy">
+		<?php 
 			if ($_Auth['User']['fb_pic_url']==''):  
 				echo $html->image('/img/uploads/'.$_Auth['User']['path'], array('alt' => 'Pic', 'width' => 50, 'height' => 50, 'class' => 'top', 'align'=>'left'));
 			else: 
 				echo $html->image($_Auth['User']['fb_pic_url'], array('alt' => 'Pic', 'width' => 50, 'height' => 50, 'class' => 'top', 'align'=>'left'));
 			endif; 
-		?></span>
+		?>
 		
 			
 		<?php if (!$_Auth['User']['start_date']): ?>
-        <span class="bodycopy"><strong>
-				<?php echo $html->link($_Auth['User']['name'], array('controller'=>'users','action'=>'view_my_profile')); ?> | 
-			</strong></span>	
-			<?php echo $html->link('My Spots', array('controller'=>'users','action'=>'my_spots')); ?>  		
-			<span class="bodycopy"><strong>|</strong></span>
-			<?php echo $html->link('My Rewards', array('controller'=>'users','action'=>'my_rewards')); ?>  		
-            <span class="bodycopy"><strong>|</strong></span>
-			<?php echo $html->link('Sign Out', array('controller'=>'users', 'action'=>'logout')); ?><br>
+			<? if ($this->params['action']=='view_my_profile'){
+					echo $_Auth['User']['name'];
+				}
+				else {	
+					echo $html->link($_Auth['User']['name'], array('controller'=>'users','action'=>'view_my_profile')); 
+				}
+				?>
+                <strong> | </strong>	
+			<?php //echo $html->link('My Spots', array('controller'=>'users','action'=>'my_spots')); ?>  		
+				<!--<strong>|</strong>
+			<?php //echo $html->link('My Rewards', array('controller'=>'users','action'=>'my_rewards')); ?>  		
+            	<strong>|</strong>-->
+			<?php echo $html->link('Sign Out', array('controller'=>'users', 'action'=>'logout')); ?>
 		<? else: ?>
-        <span class="bodycopy">
 		<?php
 				if ($this->params['action']=='dashboard'){
 					echo 'Home';
@@ -29,17 +33,16 @@
 					echo $html->link('Home', array('controller'=>'merchants','action'=>'dashboard')); 
 				}
 			?> 
-            <span class="bodycopy"><strong>|</strong></span>
-            
+            <strong>|</strong>
 			<?php 
-				if ($this->params['action']=='analytics'){
+				if ($this->params['action']=='data'){
 					echo 'Data';
 				}
 				else {
 					echo $html->link('Data', array('controller'=>'merchants','action'=>'data'));  		
             	}
             ?>
-            <span class="bodycopy"><strong>|</strong></span>
+            <strong>|</strong>
             <?php 
 				if ($this->params['action']=='edit'){
 					echo 'Settings';
@@ -48,10 +51,8 @@
 		            echo $html->link('Settings', array('controller'=>'merchants','action'=>'edit')); 		
             	}
             ?>
-            <span class="bodycopy"><strong>|</strong></span>
-            
-        	<?php echo $html->link('Logout', array('controller'=>'merchants', 'action'=>'logout')); ?><br>
-		</span>
+            <strong>|</strong>
+        	<?php echo $html->link('Logout', array('controller'=>'merchants', 'action'=>'logout')); ?>
 		<? endif; ?>		
 	</div>
 	

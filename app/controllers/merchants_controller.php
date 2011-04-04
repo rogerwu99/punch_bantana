@@ -29,47 +29,134 @@ class MerchantsController extends AppController {
 		$this->redirect(array('action'=>'dashboard'));
 	}
 	
-	function register()
+	function register($step=null)
 	{
-		if(!is_null($this->Auth->getUserId())){
-        	$this->redirect('/');  	
-		}
-		else {
-		if (!empty($this->data)){
-			$email = $this->data['Merchant']['email'];
-			$name=$this->data['Merchant']['name'];
-			$password = $this->data['Merchant']['new_password'];
-			$confirm =$this->data['Merchant']['confirm_password'];
-			$accept = $this->data['Merchant']['accept'];
-			$this->data=array();
-			$this->Merchant->create();
-			$this->data['Merchant']['name']=$name;
-			$this->data['Merchant']['email'] = (string) $email;
-			$this->data['Merchant']['new_password']=$password;
-			$this->data['Merchant']['confirm_password']=$confirm;
-			$this->data['Merchant']['accept']=$accept;
-			$password = $this->data['Merchant']['password'] = $this->Auth->hasher($password); 
-			$username = $this->data['Merchant']['username']= (string) $email;
-			$this->data['Merchant']['path']='default.png';
-			$this->Merchant->set($this->data);
-			if ($this->Merchant->validates()){
-				$this->Merchant->save();
-				$this->_login($username,$password);
-				$this->redirect('/users/expressCheckout/1/'.$plan_value.'/co');
+			if ($step==1){
+				if (!empty($this->data)){
+					$email = $this->data['Merchant']['email'];
+					$name=$this->data['Merchant']['name'];
+					$password = $this->data['Merchant']['new_password'];
+					$confirm =$this->data['Merchant']['confirm_password'];
+					$accept = $this->data['Merchant']['accept'];
+					$biz_name = $this->data['Merchant']['business_name'];
+					$biz_phone = $this->data['Merchant']['business_phone'];
+					$website = $this->data['Merchant']['website'];
+					$this->data=array();
+					$this->Merchant->create();
+					$this->data['Merchant']['name']=$name;
+					$this->data['Merchant']['email'] = (string) $email;
+					$this->data['Merchant']['new_password']=$password;
+					$this->data['Merchant']['confirm_password']=$confirm;
+					$this->data['Merchant']['accept']=$accept;
+					$this->data['Merchant']['business_name']=$biz_name;
+					$this->data['Merchant']['business_phone']=$biz_phone;
+					$this->data['Merchant']['website']=$website;
+					
+					$password = $this->data['Merchant']['password'] = $this->Auth->hasher($password); 
+					$username = $this->data['Merchant']['username']= (string) $email;
+					$this->data['Merchant']['path']='default.png';
+					$this->Merchant->set($this->data);
+					if ($this->Merchant->validates()){
+						$this->Merchant->save();
+						$this->_login($username,$password);
+						//$this->redirect('/users/expressCheckout/1/'.$plan_value.'/co');
+						$this->set('step',2);
+						$this->render();
+					}
+					else {
+						$this->set('errors', $this->Merchant->validationErrors);
+						unset($this->data['Merchant']['new_password']);
+		    			unset($this->data['Merchant']['confirm_password']);
+	//					$this->render();
+					}	
+				}
+				else {
+					$this->set('starting',false);
+				}
 			}
-			else {
-				$this->set('errors', $this->Merchant->validationErrors);
-				unset($this->data['Merchant']['new_password']);
-		    	unset($this->data['Merchant']['confirm_password']);
-						$this->render('/pages/business');
-	
+			elseif ($step==2){
+				if (!empty($this->data)){
+				$parent = $this->Auth->getUserInfo();
+				$reward = $this->data['Merchant']['reward'];
+				$points = $this->data['Merchant']['points'];
+				$start=$this->data['Merchant']['start'];
+				$start_month=$this->data['Merchant']['smonth'];
+				$start_date=$this->data['Merchant']['sdate']+1;
+				$start_year=$this->data['Merchant']['syear']+date('Y');
+				$expire=$this->data['Merchant']['expires'];
+				$expire_month=$this->data['Merchant']['emonth'];
+				$expire_date=$this->data['Merchant']['edate']+1;
+				$expire_year=$this->data['Merchant']['eyear']+date('Y');
+				$this->data=array();
+				$this->Reward->create();
+				$this->data['Reward']['description']=$reward;
+				$this->data['Reward']['threshold']=$points;
+				$this->data['Merchant']['id']=$this->Auth->getUserId();
+				if ($start=="Now") $starting = date('Ymd');
+				else $starting = date('Ymd',$start_year.'-'.$start_month.'-'.$start_date);
+				$this->data['Reward']['start_date']=$starting;
+				if ($expire!="No") $this->data['Reward']['end_date'] = $expire_year.' '.$expire_month.' '.$expire_date;
+				$this->set('confirm','true');
+				$this->Reward->save($this->data, false);
+				$results = $this->Reward->read(null,$this->Reward->id);
+				$this->set(compact('results'));
+				$this->set('saved',true);
+				$this->set('step',3);
+				}
+				else {
+					$this->set('step',2);
+					$this->render();
+				}
+				
 			}
-		}
-		else {
-			$this->set('starting',false);
-			$this->render('/pages/business');
-		}
-	}
+			elseif ($step==3){
+				if (!empty($this->data)){
+					//var_dump($this->data);
+				$parent = $this->Auth->getUserInfo();
+				$address_raw = $this->data['Merchant']['Address'];
+				$address1 = urlencode($this->data['Merchant']['Address']);
+				$city = $this->data['Merchant']['City'];
+				$state = $this->data['Merchant']['State'];
+				$name=$this->data['Merchant']['des'];
+				$max_visits = $this->data['Merchant']['max_visits']+1;
+				$this->data=array();
+				$this->Location->create();
+				$this->data['Location']['description']=$name;
+				$this->data['Location']['address']=$address_raw;
+				$this->data['Location']['merchant_id']=$this->Auth->getUserId();
+				$this->data['Location']['max_visits']=$max_visits;
+				$url = "http://where.yahooapis.com/geocode?line1=".$address1."&line2=".urlencode($city).",+".$state."&gflags=L&flags=J&appid=cENXMi4g";
+				$address = json_decode(file_get_contents($url));
+				$lat = $address->ResultSet->Results[0]->latitude;
+				$long = $address->ResultSet->Results[0]->longitude;
+				$zip = $address->ResultSet->Results[0]->uzip;
+				$this->data['Location']['lat']=$lat;
+				$this->data['Location']['long']=$long;
+				$this->data['Location']['zip']=$zip;
+				$hash_key = $this->__randomString(5,5).(string)time();
+				$url = ROOT_URL.'/beta/v/'.$hash_key;
+				// generate the QR Code
+				$qr_path = 'img/qrcodes/QRCode_'.$hash_key.'.png';
+				QRcode::png($url,$qr_path);
+				$qr_link = explode('/',$qr_path);
+				$this->data['Location']['qr_path']=$qr_link[2];
+				$this->set(compact('lat'));
+				$this->set(compact('long'));
+				$this->set('qr_path',$qr_link[2]);
+				$this->set('loc_name',$name);
+				$this->set('confirm','true');
+				$this->Location->save($this->data);
+				$this->set('step',4);
+				}
+				else {
+					$this->set('step',3);
+					$this->render();
+				}
+			}
+			elseif ($step==5) {
+				$this->set('step',5);
+			}
+		//}
 	}
 	function logout()
 	{
@@ -146,6 +233,7 @@ class MerchantsController extends AppController {
 			$this->set(compact('long'));
 			$this->set('confirm','true');
 			$this->Location->save($this->data);
+			$this->set('loc_id',$this->Location->id);
 		}
 		else {
 				$states = array(
@@ -235,19 +323,26 @@ class MerchantsController extends AppController {
 	}
 	
 	function edit_location($id=null){
+		
+		// need to make sure you are the owner
+		
 		if (!empty($this->data)){
-			$name = $this->data['Location']['Description'];
-			$address_raw = $this->data['Location']['Address'];
-			$zip=$this->data['Location']['Zip'];
-			$max_visits = $this->data['Location']['max_visits'];
-			$this->data=array();
-			$this->Location->read(null, $id);
-			$url = "http://where.yahooapis.com/geocode?line1=".urlencode($address_raw)."&line2=".$zip."&gflags=L&flags=J&appid=cENXMi4g";
-			$address = json_decode(file_get_contents($url));
-			$lat = $address->ResultSet->Results[0]->latitude;
-			$long = $address->ResultSet->Results[0]->longitude;
-			$zip = $address->ResultSet->Results[0]->uzip;
-			$this->Location->set(array(
+			$curr_loc = $this->Location->read('merchant_id', $id);
+			if ($curr_loc['Location']['merchant_id']!=$this->Auth->getUserId()){
+				Controller::render('/deny');
+			}
+			else {
+				$name = $this->data['Location']['Description'];
+				$address_raw = $this->data['Location']['Address'];
+				$zip=$this->data['Location']['Zip'];
+				$max_visits = $this->data['Location']['max_visits'];
+				$this->data=array();
+				$url = "http://where.yahooapis.com/geocode?line1=".urlencode($address_raw)."&line2=".$zip."&gflags=L&flags=J&appid=cENXMi4g";
+				$address = json_decode(file_get_contents($url));
+				$lat = $address->ResultSet->Results[0]->latitude;
+				$long = $address->ResultSet->Results[0]->longitude;
+				$zip = $address->ResultSet->Results[0]->uzip;
+				$this->Location->set(array(
 									   'description'=> $name,
 									   'address'=> $address_raw,
 									   'zip'=>$zip,
@@ -255,10 +350,11 @@ class MerchantsController extends AppController {
 									   'long'=>$long,
 									   'max_visits'=>$max_visits
 									   ));
-			$this->Location->save();
-			$results = $this->Location->read(null,$id);
-			$this->set(compact('results'));
-			$this->set('editing',false);		
+				$this->Location->save();
+				$results = $this->Location->read(null,$id);
+				$this->set(compact('results'));
+				$this->set('editing',false);		
+			}
 		}
 		else {
 			$this->set('editing', true);
@@ -315,6 +411,7 @@ class MerchantsController extends AppController {
 	//		var_dump($results);
 			$this->set(compact('results'));
 			$this->set('saved',true);
+			
 		}
 		else {
 		//	echo 'in here';
@@ -341,15 +438,18 @@ class MerchantsController extends AppController {
 	}
 	function edit_reward($id=null){
 		if (!empty($this->data)){
-			$start_month=$this->data['Reward']['smonth'];
-			$start_date=(int)$this->data['Reward']['sdate']+1;
-			$start_year=$this->data['Reward']['syear']+date('Y');
-			$expire=$this->data['Reward']['expires'];
-			$expire_month=$this->data['Reward']['emonth'];
-			$expire_date=$this->data['Reward']['edate']+1;
-			$expire_year=$this->data['Reward']['eyear']+date('Y');
 			$rew_data = $this->Reward->read(null, $id);
-			if ($this->Auth->getUserId()==$rew_data['Merchant'][0]['id']){
+			if ($rew_data['Merchant'][0]['id']!=$this->Auth->getUserId()){
+				Controller::render('/deny');
+			}
+			else {		
+				$start_month=$this->data['Reward']['smonth'];
+				$start_date=(int)$this->data['Reward']['sdate']+1;
+				$start_year=$this->data['Reward']['syear']+date('Y');
+				$expire=$this->data['Reward']['expires'];
+				$expire_month=$this->data['Reward']['emonth'];
+				$expire_date=$this->data['Reward']['edate']+1;
+				$expire_year=$this->data['Reward']['eyear']+date('Y');
 				$starting = date('Ymd',strtotime($start_date.' '.$start_month.' '.$start_year));
 				if ($expire!="No") $end_date = $expire_year.' '.$expire_month.' '.$expire_date;
 				$this->Reward->set(array(
@@ -402,20 +502,38 @@ class MerchantsController extends AppController {
 			$this->redirect(array('action'=>'dashboard'));
 		} 
 	}
-	function edit(){}
+	function edit(){
+	/*
+	$email = $this->data['Merchant']['email'];
+					$name=$this->data['Merchant']['name'];
+					$password = $this->data['Merchant']['new_password'];
+					$confirm =$this->data['Merchant']['confirm_password'];
+					$accept = $this->data['Merchant']['accept'];
+					$biz_name = $this->data['Merchant']['business_name'];
+					$biz_phone = $this->data['Merchant']['business_phone'];
+					$website = $this->data['Merchant']['website'];
+		*/			
+	
+	}
 	function merchant_feedback(){
+		//echo 'start';
 		$message = $this->data['Feedback']['description'];
 		$customer = $this->Auth->getUserInfo();
-		$this->Email->to = 'rogerwu99@yahoo.com';
+		//echo 'here';
+		$this->Email->to = 'rogerwu99@gmail.com';
         $this->Email->replyTo = 'roger@alumni.upenn.edu';
 		$this->Email->subject = 'Merchant Feedback!';
         $this->Email->from = 'Bantana <rogerwu99@bantana.com>';
         $this->Email->template = 'feedback';
+		//echo 'set';
 	    $this->set(compact('customer'));
 		$this->set(compact('message'));
 		$this->set('mail_sent',true);
 		$this->set('user_type','Merchant');
-		$this->Email->send();
+		//echo 'send';
+		$status = $this->Email->send();
+		//echo $status;
+		//echo 'unset';
 		unset($this->data['Feedback']['description']);
 		    	
 		$this->render('/elements/feedback');

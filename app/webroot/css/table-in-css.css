@@ -52,30 +52,71 @@ DIV.right-container13 {
 /* product table example. I still use some of the generic rules as found   */
 /* above and below, but still..                                            */
 
-DIV.left-layer11 {
+/*DIV.left-layer11 {
   border: none; float: left; margin: 0; padding: 0; width: 80%;
-}
+}*/
+/*
+759
+275+250+100+40+75=740
+19
+*/
 DIV.left-layer12 {
-  border: none; float: left; margin: 0; padding: 0; width: 14%;
+  border: none; float: left; margin: 0; padding: 0; width: 80px;
 }
 DIV.left-layer13 {
   border: none; float: left; margin: 0; padding: 0; width: 100px;
 }
 DIV.left-layer14 {
-  border: none; float: left; margin: 0; padding: 0; width: 200px;
+  border: none; float: left; margin: 0; padding: 0; width: 240px;
 }
 DIV.left-layer15 {
-  border: none; float: left; margin: 0; padding: 0; width: 150px;
+  border: none; float: left; margin: 0; padding: 0; width: 265px;
 }
 DIV.right-layer11 {
-  border: none; float: right; margin: 0; padding: 0; width: 12%;
+  border: none; float: right; margin: 0; padding: 0; width: 70px;
 }
 
-
+DIV.left-layer24 {
+  border: none; float: left; margin: 0; padding: 0; width: 275px;
+}
 DIV.left-layer22 {
-  border: none; float: left; margin: 0; padding: 0; width: 80px; 
+  border: none; float: left; margin: 0; padding: 0; width: 100px; 
+}
+DIV.left-edit-layer22 {
+  border: none; float: left; margin: 0; padding: 0; width: 50px; 
+}
+DIV.left-layer31 {
+  border: none; float: left; margin: 0; padding: 0; width: 305px; height:150px;
+}
+DIV.left-layer32 {
+  border: none; float: left; margin: 0; padding: 0; width: 200px; height:150px;
 }
 
+DIV.left-layer41 {
+  border: none; float: left; margin: 0; padding: 0; width: 50%; 
+}
+DIV.left-layer42 {
+  border: none; float: left; margin: 0; padding: 0; width: 100%; 
+}
+DIV.left-layer51 {
+  border: none; float: left; margin: 0; padding: 0; width: 30%; 
+}
+DIV.left-layer52 {
+  border: none; float: left; margin: 0; padding: 0; width: 70%; 
+}
+DIV.left-layer61 {
+  border: none; float: left; margin: 0; padding: 3; width: 33%; 
+  
+}
+DIV.left-layer71 {
+  border: none; float: left; margin: 0; padding: 0; width: 195px; text-align:left; margin-left:25px;
+}
+
+SPAN.user-spacer {
+  min-height: 130px;
+  border-left: 1px solid gray;
+
+}
 
 
 
@@ -85,6 +126,15 @@ DIV.left-layer22 {
 
 DIV.table-top{
 	width:759px; height:150px; overflow-y:auto;
+}
+DIV.table-profile-edit{
+	width:759px; height:60px; overflow-y:auto;
+}
+DIV.table-profile-edit-settings{
+	width:759px; height:180px; overflow-y:auto;
+}
+DIV.table-profile-edit-settings-for-user{
+	width:759px; height:260px; overflow-y:auto;
 }
 
 /* Watch out for this DIV... rule, it appears every now and then */
@@ -97,8 +147,8 @@ DIV.space-line {
 
 H4.table-caption {
   background: transparent; color: #3333cc; font-family: sans-serif;
-  font-size: 1em; font-style: italic; font-weight: bold; margin: 0;
-  padding: 0.3em; text-align: center; width: 850px;
+  font-size: 14px; font-style: italic; font-weight: bold; margin: 0;
+  padding: 0.3em; text-align: left; width: 850px;
 }
 
 H5.colhdr {

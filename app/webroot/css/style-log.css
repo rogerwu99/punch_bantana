@@ -676,7 +676,7 @@ body {
 	margin-top: 5px;
 	padding-right: 2px;
 	padding-bottom: 5px;
-	padding-left: 20px;
+	padding-left: 10px;
 	//border-style:dashed;
 }
 
@@ -836,7 +836,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#88bfe8', end
 }
 
 .text_field_big {
-font-size: 1.3em;
+font-size: 10px;;
 border: 1px solid #444;
 }
 
@@ -849,6 +849,19 @@ border-color: #64acd8;
 border-color: green;
 border-width: 3px;
 }
+.text_field_edit{
+border: 1px solid #444;
+}
+.text_field_edit:hover{
+border-color: #64acd8;
+
+}
+
+.text_field_edit:focus {
+border-color: green;
+border-width: 3px;
+}
+
 .button_green{
 background: #6bba70; /* old browsers */
 
