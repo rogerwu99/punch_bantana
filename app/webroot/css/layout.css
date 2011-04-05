@@ -739,18 +739,18 @@ padding-bottom:10px;
 	margin-left:60px;
 	width:667px;
 	height:500px;
-	//position:fixed;
+	
 }
 
 
 
 .lightbox_content {
 	display: block;
-	position: absolute;
-	top: 210px;
-	left: 650px;
+	position: relative;
+	top: 0px;
+	left: 370px;
 	width: 280px;
-	height: 500px;
+	height: 480px;
 	padding: 5px;
 	border: 5px solid #666;
 	background-color: white;
@@ -761,8 +761,10 @@ padding-bottom:10px;
 .lightbox_content_user {
 	display: block;
 	position: absolute;
-	top: 210px;
-	left: 650px;
+	//top: 29%;
+	//left: 55%;
+	top:190px;
+	left:310px;
 	width: 270px;
 	height: 330px;
 	padding: 5px;
@@ -774,11 +776,18 @@ padding-bottom:10px;
 }
 .lightbox_content_user_block_1 {
 	display: block;
-	position: absolute;
+	/*position: absolute;
 	top: 555px;
 	left: 270px;
 	width: 210px;
 	height: 135px;
+	*/
+	position: relative;
+	top: 345px;
+	left: 0px;
+	width: 210px;
+	height: 135px;
+	
 	padding: 5px;
 	border: 5px solid #666;
 	background-color: white;
@@ -789,9 +798,15 @@ padding-bottom:10px;
 }
 .lightbox_content_user_block_2 {
 	display: block;
-	position: absolute;
+	/*position: absolute;
 	top: 555px;
 	left: 495px;
+	width: 210px;
+	height: 135px;
+	*/
+	position: relative;
+	top: 190px;
+	left: 225px;
 	width: 210px;
 	height: 135px;
 	padding: 5px;
@@ -804,9 +819,15 @@ padding-bottom:10px;
 }
 .lightbox_content_user_block_3 {
 	display: block;
-	position: absolute;
+	/*position: absolute;
 	top: 555px;
 	left: 720px;
+	width: 200px;
+	height: 135px;
+	*/
+	position: relative;
+	top: 35px;
+	left: 450px;
 	width: 200px;
 	height: 135px;
 	padding: 5px;

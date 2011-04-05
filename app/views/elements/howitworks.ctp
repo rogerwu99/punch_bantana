@@ -4,6 +4,9 @@
 	<? echo $html->link('Merchant Login',array('controller'=>'pages','action'=>'business')); ?>
 	</div>
 </div>
+<div class="lightbox_content_user" id="reg_content">
+<? echo $this->requestAction('/users/register',array('return')); ?>
+</div>
 <div class="consumer-background" id="consumer" style="display:block;">
 	<div class="lightbox_content_user_block_1">
 		Clutter Free!<br />
@@ -17,7 +20,4 @@
 		Share with Friends!<br />
 		<span class="smallercopy_user_home">Let your friends know what great rewards you are earnings via Facebook or Twitter!</span>
 	</div> 
-</div>
-<div class="lightbox_content_user" id="reg_content">
-<? echo $this->requestAction('/users/register',array('return')); ?>
 </div>

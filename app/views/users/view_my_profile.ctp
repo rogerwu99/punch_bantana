@@ -26,11 +26,8 @@
 				        <?php foreach ($mer_array_no_dupes as $key=>$value){
 							echo $mer_array_no_dupes[$key]['Merchant']['name'].'   ';
 							for ($i=0;$i<sizeof($num_points);$i++){
-						//		echo $num_points[$i]->merchant_id.' '.$mer_array_no_dupes[$key]['Merchant']['id'];
 								if ($num_points[$i]->merchant_id==$mer_array_no_dupes[$key]['Merchant']['id']){
-								//	echo $num_points[$i]->number.' visits';
 									for ($j=0;$j<$num_points[$i]->number;$j++){
-							//			echo $j;
 										echo $html->image('star.png',array('alt'=>'star','width'=>20,'height'=>20,'class'=>'top'));
 									}
 									break;
@@ -47,7 +44,14 @@
 							<div class="left-layer22"><? echo $mer_array_no_dupes[$key]['Reward'][$key1]['threshold']; ?></div>
 							<div class="left-layer22"><? echo date('m/d/y',strtotime($mer_array_no_dupes[$key]['Reward'][$key1]['start_date'])); ?></div>
                 			<? $end_date = (is_null($mer_array_no_dupes[$key]['end_date'])) ? 'none' : date('Ymd',strtotime($mer_array_no_dupes[$key]['Reward'][$key1]['end_date'])); ?>
-							<div class="left-layer22"><? echo $end_date; ?></div>	
+							<div class="left-layer22"><? echo $end_date; ?></div>
+                            <div class="left-edit-layer22">
+								<? 	if ($num_points[$i]->number>=$mer_array_no_dupes[$key]['Reward'][$key1]['threshold']):
+										echo $html->link('Redeem',array('controller'=>'beta','action'=>'redeem',$mer_array_no_dupes[$key]['Reward'][$key1]['id']));
+									endif;				
+								
+								?>
+                            </div>	
    							</div>
        					</div>
        					<div class="space-line"></div>

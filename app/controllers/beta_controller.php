@@ -55,6 +55,26 @@ class BetaController extends AppController
 				$this->Session->write('my_lat',$results->query->latitude);
 				$this->Session->write('my_long',$results->query->longitude);
 				$this->Session->write('my_address',$full_address);
+				$stuff = $this->Session->read('redeem');
+				echo ($stuff);
+				if ($this->Session->check('redeem')){
+						// did you want to redeem?
+						// assume you do
+				
+					$this->set('redeem',true);
+					$db_results1 = $this->Reward->find('first',array('conditions'=>array('Reward.id'=>$this->Session->read('redeem'))));
+					if (empty($db_results1)){
+						echo 'There was an error';
+					}
+					else {
+						$this->set('results',$db_results1);
+					}
+								
+				}
+				else {
+					echo 'no redeem';
+				}
+			
 			}
 			
 		}
@@ -96,12 +116,16 @@ class BetaController extends AppController
 					//var_dump($db_results);
 					//var_dump($db_results1);	
 					if (date('d',$db_results1['Punchcards']['current_punch_at'])==date('d')){
-						
+						echo date('d',$db_results1['Punchcards']['current_punch_at']).' COMPARE '.date('d');
 						// simple for now -> just more than one visit is illegal
 						if ($db_results['Location']['max_visits']>1){
 							$legal = true;
 						}
 					}
+				}
+				else {
+					// first visit here
+					$legal=true;
 				}
 				if ($legal){		
 					$this->Punch->create();
@@ -132,6 +156,104 @@ class BetaController extends AppController
 			$this->set('message','There was an error, please contact us with the codes below (#100)');
 		}
 	}
+	function redeem($id=null)
+	{
+		if(is_null($this->Auth->getUserId())){
+        	Controller::render('/deny');
+        }
+		else {
+			$user = $this->Auth->getUserInfo();
+			$db_results1 = $this->Reward->find('first',array('conditions'=>array('Reward.id'=>$id)));
+			if (empty($db_results1)){
+				echo 'There was an error';
+			}
+			else {
+				
+				// LETS MAKE SURE THAT YOU CAN REALLY REDEEM
+				
+				
+				
+				$this->set(compact('user'));
+				$this->set('results',$db_results1);
+				$this->Session->write('redeem',$id);
+			}
+//		var_dump($db_results1);
+	//	$this->redirect('/');
+		}
+	}
+	function grab()
+	{
+		$results = $this->params['url'];
+		$lat=$results['latitude'];
+		$long=$results['longitude'];
+		$id = $this->Session->read('hash_value');
+		$picture_name = 'QRCode_'.$id.'.png';
+		$db_results = $this->Location->find('first',array('conditions'=>array('Location.qr_path'=>$picture_name)));
+		$legal = false;
+		
+		if (!empty($db_results)){
+			$earth_radius = 6371;
+			$lat_center = $db_results['Location']['lat'];
+			$long_center = $db_results['Location']['long'];
+			$delta_lat = deg2rad($lat - $lat_center);
+			$delta_long = deg2rad($long - $long_center);
+			$a = sin($delta_lat/2) * sin($delta_lat/2) + cos(deg2rad($lat)) * cos(deg2rad($lat_center)) * sin($delta_long/2) * sin($delta_long/2);
+			$c = 2 * atan2(sqrt($a),sqrt(1-$a));
+			$distance = $earth_radius * $c;
+			$this->set('distance',sprintf("%.4f",$distance));
+			$this->set('lat',sprintf("%.4f",$lat));
+			$this->set('long',sprintf("%.4f",$long));
+			$this->set('lat_center',sprintf("%.4f",$lat_center));
+			$this->set('long_center',sprintf("%.4f",$long_center));
+			
+			$db_results2 = $this->Merchant->find('first',array('conditions'=>array('Merchant.id'=>$db_results['Location']['merchant_id'])));
+			$db_results4 = $this->Reward->find('first',array('conditions'=>array('Reward.id'=>$this->Session->read('redeem'))));
+			
+			if ($distance <= 0.25){
+				$user = $this->Auth->getUserInfo();
+				$visit_tally = 0;
+				// ONE MORE CHECK TO MAKE SURE YOU CAN REALLY REDEEM
+				$db_results3=$this->Punchcards->find('all',array('conditions'=>array('Punchcards.user_id'=>$user['id'])));
+				if (!empty($db_results3)) {
+					foreach ($db_results3 as $key=>$value){
+						
+						// all we care about is THIS merchant
+						$loc = $this->Location->find('first',array('conditions'=>array('Location.id'=>$db_results3[$key]['Punchcards']['location_id'])));
+						$mer = $this->Merchant->find('first',array('conditions'=>array('Merchant.id'=>$loc['Location']['merchant_id'])));
+						
+						if ($mer['Merchant']['id'] == $db_results2['Merchant']['id']){
+							$visit_tally += $db_results3[$key]['Punchcards']['current_punch'];
+							
+						}
+					}
+					if ($db_results4['Reward']['threshold']<=$visit_tally){
+						// this is good!
+						$legal = true;
+						$this->set('message','Congratulations, please show your screen to the cashier');
+					
+					}
+					else {
+						$this->set('message', 'there was an error - you do not have enough points');
+					}
+				}
+				else {
+					$this->set('message', 'there was an error - you do not have any visits');
+				}
+			}
+			else { // too far away
+				$this->set('message','There was an error, please contact us with the codes below (#200)');
+			}
+		}
+		else { // venue doesn't exist
+			$this->set('message','There was an error, please contact us with the codes below (#100)');
+		}
+		
+		if ($legal){
+			// debit the visits from the account
+			$this->set('time',time());	
+			$this->set('results',$db_results4);
+		}
+		
+	}
 }
-
 ?>
