@@ -18,11 +18,18 @@
 					echo $html->link($_Auth['User']['name'], array('controller'=>'users','action'=>'view_my_profile')); 
 				}
 				?>
-                <strong> | </strong>	
-			<?php //echo $html->link('My Spots', array('controller'=>'users','action'=>'my_spots')); ?>  		
-				<!--<strong>|</strong>
+                <strong> | </strong>
+                <? if ($this->params['action']=='edit'){
+					echo 'Settings';
+				}
+				else {	
+					echo $html->link('Settings', array('controller'=>'users', 'action'=>'edit'));
+				}
+				?>	
+				
+				<strong>|</strong>
 			<?php //echo $html->link('My Rewards', array('controller'=>'users','action'=>'my_rewards')); ?>  		
-            	<strong>|</strong>-->
+            	<!--<strong>|</strong>-->
 			<?php echo $html->link('Sign Out', array('controller'=>'users', 'action'=>'logout')); ?>
 		<? else: ?>
 		<?php

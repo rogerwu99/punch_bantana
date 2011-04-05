@@ -93,9 +93,11 @@ class MerchantsController extends AppController {
 				$this->data['Reward']['threshold']=$points;
 				$this->data['Merchant']['id']=$this->Auth->getUserId();
 				if ($start=="Now") $starting = date('Ymd');
-				else $starting = date('Ymd',$start_year.'-'.$start_month.'-'.$start_date);
+				else $starting = date('Y-m-d',strtotime($start_year.'-'.$start_month.'-'.$start_date));
 				$this->data['Reward']['start_date']=$starting;
-				if ($expire!="No") $this->data['Reward']['end_date'] = $expire_year.' '.$expire_month.' '.$expire_date;
+				echo $starting. ' start date';
+				if ($expire!="No") $this->data['Reward']['end_date'] = date('Y-m-d',strtotime($expire_year.'-'.$expire_month.'-'.$expire_date));
+				
 				$this->set('confirm','true');
 				$this->Reward->save($this->data, false);
 				$results = $this->Reward->read(null,$this->Reward->id);
@@ -402,7 +404,7 @@ class MerchantsController extends AppController {
 			$this->data['Reward']['threshold']=$points;
 			$this->data['Merchant']['id']=$this->Auth->getUserId();
 			if ($start=="Now") $starting = date('Ymd');
-			else $starting = date('Ymd',$start_year.'-'.$start_month.'-'.$start_date);
+			else $starting = date('Y-m-d',$start_year.'-'.$start_month.'-'.$start_date);
 			$this->data['Reward']['start_date']=$starting;
 			if ($expire!="No") $this->data['Reward']['end_date'] = $expire_year.' '.$expire_month.' '.$expire_date;
 			$this->set('confirm','true');

@@ -111,7 +111,24 @@ DIV.left-layer61 {
 DIV.left-layer71 {
   border: none; float: left; margin: 0; padding: 0; width: 195px; text-align:left; margin-left:25px;
 }
-
+DIV.left-layer72 {
+  border: none; float: left; margin: 0; padding: 0; width: 500px; text-align:left; margin-left:25px;
+}
+DIV.left-layer81 {
+  border: none; float: left; margin: 0; padding: 0; width: 200px; text-align:left; margin-left:25px;
+}
+DIV.left-layer82 {
+  border: none; float: left; margin: 0; padding: 0; width: 500px; text-align:left; margin-left:25px;
+}
+DIV.left-layer83 {
+  border: none; float: left; margin: 0; padding: 0; width: 200px; text-align:left; margin-left:10px;
+}
+DIV.left-layer84 {
+  border: none; float: left; margin: 0; padding: 0; width: 200px; text-align:left;
+}
+DIV.left-layer85 {
+  border: none; float: left; margin: 0; padding: 0; width: 40px; text-align:left;
+}
 SPAN.user-spacer {
   min-height: 130px;
   border-left: 1px solid gray;

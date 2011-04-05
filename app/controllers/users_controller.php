@@ -6,7 +6,7 @@ class UsersController extends AppController {
 	var $name = 'Users';
 	var $helpers = array('Html', 'Form', 'Ajax');
 	var $components = array('Auth', 'Email','Paypal');//,'Ssl');
-	var $uses = array('User', 'Mail', 'Reward','Punch','Punchcard','Location','Merchant');
+	var $uses = array('User', 'Mail', 'Reward','Punch','Punchcard','Location','Merchant','Redemption');
 	var $facebook;
 	var $twitter_id;
 
@@ -192,6 +192,7 @@ class UsersController extends AppController {
 								for ($j=0;$j<sizeof($num_points);$j++){
 									if ($num_points[$j]->merchant_id == $mer['Merchant']['id']){
 										$num_points[$j]->number += $db_results[$key]['Punchcard']['current_punch']; 
+										$num_points[$j]->number -= $db_results[$key]['Punchcard']['last_redemption'];
 										break;
 									}
 								}
@@ -203,7 +204,8 @@ class UsersController extends AppController {
 							array_push($mer_id_array,$mer['Merchant']['id']);
 							array_push($mer_array_no_dupes,$mer);
 							$visits->merchant_id = $mer['Merchant']['id'];
-							$visits->number = $db_results[$key]['Punchcard']['current_punch']; 
+							$visits->number = ($db_results[$key]['Punchcard']['current_punch'] - $db_results[$key]['Punchcard']['last_redemption']);
+							 
 							$visits->location_id = $db_results[$key]['Punchcard']['location_id'];
 							array_push($num_points,$visits);
 						}
@@ -218,6 +220,25 @@ class UsersController extends AppController {
 			else {
 				$this->set('none',true);
 			}
+			
+			$db_results2 = $this->Redemption->find('all',array('conditions'=>array('Redemption.user_id'=>$this->Auth->getUserId())));
+			$rewards_array =array();
+			foreach ($db_results2 as $key=>$value){
+				$reward = $this->Reward->find('first',array('conditions'=>array('Reward.id'=>$db_results2[$key]['Redemption']['reward_id'])));
+				$location = $this->Location->find('first',array('conditions'=>array('Location.id'=>$db_results2[$key]['Redemption']['location_id'])));
+				$prize->description = $reward['Reward']['description'];
+				$prize->threshold = $reward['Reward']['threshold'];
+				$prize->merchant = $reward['Merchant'][0]['name'];
+				$prize->location_des = $location['Location']['description'];
+				$prize->location = $location['Location']['address'];
+				$prize->zip = $location['Location']['zip'];
+				$prize->redeem_date = $db_results2[$key]['Redemption']['created'];
+				array_push($rewards_array,$prize);
+			}
+			$this->set('redemptions',$db_results2);
+			$this->set('rewards',$rewards_array);
+			
+			
 			$this->render();
 		}
 	}
@@ -265,6 +286,29 @@ class UsersController extends AppController {
 	function my_rewards(){
 	}
 	function my_spots(){
+	}
+	function user_feedback(){
+		//echo 'start';
+		$message = $this->data['Feedback']['description'];
+		$customer = $this->Auth->getUserInfo();
+		//echo 'here';
+		$this->Email->to = 'rogerwu99@gmail.com';
+        $this->Email->replyTo = 'roger@alumni.upenn.edu';
+		$this->Email->subject = 'User Feedback!';
+        $this->Email->from = 'Bantana <rogerwu99@bantana.com>';
+        $this->Email->template = 'feedback';
+		//echo 'set';
+	    $this->set(compact('customer'));
+		$this->set(compact('message'));
+		$this->set('mail_sent',true);
+		$this->set('user_type','Customer');
+		//echo 'send';
+		$status = $this->Email->send();
+		//echo $status;
+		//echo 'unset';
+		unset($this->data['Feedback']['description']);
+		    	
+		$this->render('/elements/feedback');
 	}
 	/*
 	

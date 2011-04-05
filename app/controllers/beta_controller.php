@@ -3,7 +3,7 @@ App::import('Vendor', 'simplegeo', array('file' => 'SimpleGeo.php'));
 class BetaController extends AppController 
 {
     var $name = 'Beta';
-    var $uses = array('User', 'Mail','Reward','Location','Merchant','Punch','Punchcards'); 
+    var $uses = array('User', 'Mail','Reward','Location','Merchant','Punch','Punchcards','Redemption'); 
     var $helpers = array('Html', 'Form', 'Javascript', 'Xml', 'Crumb', 'Ajax');
     var $components = array('Utils', 'Email', 'RequestHandler');
    
@@ -114,13 +114,40 @@ class BetaController extends AppController
 				if (!empty($db_results1)){
 					
 					//var_dump($db_results);
-					//var_dump($db_results1);	
-					if (date('d',$db_results1['Punchcards']['current_punch_at'])==date('d')){
-						echo date('d',$db_results1['Punchcards']['current_punch_at']).' COMPARE '.date('d');
+					//var_dump($db_results1);
+					//echo $db_results1['Punchcards']['current_punch_at']. ' current';
+					
+					
+						
+					//echo date('d',strtotime($db_results1['Punchcards']['current_punch_at'])).' COMPARE '.date('d');
+					if (date('d',strtotime($db_results1['Punchcards']['current_punch_at']))==date('d')){
+						
 						// simple for now -> just more than one visit is illegal
 						if ($db_results['Location']['max_visits']>1){
+							//query the punch table and find all of today's visits
+							$db_results5=$this->Punch->find('all',array('conditions'=>array('Punch.user_id'=>$this->Auth->getUserId(),
+																							'Punch.location_id'=>$db_results['Location']['id']),
+																		'order'=>array('Punch.created DESC')));
+							$total_visits_today = 0;
+							foreach ($db_results5 as $key=>$value){
+								if (date('d',strtotime($db_results5[$key]['Punch']['created']))==date('d')){
+									$total_visits_today++;
+								}
+								else {
+									break;
+								}
+							}
+						//	echo $total_visits_today . 'total visits';
+							if ($db_results['Location']['max_visits'] > $total_visits_today){
+								$legal=true;
+							}
+						}
+						else {
 							$legal = true;
 						}
+					}
+					else {
+						$legal = true;
 					}
 				}
 				else {
@@ -131,6 +158,7 @@ class BetaController extends AppController
 					$this->Punch->create();
 					$this->data['Punch']['user_id']=$this->Auth->getUserId();
 					$this->data['Punch']['location_id']=$db_results['Location']['id'];
+					$this->data['Punch']['merchant_id']=$db_results2['Merchant']['id'];
 					$this->Punch->save($this->data);
 					$this->set('message','Your visit has been successfully recorded!');
 					$this->set('num_punches',$db_results1['Punchcards']['current_punch']+1); //+1 because we are reading the DB prior to writing it
@@ -223,11 +251,21 @@ class BetaController extends AppController
 						
 						if ($mer['Merchant']['id'] == $db_results2['Merchant']['id']){
 							$visit_tally += $db_results3[$key]['Punchcards']['current_punch'];
+							$visit_tally -= $db_results3[$key]['Punchcards']['last_redemption'];
 							
 						}
 					}
 					if ($db_results4['Reward']['threshold']<=$visit_tally){
 						// this is good!
+						
+						$this->Redemption->create();
+						$this->data['Redemption']['user_id']=$this->Auth->getUserId();
+						$this->data['Redemption']['reward_id']=$db_results4['Reward']['id'];
+						$this->data['Redemption']['location_id']=$loc['Location']['id'];
+						$this->data['Redemption']['threshold']=$db_results4['Reward']['threshold'];
+						$this->data['Redemption']['merchant_id']=$db_results2['Merchant']['id'];
+						$this->Redemption->save($this->data);
+						echo 'Reward ID '.$this->Redemption->id;
 						$legal = true;
 						$this->set('message','Congratulations, please show your screen to the cashier');
 					
@@ -250,6 +288,7 @@ class BetaController extends AppController
 		
 		if ($legal){
 			// debit the visits from the account
+			
 			$this->set('time',time());	
 			$this->set('results',$db_results4);
 		}

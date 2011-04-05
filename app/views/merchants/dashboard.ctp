@@ -31,7 +31,7 @@
 			            	<div class="left-layer24"><? echo $reward_list[$key]['description']; ?></div>
 							<div class="left-layer22"><? echo $reward_list[$key]['threshold']; ?></div>
 							<div class="left-layer22"><? echo date('m/d/y',strtotime($reward_list[$key]['start_date'])); ?></div>
-                			<? $end_date = (is_null($reward_list[$key]['end_date'])) ? 'none' : date('Ymd',strtotime($reward_list[$key]['end_date'])); ?>
+                			<? $end_date = (is_null($reward_list[$key]['end_date'])) ? 'none' : date('m/d/y',strtotime($reward_list[$key]['end_date'])); ?>
 							<div class="left-layer22"><? echo $end_date; ?></div>	
    							<div class="left-edit-layer22"> <? echo $ajax->link('Edit',array('controller'=>'merchants','action'=>'edit_reward',$reward_list[$key]['id']), array('update'=>$div_name));?></div>
    							<div class="right-layer11">    <? echo $html->link('Delete', array('controller'=>'merchants', 'action'=>'delete_reward',$reward_list[$key]['id']),array(),'Are you sure you want to delete this reward?', false); ?></div>
