@@ -1,4 +1,5 @@
 <?php 
+App::import('Vendor', 'mobile-detect', array('file'=> 'mobile-detect'.DS.'Mobile_Detect.php'));
 class AppController extends Controller 
 {
   var $components = array('Auth', 'RequestHandler', 'Utils', 'Zend.Amf');

@@ -155,8 +155,29 @@ class MerchantsController extends AppController {
 					$this->render();
 				}
 			}
+			elseif ($step==4){
+				$user = $this->Auth->getUserInfo();
+				$loc = $this->Location->find('first', array('conditions'=>array('Location.merchant_id'=>$user['id'])));
+				$this->Email->to = $user['email'];
+        		$this->Email->replyTo = 'roger@alumni.upenn.edu';
+				$this->Email->subject = 'Your Bantana QR Code';
+        		$this->Email->from = 'Bantana <rogerwu99@bantana.com>';
+        		$this->Email->template = 'qr_code';
+	 			$this->Email->sendAs = 'html'; 
+	 			$this->set('qr_path',$loc['Location']['qr_path']);
+				/*$this->Email->attachments = array (
+                        array('filename'=>ROOT.'/app/webroot/img/qrcodes/'.$loc['Location']['qr_path'],
+                        'mimetype'=>'image/png',
+                        'cid'=>$loc['Location']['qr_path']),
+                        );*/
+				$status = $this->Email->send();
+				$this->set('step',5);
+		 	}
 			elseif ($step==5) {
 				$this->set('step',5);
+			}
+			elseif ($step==6){
+				$this->redirect(array('action'=>'dashboard'));
 			}
 		//}
 	}
@@ -190,10 +211,12 @@ class MerchantsController extends AppController {
         	Controller::render('/deny');
         }
 		else {
+		//	$user =($this->Auth->getUserInfo());
 			$rewards = $this->Reward->getRewards($this->Auth->getUserId());
 			$this->set('reward_list',$rewards[0]['Reward']);
 			$locations = $this->Location->getLocations($this->Auth->getUserId());
 			$this->set('location_list',$locations);
+	//		$this->set(compact('user'));
 		}	
 	}
 	function locations(){
@@ -313,7 +336,9 @@ class MerchantsController extends AppController {
     }
 	
 	function qr_refresh($id=null){
-		$this->Location->read(null, $id);
+		$loc = $this->Location->read(null, $id);
+		$qr_old = $loc['Location']['qr_path'];
+		
 		$hash_key = $this->__randomString(5,5).(string)time();
 		$url = ROOT_URL.'/beta/v/'.$hash_key;
 		$qr_path = 'img/qrcodes/QRCode_'.$hash_key.'.png';
@@ -322,6 +347,7 @@ class MerchantsController extends AppController {
 		$this->Location->set('qr_path',$qr_link[2]);
 		$this->Location->save();
 		$this->set('new_link',$qr_link[2]);
+		unlink('img/qrcodes/'.$qr_old);
 	}
 	
 	function edit_location($id=null){
@@ -505,17 +531,9 @@ class MerchantsController extends AppController {
 		} 
 	}
 	function edit(){
-	/*
-	$email = $this->data['Merchant']['email'];
-					$name=$this->data['Merchant']['name'];
-					$password = $this->data['Merchant']['new_password'];
-					$confirm =$this->data['Merchant']['confirm_password'];
-					$accept = $this->data['Merchant']['accept'];
-					$biz_name = $this->data['Merchant']['business_name'];
-					$biz_phone = $this->data['Merchant']['business_phone'];
-					$website = $this->data['Merchant']['website'];
-		*/			
-	
+		$user = $this->Auth->getUserInfo();
+		$this->set(compact('user'));
+		
 	}
 	function merchant_feedback(){
 		//echo 'start';

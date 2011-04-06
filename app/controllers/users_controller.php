@@ -226,6 +226,7 @@ class UsersController extends AppController {
 			foreach ($db_results2 as $key=>$value){
 				$reward = $this->Reward->find('first',array('conditions'=>array('Reward.id'=>$db_results2[$key]['Redemption']['reward_id'])));
 				$location = $this->Location->find('first',array('conditions'=>array('Location.id'=>$db_results2[$key]['Redemption']['location_id'])));
+				$prize='';
 				$prize->description = $reward['Reward']['description'];
 				$prize->threshold = $reward['Reward']['threshold'];
 				$prize->merchant = $reward['Merchant'][0]['name'];
@@ -233,6 +234,7 @@ class UsersController extends AppController {
 				$prize->location = $location['Location']['address'];
 				$prize->zip = $location['Location']['zip'];
 				$prize->redeem_date = $db_results2[$key]['Redemption']['created'];
+				$prize->key=$key;
 				array_push($rewards_array,$prize);
 			}
 			$this->set('redemptions',$db_results2);

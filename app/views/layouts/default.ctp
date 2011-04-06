@@ -5,8 +5,9 @@
 <title>MOO Bantana</title>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"></META>
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" ></link>
-
-	<?php echo $scripts_for_layout ?>
+ 	
+	<?php echo $_SERVER['HTTP_USER_AGENT'];?> 
+ 	<?php echo $scripts_for_layout ?>
 	<?php echo $html->css('style-log'); ?>
 	<?php echo $html->css('type'); ?>
 	

@@ -8,24 +8,37 @@
 	<?php echo $form->input('description',array('type'=>'text','label'=>false,'value'=>$results['Reward']['description'])); ?>
 	</div>
 	<div class="left-layer22">
-	  <?php $points=range(0,100); 
-		 echo $form->select('threshold', $points, array('label'=>false,'selected'=>$results['Reward']['threshold'])); ?>
+	  <?php $points=range(1,100); 
+		 echo $form->select('threshold', $points, array('label'=>false,'selected'=>$results['Reward']['threshold']-1),array('empty'=>false)); ?>
 
 	</div>
     <div class="left-layer22">
 	    <? echo $form->select('smonth', $months, array('selected'=>date('M',strtotime($results['Reward']['start_date']))));?>
 	    <? echo $form->select('sdate', $dates,array('selected'=>date('j',strtotime($results['Reward']['start_date']))));?>
-	    <? echo $form->select('syear', $years,array('selected'=>date('Y',strtotime($results['Reward']['start_date']))));?>
+	    <? echo $form->select('syear', $years,array('selected'=>(int)date('Y',strtotime($results['Reward']['start_date']))-(int)date('Y')));?>
 	</div>
     <div class="left-layer22">
      <? $options=array('Yes'=>'Yes','No'=>'No');
-		$attributes = array('legend'=>false,'value'=>'No');
-		echo $form->radio('expires',$options,$attributes);
+		if (is_null($results['Reward']['end_date'])){
+			$attributes = array('legend'=>false,'value'=>'No');
+			echo $form->radio('expires',$options,$attributes);
+			echo $form->select('emonth', $months);?><br />
+	    	<? echo $form->select('edate', $dates);?><br />
+	    	<? echo $form->select('eyear', $years);
+	
+	
+		}
+		else {
+			$attributes = array('legend'=>false,'value'=>'Yes');
+			echo $form->radio('expires',$options,$attributes);
+	        echo $form->select('emonth', $months, array('selected'=>date('M',strtotime($results['Reward']['end_date']))-(int)date('M'))); ?><br />
+		    <? echo $form->select('edate', $dates,array('selected'=>date('j',strtotime($results['Reward']['end_date'])))); ?><br />
+	    	<? echo $form->select('eyear', $years,array('selected'=>(int)date('Y',strtotime($results['Reward']['end_date']))-(int)date('Y')));
+	
+		}
+		
 	 	?>
-        <? echo $form->select('emonth', $months, array('selected'=>date('M',strtotime($results['Reward']['end_date']))));?>
-	    <? echo $form->select('edate', $dates,array('selected'=>date('j',strtotime($results['Reward']['end_date']))));?>
-	    <? echo $form->select('eyear', $years,array('selected'=>date('Y',strtotime($results['Reward']['end_date']))));?>
-	</div>
+</div>
 	<div class="left-edit-layer22"> 
    
 	<?php echo $ajax->submit('Change',array('url'=>array('controller'=>'merchants','action'=>'edit_reward',$results['Reward']['id']),'update'=>$div_name)); ?>

@@ -5,7 +5,7 @@
      ?>
      				
            <div class="base-layer">
-                 	<h4 class="table-caption">&nbsp;&nbsp;&nbsp;ACTIVE REWARDS <? //echo $ajax->link('(Add)', array('controller'=>'merchants','action'=>'rewards'), array('update'=>'new_reward')); ?></h4>
+                    <h4 class="table-caption">&nbsp;&nbsp;&nbsp;ACTIVE REWARDS <? //echo $ajax->link('(Add)', array('controller'=>'merchants','action'=>'rewards'), array('update'=>'new_reward')); ?></h4>
                     <div class="table-row-head">&nbsp;
         				<div class="left-layer24">Reward</div>
 				        <div class="left-layer22">Pts</div>
@@ -74,6 +74,7 @@
                         You have no visits yet!
                     <? endif; ?>
 					<?php 
+//						var_dump($rewards);
 						foreach ($rewards as $key=>$value){
 			  				$class_name = ($even) ? 'table-row-even' : 'table-row-odd'; ?>
             				<div class="<? echo $class_name; ?>">&nbsp;

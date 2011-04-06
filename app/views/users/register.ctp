@@ -51,7 +51,7 @@
 				  </div>
              </div>      
 <? else: ?>
-	Thanks for signing up to Bantana!  Earning rewards has never beene easier!  
+	Thanks for signing up to Bantana!  Earning rewards has never been easier!  
     No more carrying around all of your loyalty cards...three easy steps..
     <ol>
     <li> Look for our QR Code near the register.  </li>

@@ -6,7 +6,7 @@
         				<? echo $form->create('Merchant', array('action'=>'edit')); ?>
 						Contact Name:</div>
                         <div class="left-layer41">
-						<?php echo $form->input('Name', array('error' => array('required' => 'Name is required'), 'label' => false, 'class' => 'text_field_edit','style'=>'width:217px')); ?>
+						<?php echo $form->input('Name', array('error' => array('required' => 'Name is required'), 'label' => false, 'class' => 'text_field_edit','style'=>'width:217px','value'=>$user['name'])); ?>
                         </div>
                     	<div class="left-layer41">
                         Password:</div>
@@ -20,12 +20,12 @@
                         </div>
                        <div class="left-layer41">
                        Business Name:</div>
-					   <div class="left-layer41"><?php echo $form->input('business_name', array('error' => array('required' => 'Name is required'), 'label' => false, 'class' => 'text_field_edit','size'=>15,'style'=>'width:217px' )); ?>
+					   <div class="left-layer41"><?php echo $form->input('business_name', array('error' => array('required' => 'Name is required'), 'label' => false, 'class' => 'text_field_edit','size'=>15,'style'=>'width:217px','value'=>$user['business_name'] )); ?>
                        </div>
                     	<div class="left-layer41">Business Phone:</div>
-						<div class="left-layer41"><?php echo $form->input('business_phone', array('error' => array('required' => 'Name is required'), 'label' => false, 'class' => 'text_field_edit','size'=>15,'style'=>'width:217px' )); ?></div>
+						<div class="left-layer41"><?php echo $form->input('business_phone', array('error' => array('required' => 'Name is required'), 'label' => false, 'class' => 'text_field_edit','size'=>15,'style'=>'width:217px','value'=>$user['business_phone'] )); ?></div>
 					    <div class="left-layer41">Business Website:</div>
-						<div class="left-layer41"><?php echo $form->input('website', array('error' => array('required' => 'Name is required'), 'label' => false, 'class' => 'text_field_edit','size'=>15,'style'=>'width:217px' )); ?></div>
+						<div class="left-layer41"><?php echo $form->input('website', array('error' => array('required' => 'Name is required'), 'label' => false, 'class' => 'text_field_edit','size'=>15,'style'=>'width:217px','value'=>$user['website'] )); ?></div>
 						<div class="left-layer42">	
                     	<?php echo $form->submit('SAVE!'); ?>
                         <?php echo $form->end(); ?>

@@ -3,6 +3,7 @@
 		echo $javascript->link('http://maps.google.com/maps/api/js?sensor=false');
 		echo $javascript->link('new_location.js');
      ?>
+<? //var_dump($user); ?>
      				<h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hi <? echo $_Auth['User']['name']; ?>!</h1>
 	                <div class="base-layer">
                  	<h4 class="table-caption">&nbsp;&nbsp;&nbsp;REWARDS <? echo $ajax->link('(Add)', array('controller'=>'merchants','action'=>'rewards'), array('update'=>'new_reward')); ?></h4>

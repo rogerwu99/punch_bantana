@@ -1,7 +1,6 @@
 <? if (is_null($step) || $step==1): ?>
 <span class="smallercopy_nav"><span class="smallercopy_nav_sel">General</span> | Reward | Location | Plan</span>
-       <? echo '<div class="smallercopy_err" style="color:red">'.$form->error('User.accept').'</div><br />'; ?>
-			<? $session->flash(); ?>
+		<? $session->flash(); ?>
             <div class="bodycopy_reg">Sign up</div>
 		<?php echo $form->create('Merchant'); ?>
                   <div class="smallercopy_reg">Name</div>
@@ -19,7 +18,8 @@
                   <div class="smallercopy_reg">Website</div>
                   <div class='smallercopy_err' style='color:red'><?php echo $form->input('website', array('label'=>false, 'class'=>'required validate-password-confirm', 'style'=>'width:217px','title'=>'Enter the same password for confirmation')); ?></div>
                   <div class="smallercopy_reg">
-                      <?php echo $form->checkbox('Merchant.accept', array('class'=>'required validate-one-required', 'title'=>'Please agree to terms and conditions'));?>Please read our <?php echo $html->link('Terms of Use', array('controller'=>'pages', 'action'=>'terms')); ?> and our <?php echo $html->link('Privacy Policy', array('controller'=>'pages', 'action'=>'privacy')); ?> before accepting.
+                             <? echo '<div class="smallercopy_err" style="color:red">'.$form->error('Merchant.accept').'</div><br />'; ?>
+	<?php echo $form->checkbox('Merchant.accept', array('class'=>'required validate-one-required', 'title'=>'Please agree to terms and conditions'));?>Please read our <?php echo $html->link('Terms of Use', array('controller'=>'pages', 'action'=>'terms')); ?> and our <?php echo $html->link('Privacy Policy', array('controller'=>'pages', 'action'=>'privacy')); ?> before accepting.<br /><br />
                       </div>
                   <div class="smallercopy_reg" style="text-align:center;">
     	<?php echo $ajax->submit('Create my Account!', array('url'=>array('controller'=>'merchants','action'=>'register/1'),'update'=>'reg_content'));?>
@@ -161,24 +161,21 @@
    			     <br />
                  Print this QR Code for your customers to scan.  You can also display this code on your mobile device.  A copy can be emailed to you.  
                  <br />
-                 Print / Email
+                 <a href="JavaScript:window.print();">Print </a>  / <? echo $ajax->link('Email',array('controller'=>'merchants','action'=>'register/4'),array('update'=>'reg_content')); ?>
                  </div>   
 <? elseif ($step==5): ?>
 			<span class="smallercopy_nav">General | Reward | Location | <span class="smallercopy_nav_sel">Plan</span></span>
  			<div class="bodycopy_reg">Select a Plan</div>
+            <? echo $form->create('Merchant', array('action'=>'register/6')); ?>
+
             <div class="smallercopy_reg">Select a plan from the options below.<br />
-					<? 	$options=array('basic'=>'Basic Membership - $100 / month',
-											'Trial'=>' 2 Month FREE Trial'
-											);
-							$attributes = array('legend'=>false,'value'=>'No');
-							echo $form->radio('expires',$options,$attributes);
- 						?>
-                 
-           
-            Monthly Fees per location.
+            	<input type="radio" name="data[Merchant][plan]" value="Basic" disabled="disabled"><span style="text-decoration: line-through; ">Basic Membership - $100 / month</span><br>
+				<input type="radio" name="data[Merchant][plan]" value="Pro" disabled="disabled"><span style="text-decoration: line-through; ">Pro Membership - $500 / month</span> <br>
+				<input type="radio" name="data[Merchant][plan]" value="Free" checked> 2 Month FREE Trial<br />
+			<span class="smallercopy">Monthly Fees per location.</span>
             </div>
  	              <div class="smallercopy_reg" style="text-align:center;">
-    				<?php echo $ajax->submit('Enter!', array('url'=>array('controller'=>'merchants','action'=>'register/6'),'update'=>'reg_content'));?>
+    				<?php echo $form->submit('Enter!', array('url'=>array('controller'=>'merchants','action'=>'register/6')));?>
  	   				<?php echo $form->end(); ?>
 	   			     </div> 
 	

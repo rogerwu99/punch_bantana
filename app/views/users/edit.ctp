@@ -3,10 +3,11 @@
                  	<h4 class="table-caption">&nbsp;&nbsp;&nbsp;EDIT INFORMATION </h4>
               		<div class="table-profile-edit-settings-for-user">
                     	<div class="left-layer41">
+                        <? //var_dump($user); ?>
         				<? echo $form->create('User', array('action'=>'edit')); ?>
 						Name:</div>
                         <div class="left-layer41">
-						<?php echo $form->input('Name', array('error' => array('required' => 'Name is required'), 'label' => false, 'class' => 'text_field_edit','style'=>'width:217px')); ?>
+						<?php echo $form->input('Name', array('error' => array('required' => 'Name is required'), 'label' => false, 'class' => 'text_field_edit','style'=>'width:217px','value'=>$user['name'])); ?>
                         </div>
                     	<div class="left-layer41">
                         Password:</div>
@@ -29,9 +30,9 @@
                        </div>
                     	<div class="left-layer41">Birthday</div>	
 
-						<div class="left-layer41"><? echo $form->select('smonth', $months, array('selected'=>date('M',strtotime($results['Reward']['start_date']))));?>
-	    <? echo $form->select('sdate', $dates,array('selected'=>date('j',strtotime($results['Reward']['start_date']))));?>
-	    <? echo $form->select('syear', $years,array('selected'=>date('Y',strtotime($results['Reward']['start_date']))));?>
+						<div class="left-layer41"><? echo $form->select('smonth', $months, array('selected'=>date('M',strtotime($user['birthday']))));?>
+	    <? echo $form->select('sdate', $dates,array('selected'=>date('j',strtotime($user['birthday']))));?>
+	    <? echo $form->select('syear', $years,array('selected'=>date('Y',strtotime($user['birthday']))));?>
 	</div>
     
     

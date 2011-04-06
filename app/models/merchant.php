@@ -64,12 +64,17 @@ class Merchant extends AppModel {
 							'on' => 'create'
     					)
     		),
-		'accept' => array
-					(
+		'accept' => array(
 					'rule' => array('equalTo', '1'),
 					'message' => 'Must accept terms.',
 					'on' => 'create'
+					),
+		'business_phone' => array(
+					'rule'=>array('minLength',10),
+					'message'=>'Please provide a phone number.',
+					'on'=>'create'
 					)
+					
   		);
     
 
