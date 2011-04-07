@@ -21,7 +21,24 @@ class Reward extends AppModel {
 	
 	 }
 
-/*        'User' => array(
+/*   
+
+$reward = $this->data['Merchant']['reward'];
+			$points = $this->data['Merchant']['points'];
+			$start=$this->data['Merchant']['start'];
+			$start_month=$this->data['Merchant']['smonth'];
+			$start_date=$this->data['Merchant']['sdate']+1;
+			$start_year=$this->data['Merchant']['syear']+date('Y');
+			$expire=$this->data['Merchant']['expires'];
+			$expire_month=$this->data['Merchant']['emonth'];
+			$expire_date=$this->data['Merchant']['edate']+1;
+			$expire_year=$this->data['Merchant']['eyear']+date('Y');
+			$this->data=array();
+			$this->Reward->create();
+			$this->data['Reward']['description']=$reward;
+			$this->data['Reward']['threshold']=$points;
+
+     'User' => array(
         'className'             => 'User',
         'joinTable'             => 'users_rewards',
         'foreignKey'            => 'reward_id',

@@ -15,7 +15,7 @@
 							"Dec"=>"Dec"
 							);
 				$dates=range(1,31);
-				$years=range(1900,(int)date('Y')-18);	
+				$years=range((int)date('Y')-13,1900);	
 				?> 
 				<? $session->flash(); ?>
             	<div class="bodycopy_reg">Sign up</div>
@@ -36,9 +36,9 @@
                     </div>
                     <div class="left-layer51">Birthday</div>	
 					<div class="left-layer52">
-						<? echo $form->select('smonth', $months, array('selected'=>date('M',strtotime($results['Reward']['start_date']))));?>
-	    				<? echo $form->select('sdate', $dates,array('selected'=>date('j',strtotime($results['Reward']['start_date']))));?>
-	    				<? echo $form->select('syear', $years,array('selected'=>date('Y',strtotime($results['Reward']['start_date']))));?>
+						<? echo $form->select('smonth', $months);?>
+	    				<? echo $form->select('sdate', $dates);?>
+	    				<? echo $form->select('syear', $years);?>
 					</div>
                   </div>
                   <div class="smallercopy_reg"><br />

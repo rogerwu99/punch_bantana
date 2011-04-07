@@ -51,6 +51,7 @@ class UsersController extends AppController {
 				$password = $this->data['User']['new_password'];
 				$confirm =$this->data['User']['confirm_password'];
 				$accept = $this->data['User']['accept'];
+				$fb_uid = $this->data['User']['fb_uid'];
 				$this->data=array();
 				$this->User->create();
 				$this->data['User']['name']=$name;
@@ -60,7 +61,15 @@ class UsersController extends AppController {
 				$this->data['User']['accept']=$accept;
 				$password = $this->data['User']['password'] = $this->Auth->hasher($password); 
 				$username = $this->data['User']['username']= (string) $email;
-				$this->data['User']['path']='default.png';
+				$this->data['User']['path']=(is_null($path)) ? 'default.png' : $path;
+				if (!is_null($fb_uid)){
+					$facebook = $this->createFacebook();
+					$session=$facebook->getSession();
+					$this->data['User']['fb_access_key'] = $session['access_token'];
+					$this->data['User']['fb_uid'] = $fb_uid;
+					$this->data['User']['fb_pic_url'] = 'http://graph.facebook.com/'.$fb_uid.'/picture';
+				}
+				
 				$this->User->set($this->data);
 				if ($this->User->validates()){
 					$this->User->save();
@@ -143,6 +152,65 @@ class UsersController extends AppController {
 			$this->data['User']['tw_access_secret'] =  $accessToken->secret;
 			$this->User->save($this->data);
 		}
+	}
+	public function facebookLogin(){
+		$facebook = $this->createFacebook();
+		$session=$facebook->getSession();
+		$full_url = ROOT_URL . '/users/fbCallback';
+		$login_url = $facebook->getLoginUrl(array('req_perms' => 'email,user_birthday,user_about_me,user_location,publish_stream','next' => $full_url));
+		if(!empty($session)){
+			$this->Session->write('fb_acces_token',$session['access_token']);
+			$facebook_id = $facebook->getUser();
+			if(is_null($this->Auth->getUserId())){
+				$db_results = $this->User->find('first', array('conditions' => (array('User.fb_uid'=>$facebook_id)), 'fields'=>(array('User.username','User.password'))));
+
+				if (!empty($db_results)) {
+					//echo 'results not empty';
+					$this->_login($db_results['User']['username'],$db_results['User']['password']);
+					$this->redirect('/');
+				}
+				else{
+					$this->redirect($login_url);
+				}
+			}
+			else {
+				$this->redirect($login_url);
+			}
+		}
+		else{
+			$this->redirect($login_url);
+		}
+	}
+	
+	public function fbCallback(){
+		$facebook = $this->createFacebook();
+		$session=$facebook->getSession();
+		$facebook_id = $facebook->getUser();
+		if (is_null($this->Auth->getUserId())){
+			$db_results = $this->User->find('first', array('conditions' => (array('User.fb_uid'=>$facebook_id)), 'fields'=>(array('User.username','User.password'))));
+			if (!empty($db_results)) {
+				$this->_login($db_results['User']['username'],$db_results['User']['password']);
+				$this->redirect('/');
+			}
+			else {
+				if(!empty($session)){
+					try{
+						$fb_user=json_decode(file_get_contents('https://graph.facebook.com/me?access_token='.$session['access_token']));
+						//var_dump($fb_user);
+					}
+					catch(FacebookApiException $e){
+						error_log($e);
+					}
+					/*$this->data['User']['fb_uid'] = (int) $user->id;
+					$this->data['User']['fb_pic_url'] = 'http://graph.facebook.com/'.$user->id.'/picture';
+					$this->data['User']['fb_location'] = '';
+					$this->data['User']['fb_access_key'] = $session['access_token'];
+					*/$this->set('fb_user',$fb_user);
+				}
+			}
+		}
+		
+		$this->layout = 'about';
 	}
 	
 	function view_my_profile(){
@@ -284,6 +352,63 @@ class UsersController extends AppController {
 			$this->set('dates',range(1,31));
 			$this->set('years',range(1900,(int)date('Y')-18));
 		}
+	}
+	function edit_pic(){
+		 if(is_null($this->Auth->getUserId())){
+                       Controller::render('/deny');
+         }
+		if (!empty($this->data)) {
+			//	var_dump($this->data);
+			App::import('Vendor', 'upload');
+	        
+	        
+ 			$typelist=split('/', $_FILES['data']['type']['User']['photo']);
+			$allowed[0]='xxx';
+            $allowed[1]='gif';
+            $allowed[2]='jpg';
+            $allowed[3]='jpeg';
+            $allowed[4]='png';
+            
+			$allowed_val='';
+            $allowed_val=array_search($typelist[1], $allowed);
+
+			if (!$allowed_val){
+				$this->Session->setFlash('<span class="bodycopy" style="color:red;">Profile picture must be gif, jpg or png only.</span>');
+			}
+	        
+	    	else if(!empty($this->data) && $this->data['User']['photo']['size']>0){
+	          
+				$file = $this->data['User']['photo']; 
+	            $handle = new Upload($file);
+
+	            if ($handle->uploaded){
+					if($handle->image_src_x >= 100){
+						$handle->image_resize = true;
+		    			$handle->image_ratio_y = true;
+		    			$handle->image_x = 100;
+		    			
+		    			if($handle->image_y >= 100){
+		    				$handle->image_resize = true;
+			    			$handle->image_ratio_x = true;
+			    			$handle->image_y = 100;
+		    			}
+					}
+	    			$handle->Process('img/uploads');
+				
+				}
+	            if(!is_null($handle->file_dst_name) && $handle->file_dst_name!=''){
+					$user_path = $handle->file_dst_name;
+				}
+               
+  	            $handle->clean();
+	            $this->User->read(null,$this->Auth->getUserId());
+				$this->User->set('path', $user_path);
+  	        	$this->User->save();
+  	        }
+         
+	        //$this->redirect(array('controller'=>'beta', 'action'=>'view_my_profile'));
+	        exit;
+	    }
 	}
 	function my_rewards(){
 	}
@@ -450,108 +575,13 @@ public function verifyEmailAddress(){
         return $key;
     }
 
-	public function facebookLogin(){
-		$facebook = $this->createFacebook();
-		$session=$facebook->getSession();
-		$full_url = ROOT_URL . '/users/fbCallback';
-		$login_url = $facebook->getLoginUrl(array('req_perms' => 'email,user_birthday,user_about_me,user_location,publish_stream','next' => $full_url));
-		if(!empty($session)){
-			$this->Session->write('fb_acces_token',$session['access_token']);
-			$facebook_id = $facebook->getUser();
-	
-			$db_results = $this->User->find('first', array('conditions' => (array('User.fb_uid'=>$facebook_id)), 'fields'=>(array('User.username','User.password'))));
-
-			if (!empty($db_results)) {
-				//echo 'results not empty';
-				$this->_login($db_results['User']['username'],$db_results['User']['password']);
-	
-				$this->redirect('/');
-			}
-			else{
-				$this->redirect($login_url);
-			}
-	
-		}
-		else{
-			$this->redirect($login_url);
-		}
-	}
-	
-	public function fbCallback(){
-		$facebook = $this->createFacebook();
-		$session=$facebook->getSession();
-			$facebook_id = $facebook->getUser();
-	
-			$db_results = $this->User->find('first', array('conditions' => (array('User.fb_uid'=>$facebook_id)), 'fields'=>(array('User.username','User.password'))));
-
-			if (!empty($db_results)) {
-				$this->_login($db_results['User']['username'],$db_results['User']['password']);
-				$this->redirect('/');
-			}
-		$this->layout = 'page';
-	}
 	
 	
 	
 	
 	
-	function edit_pic(){
-		 if(is_null($this->Auth->getUserId())){
-                       Controller::render('/deny');
-         }
-		if (!empty($this->data)) {
-			//	var_dump($this->data);
-			App::import('Vendor', 'upload');
-	        
-	        
- 			$typelist=split('/', $_FILES['data']['type']['User']['photo']);
-			$allowed[0]='xxx';
-            $allowed[1]='gif';
-            $allowed[2]='jpg';
-            $allowed[3]='jpeg';
-            $allowed[4]='png';
-            
-			$allowed_val='';
-            $allowed_val=array_search($typelist[1], $allowed);
-
-			if (!$allowed_val){
-				$this->Session->setFlash('<span class="bodycopy" style="color:red;">Profile picture must be gif, jpg or png only.</span>');
-			}
-	        
-	    	else if(!empty($this->data) && $this->data['User']['photo']['size']>0){
-	          
-				$file = $this->data['User']['photo']; 
-	            $handle = new Upload($file);
-
-	            if ($handle->uploaded){
-					if($handle->image_src_x >= 100){
-						$handle->image_resize = true;
-		    			$handle->image_ratio_y = true;
-		    			$handle->image_x = 100;
-		    			
-		    			if($handle->image_y >= 100){
-		    				$handle->image_resize = true;
-			    			$handle->image_ratio_x = true;
-			    			$handle->image_y = 100;
-		    			}
-					}
-	    			$handle->Process('img/uploads');
-				
-				}
-	            if(!is_null($handle->file_dst_name) && $handle->file_dst_name!=''){
-					$user_path = $handle->file_dst_name;
-				}
-               
-  	            $handle->clean();
-	            $this->User->read(null,$this->Auth->getUserId());
-				$this->User->set('path', $user_path);
-  	        	$this->User->save();
-  	        }
-         
-	        //$this->redirect(array('controller'=>'beta', 'action'=>'view_my_profile'));
-	        exit;
-	    }
-	}*/
+	
+	*/
 	
 	
 	/*function forgot() {

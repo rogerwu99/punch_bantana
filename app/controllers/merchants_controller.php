@@ -434,12 +434,18 @@ class MerchantsController extends AppController {
 			$this->data['Reward']['start_date']=$starting;
 			if ($expire!="No") $this->data['Reward']['end_date'] = $expire_year.' '.$expire_month.' '.$expire_date;
 			$this->set('confirm','true');
-			$this->Reward->save($this->data, false);
-			$results = $this->Reward->read(null,$this->Reward->id);
-	//		var_dump($results);
-			$this->set(compact('results'));
-			$this->set('saved',true);
-			
+			$this->Reward->set($this->data);
+			// validate data
+			if ($this->Reward->validates()){
+				$this->Reward->save();
+				$results = $this->Reward->read(null,$this->Reward->id);
+		//		var_dump($results);
+				$this->set(compact('results'));
+				$this->set('saved',true);
+			}
+			else {
+				$this->set('errors', $this->Reward->validationErrors);
+			}	
 		}
 		else {
 		//	echo 'in here';
