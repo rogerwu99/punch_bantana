@@ -9,8 +9,8 @@
                     <div class="table-row-head">&nbsp;
         				<div class="left-layer24">Reward</div>
 				        <div class="left-layer22">Pts</div>
- 				        <div class="left-layer22">Start</div>
-        				<div class="left-layer22">End</div>
+ 				        <div class="left-layer22a">Start</div>
+        				<div class="left-layer22a">End</div>
  				        <div class="left-edit-layer22">&nbsp;</div>
  				        <div class="right-layer11">&nbsp;</div>
  			        </div>
@@ -40,9 +40,9 @@
             			<div class="<? echo $class_name; ?>">&nbsp;
 			            	<div class="left-layer24"><? echo $mer_array_no_dupes[$key]['Reward'][$key1]['description']; ?></div>
 							<div class="left-layer22"><? echo $mer_array_no_dupes[$key]['Reward'][$key1]['threshold']; ?></div>
-							<div class="left-layer22"><? echo date('m/d/y',strtotime($mer_array_no_dupes[$key]['Reward'][$key1]['start_date'])); ?></div>
+							<div class="left-layer22a"><? echo date('m/d/y',strtotime($mer_array_no_dupes[$key]['Reward'][$key1]['start_date'])); ?></div>
                 			<? $end_date = (is_null($mer_array_no_dupes[$key]['end_date'])) ? 'none' : date('m/d/y',strtotime($mer_array_no_dupes[$key]['Reward'][$key1]['end_date'])); ?>
-							<div class="left-layer22"><? echo $end_date; ?></div>
+							<div class="left-layer22a"><? echo $end_date; ?></div>
                             <div class="left-edit-layer22">
 								<? 	if ($num_points[$i]->number>=$mer_array_no_dupes[$key]['Reward'][$key1]['threshold']):
 										echo $html->link('Redeem',array('controller'=>'beta','action'=>'redeem',$mer_array_no_dupes[$key]['Reward'][$key1]['id']));
@@ -60,7 +60,7 @@
     				</div>
  				    <br /><h4 class="table-caption">&nbsp;&nbsp;&nbsp;MY REWARDS <? //echo $ajax->link('(Add)', array('controller'=>'merchants','action'=>'locations'),array('update'=>'new_location')); ?></h4>
         			 <div class="table-row-head">&nbsp;
-        				<div class="left-layer81">Redemption Location</div>
+        				<div class="left-layer81">Location</div>
 				        <div class="left-layer84">Reward</div>
  				        <div class="left-layer85">Points</div>
  				        <div class="left-layer83">Date Redeemed</div>
@@ -92,8 +92,8 @@
     				<h4 class="table-caption">&nbsp;&nbsp;&nbsp;MY SPOTS <? //echo $ajax->link('(Add)', array('controller'=>'merchants','action'=>'locations'),array('update'=>'new_location')); ?></h4>
         			<div class="table-row-head">&nbsp;
         				<div class="left-layer71">Name</div>
- 				        <div class="left-layer14">Address</div>
-				        <div class="left-layer12">Zip</div>
+ 				        <div class="left-layer94">Address</div>
+				        <div class="left-layer92">Zip</div>
 				        <div class="left-edit-layer22">&nbsp;</div>
         				<div class="right-layer11">&nbsp;</div>
         			</div>
@@ -114,8 +114,8 @@
         			<? $class_name = ($even) ? 'table-row-even' : 'table-row-odd'; ?>
             		<div class="<? echo $class_name; ?>">&nbsp;
               			<div class="left-layer71"><? echo $mer_array[$key]['Merchant']['name'];?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<? echo $loc_array[$key]['Location']['description']; ?></div>
-			  			<div class="left-layer14"><? echo $loc_array[$key]['Location']['address']; ?></div>
-			  			<div class="left-layer12"><? echo $loc_array[$key]['Location']['zip']; ?></div>
+			  			<div class="left-layer94"><? echo $loc_array[$key]['Location']['address']; ?></div>
+			  			<div class="left-layer92"><? echo $loc_array[$key]['Location']['zip']; ?></div>
                         <div class="left-layer72">All Time Visits: &nbsp;
                         <? 	for ($j=0;$j<$loc_array[$key]['Location']['visits'];$j++){
 								echo $html->image('star.png',array('alt'=>'star','width'=>20,'height'=>20,'class'=>'top'));

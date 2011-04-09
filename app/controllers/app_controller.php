@@ -1,5 +1,6 @@
 <?php 
 App::import('Vendor', 'mobile-detect', array('file'=> 'mobile-detect'.DS.'Mobile_Detect.php'));
+App::import('Vendor', 'browscap', array('file'=>'Browser.php'));
 class AppController extends Controller 
 {
   var $components = array('Auth', 'RequestHandler', 'Utils', 'Zend.Amf');
@@ -48,6 +49,10 @@ class AppController extends Controller
   {
     $this->Auth->logout();
   }
+
+
+
+
 
 }
 

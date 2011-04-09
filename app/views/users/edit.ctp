@@ -66,11 +66,12 @@
     		<hr />
                     <h4 class="table-caption">&nbsp;&nbsp;&nbsp;EDIT MY PICTURE </h4>
                     <div class="table-profile-edit">
-        				<div class="left-layer41">
+        				<div class="left-layer41a">
            					<? 	echo $form->create('User', array('type' => 'file', 'action'=>'edit_pic'));
 								echo $form->file('photo', array('style'=>'height:25px;')); ?>
-                    	</div>
-	      				<div class="left-layer41">
+                    	
+                        </div>
+	      				<div class="left-layer41b">
   							<?	echo $form->submit('SAVE!');
 								echo $form->end();
 							?>

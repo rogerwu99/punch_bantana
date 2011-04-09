@@ -921,3 +921,18 @@ background:#fff
 {
 background:#FFFFE6
 }
+.fb_button{
+	float:right;
+	margin-top:10px;
+}
+#merchant_login{
+	float:right;
+	margin-top:-35px;
+	margin-right:-25px;
+}
+#tag_line{
+	margin-left:60px;
+}
+.big_mobile_signup{
+	width:217px;
+}

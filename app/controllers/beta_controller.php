@@ -294,5 +294,27 @@ class BetaController extends AppController
 		}
 		
 	}
+	function extract_products_from_agent_string()
+	{
+		$agent = $_SERVER['HTTP_USER_AGENT'];
+	//	echo $agent;
+  	$found = array();
+  $pattern  = "([^/[:space:]]*)" . "(/([^[:space:]]*))?";
+  $pattern .= "([[:space:]]*\[[a-zA-Z][a-zA-Z]\])?" . "[[:space:]]*";
+  $pattern .= "(\\((([^()]|(\\([^()]*\\)))*)\\))?" . "[[:space:]]*";
+//echo $agent;
+  while( strlen($agent) > 0 )
+  {
+    if ($l = ereg($pattern, $agent, $a = array()))
+    {
+//		var_dump($a);
+      array_push($found, array("product" => $a[1], "version" => $a[3], "comment" => $a[6]));
+      $agent = substr($agent, $l);
+    }
+    else $agent = "";		// abort parsing, no match
+  }
+//var_dump($found);
+  return $found;
+}
 }
 ?>

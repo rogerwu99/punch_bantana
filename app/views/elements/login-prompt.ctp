@@ -1,4 +1,4 @@
-<div class="sidebar5" id="consumer" style="display:block;">
+	<div class="sidebar5" id="consumer" style="display:block;">
 <?php 
 if ($c == 'Pages'){
 	$page = $a['pass'][0]; 
@@ -13,19 +13,19 @@ $page = 'home';
 
 	?>
 <?  if ($page == 'home'): ?>
-<div style="float:right;">
+<div style="float:right;">	
 	<div id="logging_in" style="display:block">
 	<span class="bodycopy">
 			<? echo $form->create('User',array('controller'=>'users','action'=>'login')); ?>
 			Email:
-			<? echo $form->input('Auth.username', array('div'=>false,'label'=>false, 'style'=>'width:100px')); ?>
+			<? echo $form->input('Auth.username', array('div'=>false,'label'=>false, 'style'=>'width:100px','class'=>'big_mobile')); ?>
 			Password:
-			<? 	echo $form->input('Auth.password', array('div'=>false,'type' => 'password', 'label'=>false, 'style'=>'width:100px'));
-				echo $form->submit('Sign In!', array('name'=>'submit', 'div'=>false));
+			<? 	echo $form->input('Auth.password', array('div'=>false,'type' => 'password', 'label'=>false, 'style'=>'width:100px', 'class'=>'big_mobile')); ?>
+			<?	echo $form->submit('Sign In!', array('name'=>'submit', 'div'=>false));
 				echo $form->end();
 			?>
-    </span>
-	<span style="float:right;margin-top:10px;"><?		echo $html->link($html->image("signin_facebook.gif", array('alt'=>'Login With FB', 'width'=>'150', 'height'=>'22', 'border'=>'0')),array('controller'=>'users', 'action'=>'facebookLogin'), array('escape'=>false));	
+  </span>  </span>
+	<span class="fb_button"><?		echo $html->link($html->image("signin_facebook.gif", array('alt'=>'Login With FB', 'width'=>'150', 'height'=>'22', 'border'=>'0')),array('controller'=>'users', 'action'=>'facebookLogin'), array('escape'=>false));	
 	?>
 	<?	//echo $html->link('Sign up','/users/register'); ?>
 	</span>

@@ -1,3 +1,4 @@
+<?php if (!$mobile): ?>
 <?php if(!empty($_Auth['User'])): ?>
 	<div class="sidebar5" id="logged_in">
 	<div style="float:right;padding-top:2px;"class="bodycopy">
@@ -68,6 +69,9 @@
 	</div>
 <?php endif; ?>	
 <div id="clear"></div>
+<? else: ?>
+this is a mobile site
+<? endif; ?>
 	
 
 

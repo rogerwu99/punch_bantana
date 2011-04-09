@@ -12,16 +12,15 @@
 		echo $javascript->link('map.js');
 		?>
 	    </div>
-		
-		<article>
+	<div class="mobile_map">	
+		<center><article>
       <p>Your location: <span id="status"><? echo $simplegeo_address; ?>
 	</span></p>
-   	<div id="right_col" style="float:right;width:200px;height:400px;"></div>
-	
+   
    </article>
-	
 	<? echo $html->link('Continue to My Rewards',array('controller'=>'users','action'=>'view_my_profile')); ?>
-    
+   <br /><br /> </center>
+	</div>
     
 	</div>
 	</div>
@@ -42,7 +41,8 @@
 		echo $javascript->link('clock.js');
 		?>
 		</div>
-		
+		<div class="mobile_map">	
+		<center>
 		<article>
       <span id="status_1"><? echo $simplegeo_address; ?>
 	</span>
@@ -50,7 +50,8 @@
    </article>
 	
 	<? echo $html->link('Continue to My Rewards',array('controller'=>'users','action'=>'view_my_profile')); ?>
-    
+    <br /><br /></center>
+    </div>
    
 
 

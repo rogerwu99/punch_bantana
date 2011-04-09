@@ -1,6 +1,6 @@
-<div style="margin-left:60px;">
+<div id="tag_line">
 	<h4>Smart Rewards for the Smart Customer</h4>
-	<div class="smallercopy" style="float:right;margin-top:-35px;margin-right:-25px;">
+	<div class="smallercopy" id="merchant_login">
 	<? echo $html->link('Merchant Login',array('controller'=>'pages','action'=>'business')); ?>
 	</div>
 </div>

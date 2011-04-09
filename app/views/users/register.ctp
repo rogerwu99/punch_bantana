@@ -21,13 +21,13 @@
             	<div class="bodycopy_reg">Sign up</div>
 				<?php echo $form->create('User', array('action' => 'register')); ?>
                   <div class="smallercopy_reg">Name</div>
-                  <div class='smallercopy_err' style='color:red'><?php echo $form->input('name', array('label'=>false, 'class'=>'required', 'style'=>'width:217px')); ?></div>
+                  <div class='smallercopy_err' style='color:red'><?php echo $form->input('name', array('label'=>false, 'class'=>'big_mobile_signup' )); ?></div>
                   <div class="smallercopy_reg">Email Address</div>
- 				  <div class='smallercopy_err' style='color:red'><?php echo $form->input('email', array('class'=>'required', 'title'=>'Please enter a valid email address', 'style'=>'width:217px', 'label'=>false)); ?></div>
+ 				  <div class='smallercopy_err' style='color:red'><?php echo $form->input('email', array('class'=>'big_mobile_signup', 'title'=>'Please enter a valid email address',  'label'=>false)); ?></div>
 			      <div class="smallercopy_reg">Password</div>
- 				  <div class='smallercopy_err' style='color:red'><?php echo $form->input('new_password', array('type' => 'password', 'label'=>false, 'class'=>'required validate-password', 'style'=>'width:217px', 'title'=>'Enter a password greater than 6 characters')); ?></div>
+ 				  <div class='smallercopy_err' style='color:red'><?php echo $form->input('new_password', array('type' => 'password', 'label'=>false, 'class'=>'big_mobile_signup', 'title'=>'Enter a password greater than 6 characters')); ?></div>
                   <div class="smallercopy_reg">Re-type Password</div>
-                  <div class='smallercopy_err' style='color:red'><?php echo $form->input('confirm_password', array('label'=>false, 'type' => 'password', 'class'=>'required validate-password-confirm', 'style'=>'width:217px','title'=>'Enter the same password for confirmation')); ?></div>
+                  <div class='smallercopy_err' style='color:red'><?php echo $form->input('confirm_password', array('label'=>false, 'type' => 'password', 'class'=>'big_mobile_signup', 'title'=>'Enter the same password for confirmation')); ?></div>
                   <div class="smallercopy_reg">
                   	<div class="left-layer51">Gender</div>
 					<div class="left-layer52">

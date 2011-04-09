@@ -6,8 +6,29 @@
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"></META>
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" ></link>
  	
-	<?php echo $_SERVER['HTTP_USER_AGENT'];?> 
- 	<?php echo $scripts_for_layout ?>
+<?php
+	$mobile = false;
+	$regex_match="/(nokia|iphone|android|motorola|^mot\-|softbank|foma|docomo|kddi|up\.browser|up\.link|";
+	$regex_match.="htc|dopod|blazer|netfront|helio|hosin|huawei|novarra|CoolPad|webos|techfaith|palmsource|";
+	$regex_match.="blackberry|alcatel|amoi|ktouch|nexian|samsung|^sam\-|s[cg]h|^lge|ericsson|philips|sagem|wellcom|bunjalloo|maui|";
+	$regex_match.="symbian|smartphone|midp|wap|phone|windows ce|iemobile|^spice|^bird|^zte\-|longcos|pantech|gionee|^sie\-|portalmmm|";
+	$regex_match.="jig\s browser|hiptop|^ucweb|^benq|haier|^lct|opera\s*mobi|opera\*mini|320x320|240x320|176x220";
+	$regex_match.=")/i";
+	//echo $_SERVER['HTTP_USER_AGENT'];
+		if( isset($_SERVER['HTTP_X_WAP_PROFILE']) or isset($_SERVER['HTTP_PROFILE']) or preg_match($regex_match, strtolower($_SERVER['HTTP_USER_AGENT']))){
+		$mobile = true;
+		//echo 'mobile';  
+		Configure::write('mobile',true);
+
+	}
+	else {
+		$mobile = false;
+			Configure::write('mobile',false);
+
+	}
+	?>
+    <? if (!Configure::read('mobile')): ?>
+    <?php echo $scripts_for_layout ?>
 	<?php echo $html->css('style-log'); ?>
 	<?php echo $html->css('type'); ?>
 	
@@ -37,6 +58,26 @@
 	<!--[if IE 8]>
 	  <?php //echo $html->css('ie7'); ?>
 	<![endif]-->
+    <? else : ?>
+    	<?php echo $scripts_for_layout ?>
+		<?php echo $html->css('style-log-mobile'); ?>
+		<?php //echo $html->css('type'); ?>
+		<?php //echo $html->css('reset.css'); ?>
+		<?php //echo $html->css('text.css'); ?>
+		<?php //echo $html->css('grid_fluid.css'); ?>
+		<?php echo $html->css('layout-mobile.css'); ?>
+		<?php //echo $html->css('nav.css'); ?>
+		<?php echo $html->css('table-in-css-mobile.css'); ?>
+	
+		<?php print $html->charset('UTF-8'); ?>
+		<?php print $javascript->link('prototype'); ?>
+    	<?php print $javascript->link('scriptaculous.js?load=effects,slider'); ?>
+       
+
+		<? //echo $javascript->link('http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js'); ?>
+	    <? //echo $javascript->link('http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.js'); ?>
+    	<? //echo $html->css('http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.css'); ?>
+    <? endif; ?>
     <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -64,13 +105,13 @@
               <div id="topcenterborderwrapper">
                 <div id="topcenterborder"></div>
               </div>
-             <div id="toprightcorner"></div>
+           	  <div id="toprightcorner"></div>
             </div>
             <div id="maincontentwrapper">
               <div id="shadowleft"></div>
-              <div id="contentwrapper">
+            	 <div id="contentwrapper">
 		       	<div id="contentwrapper"><div id="leftcolumn">
-		    	<div class="container_12"><div class="grid_12">
+	    	<div class="container_12"><div class="grid_12">
 					<div class="nav">
 				   	<?php if(empty($_Auth['User'])): ?>
 						 <?php echo $this->element('login-prompt', array('c'=>$this->name, 'a'=>$this->params, 'deny'=>'nope')); ?>
@@ -81,7 +122,10 @@
 				<?php else: ?>
             			<?php echo $this->element('login');?>
 					</div>
+						 <? if (!Configure::read('mobile')): ?>
 						<?php echo $this->element('logo'); ?>
+                         <? endif; ?>
+						
 				</div></div>		
 	            <?php echo $content_for_layout; ?>
 				<?php endif; ?>
