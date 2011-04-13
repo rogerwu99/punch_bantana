@@ -1,4 +1,4 @@
-<div id="leftcolumn" class="bodycopy">
+<div id="leftcolumn_user" class="bodycopy">
 <?php 
 		echo $javascript->link('http://maps.google.com/maps/api/js?sensor=false');
 		echo $javascript->link('new_location.js');
@@ -6,6 +6,7 @@
      				
            <div class="base-layer">
                     <h4 class="table-caption">&nbsp;&nbsp;&nbsp;ACTIVE REWARDS <? //echo $ajax->link('(Add)', array('controller'=>'merchants','action'=>'rewards'), array('update'=>'new_reward')); ?></h4>
+                    <h4 class="table-caption-mobile"><? echo $html->link('ACTIVE REWARDS',array('controller'=>'users','action'=>'my_rewards'));?></h4>
                     <div class="table-row-head">&nbsp;
         				<div class="left-layer24">Reward</div>
 				        <div class="left-layer22">Pts</div>
@@ -21,8 +22,9 @@
                         <? if (empty($mer_array_no_dupes)): ?>
                         You have no rewards yet!
                         <? endif; ?>
-				        <?php foreach ($mer_array_no_dupes as $key=>$value){
-							echo 'Active Points at: '.$mer_array_no_dupes[$key]['Merchant']['name'].'   ';
+				        <?php foreach ($mer_array_no_dupes as $key=>$value){ ?>
+						<div class='table-row-odd'>&nbsp;
+                        <?	echo 'Active Points at: '.$mer_array_no_dupes[$key]['Merchant']['name'].'   ';
 							for ($i=0;$i<sizeof($num_points);$i++){
 								if ($num_points[$i]->merchant_id==$mer_array_no_dupes[$key]['Merchant']['id']){
 									for ($j=0;$j<$num_points[$i]->number;$j++){
@@ -31,7 +33,9 @@
 									break;
 								}
 							}
-							foreach ($mer_array_no_dupes[$key]['Reward'] as $key1=>$value1){
+						?>	
+						</div>	
+						<?	foreach ($mer_array_no_dupes[$key]['Reward'] as $key1=>$value1){
 							if ($mer_array_no_dupes[$key]['Reward'][$key1]['deleted']==0):
 							$div_name = 'rewdiv_'.$mer_array_no_dupes[$key]['Reward'][$key1]['id'];
 						?>
@@ -59,6 +63,8 @@
 						}?>
     				</div>
  				    <br /><h4 class="table-caption">&nbsp;&nbsp;&nbsp;MY REWARDS <? //echo $ajax->link('(Add)', array('controller'=>'merchants','action'=>'locations'),array('update'=>'new_location')); ?></h4>
+                     <h4 class="table-caption-mobile"><? echo $html->link('MY REWARDS',array('controller'=>'users','action'=>'my_redeemed_rewards'));?></h4>
+                   
         			 <div class="table-row-head">&nbsp;
         				<div class="left-layer81">Location</div>
 				        <div class="left-layer84">Reward</div>
@@ -90,6 +96,8 @@
                    	</div> 
 					<br />
     				<h4 class="table-caption">&nbsp;&nbsp;&nbsp;MY SPOTS <? //echo $ajax->link('(Add)', array('controller'=>'merchants','action'=>'locations'),array('update'=>'new_location')); ?></h4>
+                     <h4 class="table-caption-mobile"><? echo $html->link('MY SPOTS',array('controller'=>'users','action'=>'my_spots'));?></h4>
+                   
         			<div class="table-row-head">&nbsp;
         				<div class="left-layer71">Name</div>
  				        <div class="left-layer94">Address</div>

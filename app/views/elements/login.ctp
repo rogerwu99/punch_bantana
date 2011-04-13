@@ -1,7 +1,7 @@
-<?php if (!$mobile): ?>
 <?php if(!empty($_Auth['User'])): ?>
-	<div class="sidebar5" id="logged_in">
-	<div style="float:right;padding-top:2px;"class="bodycopy">
+	<span class="bodycopy">
+	<span class="sidebar5" id="logged_in">
+	<span class="sidebar_desktop_adjustment">
 		<?php 
 			if ($_Auth['User']['fb_pic_url']==''):  
 				echo $html->image('/img/uploads/'.$_Auth['User']['path'], array('alt' => 'Pic', 'width' => 50, 'height' => 50, 'class' => 'top', 'align'=>'left'));
@@ -62,16 +62,10 @@
             <strong>|</strong>
         	<?php echo $html->link('Logout', array('controller'=>'merchants', 'action'=>'logout')); ?>
 		<? endif; ?>		
-	</div>
+	</span>
 	
-	
+	</span>
     
-	</div>
+	</span>
 <?php endif; ?>	
-<div id="clear"></div>
-<? else: ?>
-this is a mobile site
-<? endif; ?>
-	
-
-
+<div class="clear"></div>

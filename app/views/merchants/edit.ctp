@@ -1,9 +1,10 @@
 <div id="leftcolumn" class="bodycopy">
      <div class="base-layer">
+     <? //var_dump($user); ?>
                  	<h4 class="table-caption">&nbsp;&nbsp;&nbsp;EDIT INFORMATION </h4>
               		<div class="table-profile-edit-settings">
                     	<div class="left-layer41">
-        				<? echo $form->create('Merchant', array('action'=>'edit')); ?>
+        				<? echo $form->create('Merchant', array('controller'=>'merchant','action'=>'edit')); ?>
 						Contact Name:</div>
                         <div class="left-layer41">
 						<?php echo $form->input('Name', array('error' => array('required' => 'Name is required'), 'label' => false, 'class' => 'text_field_edit','style'=>'width:217px','value'=>$user['name'])); ?>

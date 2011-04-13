@@ -1,5 +1,9 @@
              
          <? if (!$saved): ?>
+         <? $session->flash(); ?>
+       <? foreach($errors as $key=>$value){ ?>
+       <div class='smallercopy_err' style='color:red'> 	<? echo $errors[$key]; ?> </div>
+	   <? } ?>
            <?php $points=range(0,100); 
 		
 		echo $form->create('Merchant');
@@ -45,14 +49,15 @@
         
 		
          <? else: ?>
-        		<div class="left-layer14"><? echo $results['Reward']['description']; ?></div>
+         <div class="table-row-even">&nbsp;
+        		<div class="left-layer24"><? echo $results['Reward']['description']; ?></div>
 				<div class="left-layer22"><? echo $results['Reward']['threshold']; ?></div>
 				<div class="left-layer22"><? echo date('m/d/y',strtotime($results['Reward']['start_date'])); ?></div>
-                <? $end_date = (is_null($results['Reward']['end_date'])) ? 'none' : date('Ymd',strtotime($results['Reward']['end_date'])); ?>
+                <? $end_date = (is_null($results['Reward']['end_date'])) ? 'none' : date('m/d/y',strtotime($results['Reward']['end_date'])); ?>
 				<div class="left-layer22"><? echo $end_date; ?></div>	
-				<div class="left-layer22">&nbsp;</div>	
+				<div class="left-edit-layer22">&nbsp;</div>	
 				<div class="right-layer11">&nbsp;</div>	
-				
+	</div>                
 	
     
          <? endif; ?>

@@ -32,7 +32,7 @@ class BetaController extends AppController
 				// create a login screen for mobile only
 			}
 			else {
-				echo $id;
+				//echo $id;
 				//echo 'yes id, yes logged in';
 			
 				//do the lat long check
@@ -72,7 +72,8 @@ class BetaController extends AppController
 								
 				}
 				else {
-					echo 'no redeem';
+					//echo 'no redeem';
+					$this->set('redeem',false);
 				}
 			
 			}
@@ -105,7 +106,7 @@ class BetaController extends AppController
 			$this->set('lat_center',sprintf("%.4f",$lat_center));
 			$this->set('long_center',sprintf("%.4f",$long_center));
 			$db_results2 = $this->Merchant->find('first',array('conditions'=>array('Merchant.id'=>$db_results['Location']['merchant_id'])));
-			if ($distance <= 0.25){
+			if ($distance <= 0.5){
 				
 				$db_results1 = $this->Punchcards->find('first',array('conditions'=>array('Punchcards.user_id'=>$this->Auth->getUserId(),
 																						 'Punchcards.location_id'=>$db_results['Location']['id']
@@ -237,7 +238,7 @@ class BetaController extends AppController
 			$db_results2 = $this->Merchant->find('first',array('conditions'=>array('Merchant.id'=>$db_results['Location']['merchant_id'])));
 			$db_results4 = $this->Reward->find('first',array('conditions'=>array('Reward.id'=>$this->Session->read('redeem'))));
 			
-			if ($distance <= 0.25){
+			if ($distance <= 0.5){
 				$user = $this->Auth->getUserInfo();
 				$visit_tally = 0;
 				// ONE MORE CHECK TO MAKE SURE YOU CAN REALLY REDEEM
@@ -292,29 +293,8 @@ class BetaController extends AppController
 			$this->set('time',time());	
 			$this->set('results',$db_results4);
 		}
+		$this->Session->delete('redeem');
 		
 	}
-	function extract_products_from_agent_string()
-	{
-		$agent = $_SERVER['HTTP_USER_AGENT'];
-	//	echo $agent;
-  	$found = array();
-  $pattern  = "([^/[:space:]]*)" . "(/([^[:space:]]*))?";
-  $pattern .= "([[:space:]]*\[[a-zA-Z][a-zA-Z]\])?" . "[[:space:]]*";
-  $pattern .= "(\\((([^()]|(\\([^()]*\\)))*)\\))?" . "[[:space:]]*";
-//echo $agent;
-  while( strlen($agent) > 0 )
-  {
-    if ($l = ereg($pattern, $agent, $a = array()))
-    {
-//		var_dump($a);
-      array_push($found, array("product" => $a[1], "version" => $a[3], "comment" => $a[6]));
-      $agent = substr($agent, $l);
-    }
-    else $agent = "";		// abort parsing, no match
-  }
-//var_dump($found);
-  return $found;
-}
 }
 ?>

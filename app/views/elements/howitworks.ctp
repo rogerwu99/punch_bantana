@@ -7,6 +7,7 @@
 <div class="lightbox_content_user" id="reg_content">
 <? echo $this->requestAction('/users/register',array('return')); ?>
 </div>
+
 <div class="consumer-background" id="consumer" style="display:block;">
 	<div class="lightbox_content_user_block_1">
 		Clutter Free!<br />

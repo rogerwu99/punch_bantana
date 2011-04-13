@@ -13,6 +13,27 @@ class Reward extends AppModel {
     							'className' => 'Merchant',
     							'unique' => false,
   							));
+	var $validate = array(
+    	'description' => array(
+    							'rule'=>'notEmpty',
+	   							'message' => 'Must have a description.',
+    							'last'=>true,
+							  ),
+    	/*'end_date' => array(
+    							'rule'=>array('dateorder','start_date'),
+	   							'message' => 'End date must be after start date.',
+    							'last'=>true,
+							  ),
+		*/
+		'threshold' => array
+					(
+					'rule' => array('comparison', '>=', 1),
+					'message' => 'Must have at least one point.'
+					)
+  		);
+    
+
+
 
 	function getRewards($id=null) {
 		
@@ -20,6 +41,26 @@ class Reward extends AppModel {
 	return $this->Merchant->find('all',array('conditions'=>array('Merchant.id'=>$id)));
 	
 	 }
+	 
+	 function dateorder($field=array(), $compare_field=null ) 
+    {
+		foreach( $field as $key => $value )
+        {
+            $v1 = date('Ymd',strtotime($value));
+            $v2 = date('Ymd',strtotime($this->data[$this->name][ $compare_field ]));                 
+            if($v1 < $v2) 
+            {
+                return false;
+            } 
+            else 
+            {
+                continue;
+            }
+        }
+        return true;
+    } 
+	 
+	 
 
 /*   
 

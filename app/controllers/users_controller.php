@@ -411,8 +411,181 @@ class UsersController extends AppController {
 	    }
 	}
 	function my_rewards(){
+		if(is_null($this->Auth->getUserId())){
+       		Controller::render('/deny');
+        }
+		else {
+			$user = $this->Auth->getUserInfo();
+			$this->set(compact('user'));
+			$loc_array=array();
+			$mer_array=array();
+			$mer_id_array=array();
+			$mer_array_no_dupes = array();
+			$num_points = array();
+			$dupe= false;
+			$db_results=$this->Punchcard->find('all',array('conditions'=>array('Punchcard.user_id'=>$user['id'])));
+			if (!empty($db_results)) {
+				foreach ($db_results as $key=>$value){
+					$loc = $this->Location->find('first',array('conditions'=>array('Location.id'=>$db_results[$key]['Punchcard']['location_id'])));
+					$mer = $this->Merchant->find('first',array('conditions'=>array('Merchant.id'=>$loc['Location']['merchant_id'])));
+					$loc['Location']['visits']=$db_results[$key]['Punchcard']['current_punch'];
+					array_push($loc_array,$loc);
+					array_push($mer_array,$mer);
+					if (empty($mer_id_array)){
+						array_push($mer_id_array,$mer['Merchant']['id']);
+						array_push($mer_array_no_dupes,$mer);
+						$visits->merchant_id = $mer['Merchant']['id'];
+						$visits->number = $db_results[$key]['Punchcard']['current_punch'];
+						$visits->location_id = $db_results[$key]['Punchcard']['location_id'];
+						array_push($num_points,$visits);
+					}
+					else {
+						for ($i=0;$i<sizeof($mer_id_array);$i++){
+							if ($mer['Merchant']['id']==$mer_id_array[$i]){
+								for ($j=0;$j<sizeof($num_points);$j++){
+									if ($num_points[$j]->merchant_id == $mer['Merchant']['id']){
+										$num_points[$j]->number += $db_results[$key]['Punchcard']['current_punch']; 
+										$num_points[$j]->number -= $db_results[$key]['Punchcard']['last_redemption'];
+										break;
+									}
+								}
+								$dupe = true;
+								break;
+							}
+						}
+						if (!$dupe) {
+							array_push($mer_id_array,$mer['Merchant']['id']);
+							array_push($mer_array_no_dupes,$mer);
+							$visits->merchant_id = $mer['Merchant']['id'];
+							$visits->number = ($db_results[$key]['Punchcard']['current_punch'] - $db_results[$key]['Punchcard']['last_redemption']);
+							 
+							$visits->location_id = $db_results[$key]['Punchcard']['location_id'];
+							array_push($num_points,$visits);
+						}
+					}
+					$dupe = false;
+				}
+				$this->set('num_points',$num_points);
+				$this->set('loc_array',$loc_array);
+				$this->set('mer_array',$mer_array);
+				$this->set('mer_array_no_dupes',$mer_array_no_dupes);
+			}
+			else {
+				$this->set('none',true);
+			}
+			
+		$this->render();
+		}
+	}
+	function my_redeemed_rewards(){
+		if(is_null($this->Auth->getUserId())){
+       		Controller::render('/deny');
+        }
+		else {
+			$user = $this->Auth->getUserInfo();
+			$this->set(compact('user'));
+			
+			$db_results2 = $this->Redemption->find('all',array('conditions'=>array('Redemption.user_id'=>$this->Auth->getUserId())));
+			$rewards_array =array();
+			foreach ($db_results2 as $key=>$value){
+				$reward = $this->Reward->find('first',array('conditions'=>array('Reward.id'=>$db_results2[$key]['Redemption']['reward_id'])));
+				$location = $this->Location->find('first',array('conditions'=>array('Location.id'=>$db_results2[$key]['Redemption']['location_id'])));
+				$prize='';
+				$prize->description = $reward['Reward']['description'];
+				$prize->threshold = $reward['Reward']['threshold'];
+				$prize->merchant = $reward['Merchant'][0]['name'];
+				$prize->location_des = $location['Location']['description'];
+				$prize->location = $location['Location']['address'];
+				$prize->zip = $location['Location']['zip'];
+				$prize->redeem_date = $db_results2[$key]['Redemption']['created'];
+				$prize->key=$key;
+				array_push($rewards_array,$prize);
+			}
+			$this->set('redemptions',$db_results2);
+			$this->set('rewards',$rewards_array);
+			
+			
+			$this->render();
+		}
 	}
 	function my_spots(){
+		if(is_null($this->Auth->getUserId())){
+       		Controller::render('/deny');
+        }
+		else {
+			$root_url =ROOT_URL;
+			$user = $this->Auth->getUserInfo();
+			$image_link = ''; 
+			$image_can_change = false;
+			if ($user['fb_pic_url']==''){
+				$image_link=$root_url.'/img/uploads/'.$user['path'];
+				$image_can_change = true;
+			}
+			else {
+				$image_link = $user['fb_pic_url'];
+			}
+			$this->set('image_can_change', $image_can_change);
+			$this->set('image_link', $image_link);
+			$this->set(compact('user'));
+			$loc_array=array();
+			$mer_array=array();
+			$mer_id_array=array();
+			$mer_array_no_dupes = array();
+			$num_points = array();
+			$dupe= false;
+			$db_results=$this->Punchcard->find('all',array('conditions'=>array('Punchcard.user_id'=>$user['id'])));
+			if (!empty($db_results)) {
+				foreach ($db_results as $key=>$value){
+					$loc = $this->Location->find('first',array('conditions'=>array('Location.id'=>$db_results[$key]['Punchcard']['location_id'])));
+					$mer = $this->Merchant->find('first',array('conditions'=>array('Merchant.id'=>$loc['Location']['merchant_id'])));
+					$loc['Location']['visits']=$db_results[$key]['Punchcard']['current_punch'];
+					array_push($loc_array,$loc);
+					array_push($mer_array,$mer);
+					if (empty($mer_id_array)){
+						array_push($mer_id_array,$mer['Merchant']['id']);
+						array_push($mer_array_no_dupes,$mer);
+						$visits->merchant_id = $mer['Merchant']['id'];
+						$visits->number = $db_results[$key]['Punchcard']['current_punch'];
+						$visits->location_id = $db_results[$key]['Punchcard']['location_id'];
+						array_push($num_points,$visits);
+					}
+					else {
+						for ($i=0;$i<sizeof($mer_id_array);$i++){
+							if ($mer['Merchant']['id']==$mer_id_array[$i]){
+								for ($j=0;$j<sizeof($num_points);$j++){
+									if ($num_points[$j]->merchant_id == $mer['Merchant']['id']){
+										$num_points[$j]->number += $db_results[$key]['Punchcard']['current_punch']; 
+										$num_points[$j]->number -= $db_results[$key]['Punchcard']['last_redemption'];
+										break;
+									}
+								}
+								$dupe = true;
+								break;
+							}
+						}
+						if (!$dupe) {
+							array_push($mer_id_array,$mer['Merchant']['id']);
+							array_push($mer_array_no_dupes,$mer);
+							$visits->merchant_id = $mer['Merchant']['id'];
+							$visits->number = ($db_results[$key]['Punchcard']['current_punch'] - $db_results[$key]['Punchcard']['last_redemption']);
+							 
+							$visits->location_id = $db_results[$key]['Punchcard']['location_id'];
+							array_push($num_points,$visits);
+						}
+					}
+					$dupe = false;
+				}
+				$this->set('num_points',$num_points);
+				$this->set('loc_array',$loc_array);
+				$this->set('mer_array',$mer_array);
+				$this->set('mer_array_no_dupes',$mer_array_no_dupes);
+			}
+			else {
+				$this->set('none',true);
+			}
+			
+			$this->render();
+		}
 	}
 	function user_feedback(){
 		//echo 'start';

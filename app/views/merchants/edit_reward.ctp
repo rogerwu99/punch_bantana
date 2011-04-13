@@ -2,6 +2,10 @@
 
 <?php $div_name = 'div_'.$div_id; 
 	if ($editing): ?>
+     <? $session->flash(); ?>
+       <? foreach($errors as $key=>$value){ ?>
+       <div class='smallercopy_err' style='color:red'> 	<? echo $errors[$key]; ?> </div>
+	   <? } ?>
 <div id="<? echo $div_name; ?>">         
 <?php echo $form->create('Reward'); ?>
 	<div class="left-layer24">
@@ -51,11 +55,13 @@
 </div>
 
 <? else: ?>
+<? //var_dump($results); ?>
+  <div class="table-row-odd">&nbsp;
 	<div class="left-layer24"><? echo $results['Reward']['description'];?></div>
 	<div class="left-layer22"><? echo $results['Reward']['threshold']; ?></div>
-	<div class="left-layer22"><? echo $results['Reward']['start_date']; ?></div>
-	<? $end_date = (is_null($results['Reward']['end_date'])) ? 'none' : date('Ymd',strtotime($reults['Reward']['end_date'])); ?>
-	<div class="left-layer22"><? echo $end_date; ?></div>
-    
+	<div class="left-layer22"><? echo date('m/d/y',strtotime($results['Reward']['start_date'])); ?></div>
+	<? $end_date = (is_null($results['Reward']['end_date'])) ? 'none' : date('m/d/y',strtotime($results['Reward']['end_date'])); ?>
+    <div class="left-layer22"><? echo $end_date; ?></div>
+    </div>
     
 <? endif; ?>

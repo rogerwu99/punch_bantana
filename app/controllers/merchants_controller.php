@@ -211,6 +211,10 @@ class MerchantsController extends AppController {
         	Controller::render('/deny');
         }
 		else {
+			
+			// ACTIVE REWARDS ONLY 
+			
+			
 		//	$user =($this->Auth->getUserInfo());
 			$rewards = $this->Reward->getRewards($this->Auth->getUserId());
 			$this->set('reward_list',$rewards[0]['Reward']);
@@ -411,8 +415,9 @@ class MerchantsController extends AppController {
           	Controller::render('/deny');
         }
 		else {
+			
 		if (!empty($this->data)){
-			//var_dump($this->data);
+		//	var_dump($this->data);
 			$parent = $this->Auth->getUserInfo();
 			$reward = $this->data['Merchant']['reward'];
 			$points = $this->data['Merchant']['points'];
@@ -430,21 +435,39 @@ class MerchantsController extends AppController {
 			$this->data['Reward']['threshold']=$points;
 			$this->data['Merchant']['id']=$this->Auth->getUserId();
 			if ($start=="Now") $starting = date('Ymd');
-			else $starting = date('Y-m-d',$start_year.'-'.$start_month.'-'.$start_date);
+			else $starting = date('Ymd',strtotime($start_month.' '.$start_date.' '.$start_year));
 			$this->data['Reward']['start_date']=$starting;
-			if ($expire!="No") $this->data['Reward']['end_date'] = $expire_year.' '.$expire_month.' '.$expire_date;
+			if ($expire!="No") $this->data['Reward']['end_date'] = date('Ymd',strtotime($expire_month.' '.$expire_date.' '.$expire_year));
 			$this->set('confirm','true');
 			$this->Reward->set($this->data);
 			// validate data
 			if ($this->Reward->validates()){
 				$this->Reward->save();
 				$results = $this->Reward->read(null,$this->Reward->id);
-		//		var_dump($results);
+				//var_dump($results);
 				$this->set(compact('results'));
 				$this->set('saved',true);
 			}
 			else {
 				$this->set('errors', $this->Reward->validationErrors);
+				$months = array(
+							"Jan"=>"Jan",
+							"Feb"=>"Feb",
+							"Mar"=>"Mar",
+							"Apr"=>"Apr",
+							"May"=>"May",
+							"Jun"=>"Jun",
+							"Jul"=>"Jul",
+							"Aug"=>"Aug",
+							"Sep"=>"Sep",
+							"Oct"=>"Oct",
+							"Nov"=>"Nov",
+							"Dec"=>"Dec"
+							);
+			$this->set(compact('months'));
+			$this->set('dates',range(1,31));
+			$this->set('years',range((int)date('Y'),2020));
+			$this->render();
 			}	
 		}
 		else {
@@ -476,23 +499,55 @@ class MerchantsController extends AppController {
 			if ($rew_data['Merchant'][0]['id']!=$this->Auth->getUserId()){
 				Controller::render('/deny');
 			}
-			else {		
+			else {
+//				var_dump($this->data);		
 				$start_month=$this->data['Reward']['smonth'];
-				$start_date=(int)$this->data['Reward']['sdate']+1;
+				$start_date=$this->data['Reward']['sdate']+1;
 				$start_year=$this->data['Reward']['syear']+date('Y');
 				$expire=$this->data['Reward']['expires'];
 				$expire_month=$this->data['Reward']['emonth'];
 				$expire_date=$this->data['Reward']['edate']+1;
 				$expire_year=$this->data['Reward']['eyear']+date('Y');
-				$starting = date('Ymd',strtotime($start_date.' '.$start_month.' '.$start_year));
-				if ($expire!="No") $end_date = $expire_year.' '.$expire_month.' '.$expire_date;
-				$this->Reward->set(array(
+				$thresh = $this->data['Reward']['threshold'];			
+				$starting = date('Ymd',strtotime($start_month.' '.$start_date.' '.$start_year));
+	//			echo $starting;
+				if ($expire!="No") $end_date = date('Ymd',strtotime($expire_month.' '.$expire_date.' '.$expire_year));
+				else $end_date=NULL;
+				$this->data['Reward']['start_date']=$starting;
+				$this->data['Reward']['end_date']=$end_date;
+				$this->data['Reward']['threshold']=$thresh+1;
+	/*			$this->Reward->set(array(
 								   'description'=> $this->data['Reward']['description'],
 								   'threshold'=> $this->data['Reward']['threshold'],
 								   'start_date'=>$starting,
 								   'end_date'=>$end_date
 								   ));
-				$this->Reward->save();
+		*/
+				$this->Reward->set($this->data);
+				if ($this->Reward->validates()){
+					$this->Reward->save();
+				}	
+				else {
+					$this->set('errors', $this->Reward->validationErrors);
+					$months = array(
+							"Jan"=>"Jan",
+							"Feb"=>"Feb",
+							"Mar"=>"Mar",
+							"Apr"=>"Apr",
+							"May"=>"May",
+							"Jun"=>"Jun",
+							"Jul"=>"Jul",
+							"Aug"=>"Aug",
+							"Sep"=>"Sep",
+							"Oct"=>"Oct",
+							"Nov"=>"Nov",
+							"Dec"=>"Dec"
+							);
+					$this->set(compact('months'));
+					$this->set('dates',range(1,31));
+					$this->set('years',range((int)date('Y'),2020));
+					$this->render();
+				}
 			}
 			$results = $this->Reward->read(null,$id);
 			$this->set(compact('results'));
@@ -539,7 +594,79 @@ class MerchantsController extends AppController {
 	function edit(){
 		$user = $this->Auth->getUserInfo();
 		$this->set(compact('user'));
-		
+		if (!empty($this->data)){	
+	/*		if ($this->data['Merchant']['new_password']==''){
+				$this->data['Merchant']['new_password']=$user['password'];
+				$this->data['Merchant']['confirm_password']=$user['password'];
+			}
+		*/	$this->Merchant->read(null,$user['id']);
+			$this->Merchant->set($this->data);
+			if ($this->Merchant->validates()){
+	//			echo 'validate';
+				$this->Merchant->save();
+			}	
+			else {
+		//		echo 'not validate';
+				$this->set('errors', $this->Merchant->validationErrors);
+			}
+		}
+	}
+	function edit_pic(){
+		 if(is_null($this->Auth->getUserId())){
+                       Controller::render('/deny');
+         }
+		if (!empty($this->data)) {
+			//	var_dump($this->data);
+			App::import('Vendor', 'upload');
+	        
+	        
+ 			$typelist=split('/', $_FILES['data']['type']['Merchant']['photo']);
+			$allowed[0]='xxx';
+            $allowed[1]='gif';
+            $allowed[2]='jpg';
+            $allowed[3]='jpeg';
+            $allowed[4]='png';
+            
+			$allowed_val='';
+            $allowed_val=array_search($typelist[1], $allowed);
+
+			if (!$allowed_val){
+				$this->Session->setFlash('<span class="bodycopy" style="color:red;">Profile picture must be gif, jpg or png only.</span>');
+			}
+	        
+	    	else if(!empty($this->data) && $this->data['Merchant']['photo']['size']>0){
+	          
+				$file = $this->data['Merchant']['photo']; 
+	            $handle = new Upload($file);
+
+	            if ($handle->uploaded){
+					if($handle->image_src_x >= 100){
+						$handle->image_resize = true;
+		    			$handle->image_ratio_y = true;
+		    			$handle->image_x = 100;
+		    			
+		    			if($handle->image_y >= 100){
+		    				$handle->image_resize = true;
+			    			$handle->image_ratio_x = true;
+			    			$handle->image_y = 100;
+		    			}
+					}
+	    			$handle->Process('img/uploads');
+				
+				}
+	            if(!is_null($handle->file_dst_name) && $handle->file_dst_name!=''){
+					$user_path = $handle->file_dst_name;
+				}
+               
+  	            $handle->clean();
+	            $this->Merchant->read(null,$this->Auth->getUserId());
+				$this->Merchant->set('path', $user_path);
+  	        	$this->Merchant->save();
+  	        }
+         
+	        $this->redirect(array('action'=>'edit'));
+	        exit;
+	    }
 	}
 	function merchant_feedback(){
 		//echo 'start';
@@ -1000,63 +1127,7 @@ function expressCheckout($step=1,$amt=99.95,$type='co'){
 	
 	
 	
-	function edit_pic(){
-		 if(is_null($this->Auth->getUserId())){
-                       Controller::render('/deny');
-         }
-		if (!empty($this->data)) {
-			//	var_dump($this->data);
-			App::import('Vendor', 'upload');
-	        
-	        
- 			$typelist=split('/', $_FILES['data']['type']['User']['photo']);
-			$allowed[0]='xxx';
-            $allowed[1]='gif';
-            $allowed[2]='jpg';
-            $allowed[3]='jpeg';
-            $allowed[4]='png';
-            
-			$allowed_val='';
-            $allowed_val=array_search($typelist[1], $allowed);
-
-			if (!$allowed_val){
-				$this->Session->setFlash('<span class="bodycopy" style="color:red;">Profile picture must be gif, jpg or png only.</span>');
-			}
-	        
-	    	else if(!empty($this->data) && $this->data['User']['photo']['size']>0){
-	          
-				$file = $this->data['User']['photo']; 
-	            $handle = new Upload($file);
-
-	            if ($handle->uploaded){
-					if($handle->image_src_x >= 100){
-						$handle->image_resize = true;
-		    			$handle->image_ratio_y = true;
-		    			$handle->image_x = 100;
-		    			
-		    			if($handle->image_y >= 100){
-		    				$handle->image_resize = true;
-			    			$handle->image_ratio_x = true;
-			    			$handle->image_y = 100;
-		    			}
-					}
-	    			$handle->Process('img/uploads');
-				
-				}
-	            if(!is_null($handle->file_dst_name) && $handle->file_dst_name!=''){
-					$user_path = $handle->file_dst_name;
-				}
-               
-  	            $handle->clean();
-	            $this->User->read(null,$this->Auth->getUserId());
-				$this->User->set('path', $user_path);
-  	        	$this->User->save();
-  	        }
-         
-	        //$this->redirect(array('controller'=>'beta', 'action'=>'view_my_profile'));
-	        exit;
-	    }
-	}*/
+	*/
 	
 	
 	/*function forgot() {

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 
 <title>MOO Bantana</title>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"></META>
+    <meta name="viewport" content="user-scalable=no, width=device-width" />
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" ></link>
  	
 <?php
@@ -60,15 +61,15 @@
 	<![endif]-->
     <? else : ?>
     	<?php echo $scripts_for_layout ?>
-		<?php echo $html->css('style-log-mobile'); ?>
+		<?php echo $html->css(array('style-log-mobile'),'stylesheet',array('media'=>"only screen and (max-width: 854px)")); ?>
 		<?php //echo $html->css('type'); ?>
 		<?php //echo $html->css('reset.css'); ?>
 		<?php //echo $html->css('text.css'); ?>
 		<?php //echo $html->css('grid_fluid.css'); ?>
-		<?php echo $html->css('layout-mobile.css'); ?>
+		<?php echo $html->css(array('layout-mobile.css'),'stylesheet',array('media'=>"only screen and (max-width: 854px)")); ?>
 		<?php //echo $html->css('nav.css'); ?>
-		<?php echo $html->css('table-in-css-mobile.css'); ?>
-	
+		<?php echo $html->css(array('table-in-css-mobile.css'),'stylesheet',array('media'=>"only screen and (max-width: 854px)")); ?>
+		
 		<?php print $html->charset('UTF-8'); ?>
 		<?php print $javascript->link('prototype'); ?>
     	<?php print $javascript->link('scriptaculous.js?load=effects,slider'); ?>
@@ -113,10 +114,17 @@
 		       	<div id="contentwrapper"><div id="leftcolumn">
 	    	<div class="container_12"><div class="grid_12">
 					<div class="nav">
-				   	<?php if(empty($_Auth['User'])): ?>
-						 <?php echo $this->element('login-prompt', array('c'=>$this->name, 'a'=>$this->params, 'deny'=>'nope')); ?>
+                    <?php if(empty($_Auth['User'])): ?>
+					<? if (!Configure::read('mobile')): ?>
+				   		 <?php echo $this->element('login-prompt', array('c'=>$this->name, 'a'=>$this->params, 'deny'=>'nope')); ?>
                     </div>
 						<?php echo $this->element('logo'); ?>
+                    <? else: ?>    
+						<?php echo $this->element('logo'); ?>
+                    	</div>
+						 <?php echo $this->element('login-prompt', array('c'=>$this->name, 'a'=>$this->params, 'deny'=>'nope')); ?>
+                    <? endif; ?>
+                        
 				</div></div>
 				<?php echo $content_for_layout; ?>
 				<?php else: ?>

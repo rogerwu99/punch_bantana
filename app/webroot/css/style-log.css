@@ -358,6 +358,13 @@ body {
 	padding-left: 13px;
 	padding-top: 13px;
 }
+#leftcolumn_user {
+	width:800px;
+	float: left;
+	padding-right: 28px;
+	padding-left: 13px;
+	padding-top: 13px;
+}
 
 .content1 { /* Full */
 	width:305px;
@@ -679,6 +686,10 @@ body {
 	padding-left: 10px;
 	//border-style:dashed;
 }
+.sidebar_desktop_adjustment{
+	float: right;
+	padding-top:2px;
+}
 
 .sidebarcontainer {
 	width:212px;
@@ -927,7 +938,7 @@ background:#FFFFE6
 }
 #merchant_login{
 	float:right;
-	margin-top:-35px;
+	margin-top:-19px;
 	margin-right:-25px;
 }
 #tag_line{

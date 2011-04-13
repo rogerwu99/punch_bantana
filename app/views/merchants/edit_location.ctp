@@ -18,11 +18,10 @@
 </div>
 
 <? else: ?>
-
-<? echo $results['Location']['address'];
-			echo $results['Location']['zip'];
-			echo $results['Location']['description'];
-	?>		
-    
+<div class="table-row-even">&nbsp;
+<div class="left-layer15"><? 		echo $results['Location']['description']; ?></div>
+<div class="left-layer14"><? echo $results['Location']['address']; ?></div>
+<div class="left-layer12"><?			echo $results['Location']['zip']; ?></div>		
+</div>    
     
 <? endif; ?>
