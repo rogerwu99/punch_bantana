@@ -4,14 +4,24 @@
  <div id="leftcolumn_user" style="margin-left:30px;">
  <input type="hidden" id="simplegeolat" value="<? echo $simplegeo_lat; ?>" />
 	 <input type="hidden" id="simplegeolong" value="<? echo $simplegeo_long; ?>" />
+     <input type="hidden"id="system_hour" value="<? echo gmdate('H',time()); ?>" />
+	 <input type="hidden"id="system_minute" value="<? echo gmdate('i',time()); ?>" />
 	   <?php 
 		echo $javascript->link('http://maps.google.com/maps/api/js?sensor=false');
      	echo $javascript->link('http://code.google.com/apis/gears/gears_init.js');
 		echo $javascript->link('geo.js');
 		echo $javascript->link('map.js');
+		echo $javascript->link('clock.js');
+	
 		?>
 	    
          <div class="mobile_message">
+           <br />This was redeemed at <span id="d_time"></span> and expires in 2 hours!
+<span id="countbox"></span>
+  </div>
+  <script type="text/javascript">
+
+</script> 
 	<article>
        <span id="status"><? echo $simplegeo_address; ?>
 	</span>

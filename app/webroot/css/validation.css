@@ -12,7 +12,7 @@ input.required, textarea.required {
 	font-size: 15px;
 	letter-spacing:-1px;
 	color: #414142;
-	width:217px;
+	width:255px;
 	height:21px;
 	background-color:#FFFFFF;
 	border:1px solid #D8D9DB;
@@ -36,7 +36,7 @@ input.validation-passed, textarea.validation-passed {
 	font-size: 15px;
 	letter-spacing:-1px;
 	color: #414142;
-	width:217px;
+	width:255px;
 	height:21px;
 	background-color:#FFFFFF;
 	border:1px solid #D8D9DB;
@@ -60,7 +60,7 @@ input.validation-failed, textarea.validation-failed {
 	font-size: 15px;
 	letter-spacing:-1px;
 	color: #414142;
-	width:217px;
+	width:255px;
 	height:21px;
 	background-color:#FFFFFF;
 	border:1px solid #D8D9DB;

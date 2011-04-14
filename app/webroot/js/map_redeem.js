@@ -138,6 +138,8 @@ window.onload=function() {
 	
 	alert("Generating your reward");
 	
+	
+	
 	//	eDiv.appendChild(document.createTextNode(req));
 		
 //alert(position.coords.latitude + " "+position.coords.longitude);

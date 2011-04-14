@@ -62,6 +62,7 @@ var start = new google.maps.LatLng(simplegeolat,simplegeolong);
 var browserSupportFlag =  new Boolean();
 var map;
 window.onload=function() {
+	setClock();
 	 var mapcanvas = document.createElement('div');
   		 mapcanvas.id = 'mapcanvas';
   		 mapcanvas.style.height = '200px';

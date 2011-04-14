@@ -357,6 +357,7 @@ body {
 	padding-right: 28px;
 	padding-left: 13px;
 	padding-top: 13px;
+	margin:1px 2px 160px 4px;
 }
 #leftcolumn_user {
 	width:800px;
@@ -678,9 +679,9 @@ body {
 }
 
 .sidebar5 {
-	width:450px;
+	width:409px;
 	float: right;
-	margin-top: 5px;
+	margin-top: -7px;
 	padding-right: 2px;
 	padding-bottom: 5px;
 	padding-left: 10px;
@@ -964,6 +965,7 @@ width:217px;
 .big_mobile {
 font-size: 10px;
 border: 1px solid #444;
+width:104px;
 }
 
 .big_mobile:hover{
@@ -978,5 +980,5 @@ border-width: 3px;
 
 
 .big_mobile_signup{
-	width:217px;
+	width:239px;
 }
