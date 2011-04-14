@@ -28,7 +28,7 @@
                   
 </div>       
 <? elseif ($step==2): ?>
-        <span class="smallercopy_nav">General | <span class="smallercopy_nav_sel">Reward</span> | <?php echo $ajax->link('Location',array('controller'=>'merchants','action'=>'register/3'),array('update'=>'reg_content')); ?> | <?php echo $ajax->link('Plan',array('controller'=>'merchants','action'=>'register/5'),array('update'=>'reg_content')); ?></span>
+        <span class="smallercopy_nav">General | <span class="smallercopy_nav_selected">Reward</span> | <?php echo $ajax->link('Location',array('controller'=>'merchants','action'=>'register/3'),array('update'=>'reg_content')); ?> | <?php echo $ajax->link('Plan',array('controller'=>'merchants','action'=>'register/5'),array('update'=>'reg_content')); ?></span>
 <div class="bodycopy_reg">Create a Reward</div>
 		<?php 	$points=range(0,100); 
 				$months = array(
@@ -77,7 +77,7 @@
 				    <?php echo $ajax->link('Skip',array('controller'=>'merchants','action'=>'register/3'),array('update'=>'reg_content')); ?>
    			     </div>
 <? elseif ($step==3): ?>
-			<span class="smallercopy_nav">General | Reward | <span class="smallercopy_nav_sel">Location</span> | <?php echo $ajax->link('Plan',array('controller'=>'merchants','action'=>'register/5'),array('update'=>'reg_content')); ?></span>
+			<span class="smallercopy_nav">General | Reward | <span class="smallercopy_nav_selected">Location</span> | <?php echo $ajax->link('Plan',array('controller'=>'merchants','action'=>'register/5'),array('update'=>'reg_content')); ?></span>
  			<div class="bodycopy_reg">Add a Location<br /><span class="smallercopy_cap">(You'll be able to add and modify later)</span></div>
 			<?php $states = array(
 							"AK"=>"AK",
@@ -151,7 +151,7 @@
 				    <?php echo $ajax->link('Skip',array('controller'=>'merchants','action'=>'register/5'),array('update'=>'reg_content')); ?>
    			     </div> 
 <? elseif ($step==4): ?>
-				<span class="smallercopy_nav">General | Reward | <span class="smallercopy_nav_sel">Location</span> | <?php echo $ajax->link('Plan',array('controller'=>'merchants',	'action'=>'register/5'),array('update'=>'reg_content')); ?></span>
+				<span class="smallercopy_nav">General | Reward | <span class="smallercopy_nav_selected">Location</span> | <?php echo $ajax->link('Plan',array('controller'=>'merchants',	'action'=>'register/5'),array('update'=>'reg_content')); ?></span>
 <div class="bodycopy_reg">Location Created</div>
 	 	    <div class="smallercopy_reg"> QR Code for Location: <? echo $loc_name; ?></div>
                   <div class="smallercopy_reg" style="text-align:center;">
@@ -164,7 +164,11 @@
                  <a href="JavaScript:window.print();">Print </a>  / <? echo $ajax->link('Email',array('controller'=>'merchants','action'=>'register/4'),array('update'=>'reg_content')); ?>
                  </div>   
 <? elseif ($step==5): ?>
-			<span class="smallercopy_nav">General | Reward | Location | <span class="smallercopy_nav_sel">Plan</span></span>
+
+			<span class="smallercopy_nav">General | Reward | Location | <span class="smallercopy_nav_selected">Plan</span></span>
+<? if ($mail_sent): ?>
+<div class="smallercopy_err" style='color:red'>Your email was sent!</div>
+<? endif; ?>
  			<div class="bodycopy_reg">Select a Plan</div>
             <? echo $form->create('Merchant', array('action'=>'register/6')); ?>
 

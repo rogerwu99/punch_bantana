@@ -171,6 +171,7 @@ class MerchantsController extends AppController {
                         'cid'=>$loc['Location']['qr_path']),
                         );*/
 				$status = $this->Email->send();
+				$this->set('mail_sent',true);
 				$this->set('step',5);
 		 	}
 			elseif ($step==5) {
@@ -595,15 +596,18 @@ class MerchantsController extends AppController {
 		$user = $this->Auth->getUserInfo();
 		$this->set(compact('user'));
 		if (!empty($this->data)){	
-	/*		if ($this->data['Merchant']['new_password']==''){
-				$this->data['Merchant']['new_password']=$user['password'];
-				$this->data['Merchant']['confirm_password']=$user['password'];
+					
+			if ($this->data['Merchant']['new_password']!='' && $this->data['Merchant']['new_password']==$this->data['Merchant']['confirm_password']){
+				$this->data['Merchant']['password'] = $this->Auth->hasher($this->data['Merchant']['new_password']); 
 			}
-		*/	$this->Merchant->read(null,$user['id']);
+			$this->Merchant->read(null,$user['id']);
 			$this->Merchant->set($this->data);
 			if ($this->Merchant->validates()){
 	//			echo 'validate';
 				$this->Merchant->save();
+				$username=$this->Merchant->read(null,$this->Auth->getUserId());
+				$this->_login($username['Merchant']['email'],$username['Merchant']['password']);
+		        $this->redirect(array( 'action'=>'dashboard'));
 			}	
 			else {
 		//		echo 'not validate';

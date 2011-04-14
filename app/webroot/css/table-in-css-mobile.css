@@ -157,10 +157,10 @@ DIV.left-layer94 {
 }
 
 DIV.left-layer41a {
-  border: none; float: left; margin: 0; padding: 0; width: 60%; 
+  border: none; float: left; margin: 0; padding: 0; width: 70%; 
 }
 DIV.left-layer41b {
-  border: none; float: left; margin: 0; padding: 0; width: 40%; 
+  border: none; float: left; margin: 0; padding: 0; width: 30%; 
 }
 
 
@@ -174,13 +174,13 @@ DIV.table-top-mobile{
 	width:100%;
 }
 DIV.table-profile-edit{
-	width:440px; height:60px; overflow-y:auto;
+	width:100%; height:60px; overflow-y:auto;
 }
 DIV.table-profile-edit-settings{
 	width:759px; height:180px; overflow-y:auto;
 }
 DIV.table-profile-edit-settings-for-user{
-	width:440px; height:260px; overflow-y:auto;
+	width:100%; height:260px; overflow-y:auto;
 }
 
 /* Watch out for this DIV... rule, it appears every now and then */

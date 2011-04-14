@@ -1,38 +1,41 @@
-<div id="leftcolumn" class="bodycopy">
+<div id="leftcolumn_user" class="bodycopy">
      <div class="base-layer">
-                 	<h4 class="table-caption">&nbsp;&nbsp;&nbsp;EDIT INFORMATION </h4>
-              		<div class="table-profile-edit-settings-for-user">
+                 	<h4 class="table-caption-mobile">&nbsp;&nbsp;&nbsp;EDIT INFORMATION </h4>
+	                
+                    <div class="table-profile-edit-settings-for-user">
                     	<div class="left-layer41">
                         <? //var_dump($user); ?>
-        				<? echo $form->create('User', array('action'=>'edit')); ?>
+						<? echo $form->create('User', array('action'=>'edit')); ?>
 						Name:</div>
                         <div class="left-layer41">
-						<?php echo $form->input('Name', array('error' => array('required' => 'Name is required'), 'label' => false, 'class' => 'text_field_edit','style'=>'width:217px','value'=>$user['name'])); ?>
+						<?php echo $form->input('name', array('error' => array('required' => 'Name is required'), 'label' => false, 'class' => 'big_mobile_1','value'=>$user['name'])); ?>
                         </div>
                     	<div class="left-layer41">
                         Password:</div>
                         <div class="left-layer41">
-						<?php echo $form->input('new_password', array('type' => 'password', 'label'=>false, 'class'=>'text_field_edit','style'=>'width:217px', 'title'=>'Enter a password greater than 6 characters')); ?>
+						<?php echo $form->input('new_password', array('type' => 'password', 'label'=>false, 'class'=>'big_mobile_1', 'title'=>'Enter a password greater than 6 characters')); ?>
                         </div>
                     	<div class="left-layer41">
                         Confirm Password:</div>
 						<div class="left-layer41">
-						<?php echo $form->input('confirm_password', array('label'=>false, 'type' => 'password', 'class'=>'text_field_edit','size'=>15, 'style'=>'width:217px','title'=>'Enter the same password for confirmation')); ?>
+						<?php echo $form->input('confirm_password', array('label'=>false, 'type' => 'password', 'class'=>'big_mobile_1', 'title'=>'Enter the same password for confirmation')); ?>
                         </div>
                        <div class="left-layer41">
                        Gender
 
                       </div>
-					   <div class="left-layer41"><? echo $form->radio('Gender',array('1'=>'Male')); 
-	 echo $form->radio('Gender',array('2'=>'Female')); 
-	 
+                      <? $gender = array('1'=>'Male','2'=>'Female');
+					  $attributes = array('legend'=>false,'value'=>$user['sex']);
+					   ?>
+					   <div class="left-layer41"><? echo $form->radio('sex',$gender,$attributes); 
+ 
 	 ?>
                        </div>
                     	<div class="left-layer41">Birthday</div>	
 
 						<div class="left-layer41"><? echo $form->select('smonth', $months, array('selected'=>date('M',strtotime($user['birthday']))));?>
-	    <? echo $form->select('sdate', $dates,array('selected'=>date('j',strtotime($user['birthday']))));?>
-	    <? echo $form->select('syear', $years,array('selected'=>date('Y',strtotime($user['birthday']))));?>
+	    <? echo $form->select('sdate', $dates,array('selected'=>date('j',strtotime($user['birthday']))-1));?>
+	    <? echo $form->select('syear', $years,array('selected'=>date('y',strtotime($user['birthday']))));?>
 	</div>
     
     
@@ -46,7 +49,7 @@
 	</div>
 					    <div class="left-layer41">Facebook</div>
 						<div class="left-layer41"><?php if(empty($_Auth['User']['fb_uid'])):
-			echo $html->link($html->image("signin_facebook.gif", array('alt'=>'Login With FB', 'width'=>'150', 'height'=>'22', 'border'=>'0')),array('controller'=>'users', 'action'=>'facebookLogin'), array('escape'=>false));?>	            <? else: ?>
+			echo $html->link($html->image("signin_facebook.gif", array('alt'=>'Login With FB', 'width'=>'150', 'height'=>'22', 'border'=>'0')),array('controller'=>'users', 'action'=>'facebookLogin/1'), array('escape'=>false));?>	            <? else: ?>
             <? echo "Facebook Connected"; ?>	<!--	<br><br>   -->
 	
 		<?php endif;?>	</div>
@@ -64,7 +67,7 @@
 						</div>
 		                </div>	
     		<hr />
-                    <h4 class="table-caption">&nbsp;&nbsp;&nbsp;EDIT MY PICTURE </h4>
+                    <h4 class="table-caption-mobile">&nbsp;&nbsp;&nbsp;EDIT MY PICTURE </h4>
                     <div class="table-profile-edit">
         				<div class="left-layer41a">
            					<? 	echo $form->create('User', array('type' => 'file', 'action'=>'edit_pic'));

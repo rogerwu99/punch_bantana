@@ -5,14 +5,20 @@
     <div id="venue_info">
 		
     	<? if (!empty($results)): ?>
-        	<input type="hidden" id="dateFuture" value="<? echo $time; ?>" />
-	 		
+        	
         	You can receive : <? echo $results['Reward']['description']; ?>
             <br />for : <? echo $results['Reward']['threshold']; ?> points
             <br />at : <? echo $results['Merchant'][0]['name']; ?>
-            <br />This was redeemed at <? echo date("H:i:s",$time); ?> and expires in 2 hours!
+            <br />This was redeemed at <span id='time'><? echo date("H:i:s",$time); ?></span> and expires in 2 hours!
 <span id="countbox"></span>
   </div>
+  <script type="text/javascript">
+
+var d=new Date(<? echo $time; ?>);
+document.getElementById('time').appendChild(document.createTextNode(d.toLocaleTimeString());
+
+
+</script> 
         <? else: ?>
         	<? echo "Ther was an error in processing your reward, please contact us with the above"; ?>
         <? endif; ?>    

@@ -52,6 +52,10 @@ class UsersController extends AppController {
 				$confirm =$this->data['User']['confirm_password'];
 				$accept = $this->data['User']['accept'];
 				$fb_uid = $this->data['User']['fb_uid'];
+				$month = $this->data['User']['smonth'];
+				$date = $this->data['User']['sdate']+1;
+				$year = $this->data['User']['syear'];
+				$sex = $this->data['User']['sex'];
 				$this->data=array();
 				$this->User->create();
 				$this->data['User']['name']=$name;
@@ -59,6 +63,10 @@ class UsersController extends AppController {
 				$this->data['User']['new_password']=$password;
 				$this->data['User']['confirm_password']=$confirm;
 				$this->data['User']['accept']=$accept;
+				$this->data['User']['sex']=$sex;
+				$final_year = (int)date('Y')-$year-13;
+				$this->data['User']['birthday']= date('Ymd',strtotime($month.' '.$date.' '.$final_year));
+				
 				$password = $this->data['User']['password'] = $this->Auth->hasher($password); 
 				$username = $this->data['User']['username']= (string) $email;
 				$this->data['User']['path']=(is_null($path)) ? 'default.png' : $path;
@@ -153,10 +161,15 @@ class UsersController extends AppController {
 			$this->User->save($this->data);
 		}
 	}
-	public function facebookLogin(){
+	public function facebookLogin($tok=null){
 		$facebook = $this->createFacebook();
 		$session=$facebook->getSession();
-		$full_url = ROOT_URL . '/users/fbCallback';
+		if (is_null($tok)){
+			$full_url = ROOT_URL . '/users/fbCallback';
+		}
+		else {
+			$full_url = ROOT_URL . '/users/fbConnectCallback';
+		}
 		$login_url = $facebook->getLoginUrl(array('req_perms' => 'email,user_birthday,user_about_me,user_location,publish_stream','next' => $full_url));
 		if(!empty($session)){
 			$this->Session->write('fb_acces_token',$session['access_token']);
@@ -212,7 +225,32 @@ class UsersController extends AppController {
 		
 		$this->layout = 'about';
 	}
-	
+	public function fbConnectCallback(){
+		$facebook = $this->createFacebook();
+		$session=$facebook->getSession();
+		$facebook_id = $facebook->getUser();
+		if (!is_null($this->Auth->getUserId())){
+			if(!empty($session)){
+				try{
+					$fb_user=json_decode(file_get_contents('https://graph.facebook.com/me?access_token='.$session['access_token']));
+				}
+				catch(FacebookApiException $e){
+					error_log($e);
+				}
+				$this->data=array();
+				$this->User->read(null,$this->Auth->getUserId());
+				$this->data['User']['fb_access_key'] = $session['access_token'];
+				$this->data['User']['fb_uid'] = $fb_user->id;
+				$this->data['User']['fb_pic_url'] = 'http://graph.facebook.com/'.$fb_user->id.'/picture';
+			}
+			$this->User->set($this->data);
+			if ($this->User->validates()){
+				$this->User->save();
+			//	$this->_login($username,$password);
+			}
+			$this->redirect(array('action'=>'view_my_profile'));
+		}
+	}
 	function view_my_profile(){
 		if(is_null($this->Auth->getUserId())){
        		Controller::render('/deny');
@@ -313,28 +351,31 @@ class UsersController extends AppController {
 		}
 	}
 	function edit(){
+		
 	 	if(is_null($this->Auth->getUserId())){
           Controller::render('/deny');
          }
-		if (!empty($this->data)) {
-			$name=$this->data['User']['Name'];
-			$password = $this->Auth->hasher($this->data['User']['new_password']);
-
-			$this->User->read(null,$this->Auth->getUserId());
-			$this->User->set(array(
-								   'password'=>$password,
-								   'name'=>$name
-								   ));
-	        $this->User->save();
-			$username=$this->User->read('username',$this->Auth->getUserId());
-			$this->_login($username['User']['username'],$password);
-	
-	        $this->redirect(array( 'action'=>'view_my_profile'));
-		}
 		else {
-			$user = $this->Auth->getUserInfo();
-			$this->set(compact('user'));
-			$months = array(
+			if (!empty($this->data)) {
+				if ($this->data['User']['new_password']!='' && $this->data['User']['new_password']==$this->data['User']['confirm_password']){
+					$this->data['User']['password'] = $this->Auth->hasher($this->data['User']['new_password']); 
+				}
+				$this->data['User']['birthday']= date('Ymd',strtotime($this->data['User']['smonth'].' '.++$this->data['User']['sdate'].' '.$this->data['User']['syear']));
+				$username=$this->User->read(null,$this->Auth->getUserId());
+				$this->User->set($this->data);
+	    		if ($this->User->validates()){
+				    $this->User->save();
+					$this->_login($username['User']['email'],$username['User']['password']);
+		    	    $this->redirect(array( 'action'=>'view_my_profile'));
+				}	
+				else {
+					$this->set('errors', $this->User->validationErrors);
+				}
+			}
+			else {
+				$user = $this->Auth->getUserInfo();
+				$this->set(compact('user'));
+				$months = array(
 							"Jan"=>"Jan",
 							"Feb"=>"Feb",
 							"Mar"=>"Mar",
@@ -348,9 +389,10 @@ class UsersController extends AppController {
 							"Nov"=>"Nov",
 							"Dec"=>"Dec"
 							);
-			$this->set(compact('months'));
-			$this->set('dates',range(1,31));
-			$this->set('years',range(1900,(int)date('Y')-18));
+				$this->set(compact('months'));
+				$this->set('dates',range(1,31));
+				$this->set('years',range(1900,(int)date('Y')-18));
+			}
 		}
 	}
 	function edit_pic(){
@@ -406,7 +448,7 @@ class UsersController extends AppController {
   	        	$this->User->save();
   	        }
          
-	        //$this->redirect(array('controller'=>'beta', 'action'=>'view_my_profile'));
+	        $this->redirect(array('action'=>'view_my_profile'));
 	        exit;
 	    }
 	}

@@ -92,8 +92,8 @@
 					 		$div_name = 'qrdiv_'.$location_list_copy[$key]['Location']['id']; ?>
              				<div class="left-layer13">
 							<?	echo $location_list_copy[$key]['Location']['description']; ?>
-							<div id="<? echo $div_name; ?>"><? echo $html->image('qrcodes/'.$location_list_copy[$key]['Location']['qr_path'], array('alt'=>'QR_Code', 'width'=>'87', 'height'=>'87'));?></div>
-                            <? echo $html->link('View',ROOT_URL.'/img/qrcodes/'.$location_list_copy[$key]['Location']['qr_path']); ?><br />
+							<div id="<? echo $div_name; ?>"><? echo $html->image('qrcodes/'.$location_list_copy[$key]['Location']['qr_path'], array('alt'=>'QR_Code', 'width'=>'87', 'height'=>'87'));?><br />
+                            <? echo $html->link('View',ROOT_URL.'/img/qrcodes/'.$location_list_copy[$key]['Location']['qr_path']); ?><br /></div>
     						<? echo $ajax->link('Refresh',array('controller'=>'merchants','action'=>'qr_refresh',$location_list_copy[$key]['Location']['id']), array('update'=>$div_name));?>
  	                       </div>
     					<?	endif;

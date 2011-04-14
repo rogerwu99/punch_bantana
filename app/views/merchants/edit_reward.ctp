@@ -35,7 +35,7 @@
 		else {
 			$attributes = array('legend'=>false,'value'=>'Yes');
 			echo $form->radio('expires',$options,$attributes);
-	        echo $form->select('emonth', $months, array('selected'=>date('M',strtotime($results['Reward']['end_date']))-(int)date('M'))); ?><br />
+	        echo $form->select('emonth', $months, array('selected'=>date('M',strtotime($results['Reward']['end_date'])))); ?><br />
 		    <? echo $form->select('edate', $dates,array('selected'=>date('j',strtotime($results['Reward']['end_date'])))); ?><br />
 	    	<? echo $form->select('eyear', $years,array('selected'=>(int)date('Y',strtotime($results['Reward']['end_date']))-(int)date('Y')));
 	

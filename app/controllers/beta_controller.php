@@ -123,6 +123,11 @@ class BetaController extends AppController
 					//echo date('d',strtotime($db_results1['Punchcards']['current_punch_at'])).' COMPARE '.date('d');
 					if (date('d',strtotime($db_results1['Punchcards']['current_punch_at']))==date('d')){
 						
+						
+						// right here i should parse by # of visits / 24 hours
+						
+						
+						
 						// simple for now -> just more than one visit is illegal
 						if ($db_results['Location']['max_visits']>1){
 							//query the punch table and find all of today's visits

@@ -31,8 +31,12 @@
                   <div class="smallercopy_reg">
                   	<div class="left-layer51">Gender</div>
 					<div class="left-layer52">
-						<? 	echo $form->radio('Gender',array('1'=>'Male')); 
-	 						echo $form->radio('Gender',array('2'=>'Female')); ?>
+						<? $gender = array('1'=>'Male','2'=>'Female');
+					  $attributes = array('legend'=>false,'value'=>2);
+					   ?>
+					<? echo $form->radio('sex',$gender,$attributes); 
+ 
+	 ?>
                     </div>
                     <div class="left-layer51">Birthday</div>	
 					<div class="left-layer52">

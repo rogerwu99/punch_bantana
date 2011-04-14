@@ -2,7 +2,7 @@
      <div class="base-layer">
      <? //var_dump($user); ?>
                  	<h4 class="table-caption">&nbsp;&nbsp;&nbsp;EDIT INFORMATION </h4>
-              		<div class="table-profile-edit-settings">
+                    <div class="table-profile-edit-settings">
                     	<div class="left-layer41">
         				<? echo $form->create('Merchant', array('controller'=>'merchant','action'=>'edit')); ?>
 						Contact Name:</div>
@@ -40,7 +40,7 @@
 								echo $form->file('photo', array('style'=>'height:25px;')); ?>
                     	</div>
 	      				<div class="left-layer41">
-  							<?	echo $form->submit('SAVE!');
+  							<?	echo $form->submit('UPDATE PHOTO!');
 								echo $form->end();
 							?>
   						</div>
