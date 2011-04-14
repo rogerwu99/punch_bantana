@@ -1,6 +1,8 @@
 <div id="leftcolumn_user" class="bodycopy">
      <div class="base-layer">
-                 	<h4 class="table-caption-mobile">&nbsp;&nbsp;&nbsp;EDIT INFORMATION </h4>
+                    
+                 	<h4 class="table-caption">&nbsp;&nbsp;&nbsp;EDIT INFORMATION </h4>
+                	<h4 class="table-caption-mobile">&nbsp;&nbsp;&nbsp;EDIT INFORMATION </h4>
 	                
                     <div class="table-profile-edit-settings-for-user">
                     	<div class="left-layer41">
@@ -67,6 +69,7 @@
 						</div>
 		                </div>	
     		<hr />
+                    <h4 class="table-caption">&nbsp;&nbsp;&nbsp;EDIT MY PICTURE </h4>
                     <h4 class="table-caption-mobile">&nbsp;&nbsp;&nbsp;EDIT MY PICTURE </h4>
                     <div class="table-profile-edit">
         				<div class="left-layer41a">

@@ -95,7 +95,7 @@ class MerchantsController extends AppController {
 				if ($start=="Now") $starting = date('Ymd');
 				else $starting = date('Y-m-d',strtotime($start_year.'-'.$start_month.'-'.$start_date));
 				$this->data['Reward']['start_date']=$starting;
-				echo $starting. ' start date';
+			//	echo $starting. ' start date';
 				if ($expire!="No") $this->data['Reward']['end_date'] = date('Y-m-d',strtotime($expire_year.'-'.$expire_month.'-'.$expire_date));
 				
 				$this->set('confirm','true');

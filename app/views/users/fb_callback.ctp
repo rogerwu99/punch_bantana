@@ -5,12 +5,9 @@
 	</div>
 </div>
 <div class="consumer-background" id="consumer" style="display:block;">
-
-<div class="lightbox_content_user" id="reg_content">
-<? if (is_null($intro)) : ?>
-<div id="reg_content_user">
-<? //var_dump($fb_user);
- ?>
+	<div class="lightbox_content_user" id="reg_content">
+	<? if (is_null($intro)) : ?>
+		<div id="reg_content_user">
        		<?	$months = array(
 							"Jan"=>"Jan",
 							"Feb"=>"Feb",
@@ -26,7 +23,7 @@
 							"Dec"=>"Dec"
 							);
 				$dates=range(1,31);
-				$years=range((int)date('Y'),1900);	
+				$years=range((int)date('Y')-13,1900);	
 				?> 
 				<? $session->flash(); ?>
             	<div class="bodycopy_reg">Sign up</div>
@@ -42,17 +39,22 @@
                   <div class="smallercopy_reg">
                   	<div class="left-layer51">Gender</div>
 					<div class="left-layer52">
-						<? 	echo $form->radio('Gender',array('1'=>'Male')); 
-	 						echo $form->radio('Gender',array('2'=>'Female')); ?>
+							<? $gender = array('1'=>'Male','2'=>'Female');
+							if ($fb_user->gender=='male'){ 
+								$value=1; 
+							}
+							else $value=2;
+					  $attributes = array('legend'=>false,'value'=>1);
+					   ?>
+					<? echo $form->radio('sex',$gender,$attributes);  ?>
                     </div>
                     <div class="left-layer51">Birthday</div>	
 					<div class="left-layer52">
-                    <? echo intval(date('Y'))-intval(date('Y',strtotime($fb_user->birthday))); ?>
 						<? echo $form->select('smonth', $months, array('selected'=>date('M',strtotime($fb_user->birthday)))); ?>
 	    				<? echo $form->select('sdate', $dates,  array('selected'=>intval(date('j',strtotime($fb_user->birthday)))-1));?>
-	    				<? echo $form->select('syear', $years,  array('selected'=>intval(date('Y'))-intval(date('Y',strtotime($fb_user->birthday))))); ?>
+	    				<? echo $form->select('syear', $years,  array('selected'=>intval(date('Y'))-13-intval(date('Y',strtotime($fb_user->birthday))))); ?>
 					</div>
-                  </div>
+                    </div>
                   <div class="smallercopy_reg"><br />
                   <? echo '<div class="smallercopy_err" style="color:red">'.$form->error('User.accept').'</div>'; ?>
                       <?php echo $form->checkbox('User.accept', array('class'=>'required validate-one-required', 'title'=>'Please agree to terms and conditions'));?>Please read our <?php echo $html->link('Terms of Use', array('controller'=>'pages', 'action'=>'terms')); ?> and our <?php echo $html->link('Privacy Policy', array('controller'=>'pages', 'action'=>'privacy')); ?> before accepting.

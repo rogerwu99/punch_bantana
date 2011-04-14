@@ -172,10 +172,10 @@ class UsersController extends AppController {
 		}
 		$login_url = $facebook->getLoginUrl(array('req_perms' => 'email,user_birthday,user_about_me,user_location,publish_stream','next' => $full_url));
 		if(!empty($session)){
-			$this->Session->write('fb_acces_token',$session['access_token']);
+			$this->Session->write('fb_access_token',$session['access_token']);
 			$facebook_id = $facebook->getUser();
 			if(is_null($this->Auth->getUserId())){
-				$db_results = $this->User->find('first', array('conditions' => (array('User.fb_uid'=>$facebook_id)), 'fields'=>(array('User.username','User.password'))));
+				$db_results = $this->User->find('first', array('conditions' => (array('User.fb_uid'=>$facebook_id,'User.fb_access_key'=>$session['access_token'])), 'fields'=>(array('User.username','User.password'))));
 
 				if (!empty($db_results)) {
 					//echo 'results not empty';
@@ -200,7 +200,7 @@ class UsersController extends AppController {
 		$session=$facebook->getSession();
 		$facebook_id = $facebook->getUser();
 		if (is_null($this->Auth->getUserId())){
-			$db_results = $this->User->find('first', array('conditions' => (array('User.fb_uid'=>$facebook_id)), 'fields'=>(array('User.username','User.password'))));
+			$db_results = $this->User->find('first', array('conditions' => (array('User.fb_uid'=>$facebook_id,'User.fb_access_key'=>$session['access_token'])), 'fields'=>(array('User.username','User.password'))));
 			if (!empty($db_results)) {
 				$this->_login($db_results['User']['username'],$db_results['User']['password']);
 				$this->redirect('/');

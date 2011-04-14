@@ -80,8 +80,7 @@
 					</div>
 				</div>
                </div>		
-	           </div></div> 
-			  	</div></div>
+	           </div>
 		<div id="roundedbottomwrapper">
          <div id="bottomleftcorner"></div>
           <div id="bottomcenterborderwrapper">
@@ -98,7 +97,7 @@
 </div>
         
 
-</div></div>
+</div>
 	
 
         
