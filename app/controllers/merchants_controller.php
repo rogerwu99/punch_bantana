@@ -243,7 +243,7 @@ class MerchantsController extends AppController {
 			$this->data['Location']['description']=$name;
 			$this->data['Location']['address']=$address_raw;
 			$this->data['Location']['merchant_id']=$this->Auth->getUserId();
-			$this->data['Location']['max_visits']=$max_visits;
+			$this->data['Location']['max_visits']=$max_visits+1;
 			$url = "http://where.yahooapis.com/geocode?line1=".$address1."&line2=".urlencode($city).",+".$state."&gflags=L&flags=J&appid=cENXMi4g";
 			$address = json_decode(file_get_contents($url));
 			$lat = $address->ResultSet->Results[0]->latitude;
@@ -368,7 +368,7 @@ class MerchantsController extends AppController {
 				$name = $this->data['Location']['Description'];
 				$address_raw = $this->data['Location']['Address'];
 				$zip=$this->data['Location']['Zip'];
-				$max_visits = $this->data['Location']['max_visits'];
+				$max_visits = $this->data['Location']['max_visits']+1;
 				$this->data=array();
 				$url = "http://where.yahooapis.com/geocode?line1=".urlencode($address_raw)."&line2=".$zip."&gflags=L&flags=J&appid=cENXMi4g";
 				$address = json_decode(file_get_contents($url));

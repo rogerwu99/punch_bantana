@@ -8,7 +8,7 @@
 	<div class="left-layer12"><?php echo $form->input('Zip',array('type'=>'text','label'=>false,'value'=>$results['Location']['zip'], 'style'=>'width:50px')); ?></div>
 	<? $max_visits = range(1,10); ?>
     <div>Max. Daily Visits
-    <?php echo $form->input('max_visits',array('type' =>'select', 'label'=>false, 'options' => $max_visits,'selected' => $results['Location']['max_visits'])); ?></div>
+    <?php echo $form->input('max_visits',array('type' =>'select', 'label'=>false, 'options' => $max_visits,'selected' => $results['Location']['max_visits']-1)); ?></div>
 	<div style="text-align:center">   
 	<span style="left-layer15"><? 	echo $ajax->submit('Change',array('url'=>array('controller'=>'merchants','action'=>'edit_location',$results['Location']['id']),'update'=>$div_name)); ?></span>
 	<span style="left-layer15"><?	echo $html->link('Cancel',array('controller'=>'merchants','action'=>'dashboard'),array(),'Are you sure you want to abandon changes?', false); 	

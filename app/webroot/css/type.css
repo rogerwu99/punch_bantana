@@ -10,10 +10,13 @@
 	color: black;
 	text-align:center;
 	font-weight:bold;
+	margin-right:40px;
+	padding: 2px 1px 1px 1px;
 }
 
 .bodycopy a:link {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 15px;
 	letter-spacing:-1px;
+	margin: 15px;
 	color: #0099FF;
 	text-decoration: underline;
 }
@@ -89,7 +92,7 @@
 .smallercopy_reg {
 	width:260px;
 	vertical-align:sub;
-	font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 13px;
+	font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px;
 	letter-spacing:-1px;
 	color: black;
 	margin-left:10px;
@@ -112,10 +115,10 @@
 .smallercopy_nav {
 	width:100%;
 	vertical-align:sub;
-	font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10px;
+	font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 11px;
 	letter-spacing:-1px;
 	color: #414142;
-	margin-left:70px;
+	margin-left:60px;
 	text-align:center;
 }
 .smallercopy_nav a:link {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10px;
@@ -131,7 +134,7 @@
 
 .smallercopy_nav_sel {
 	width:260px;
-	font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 11px; font-weight:bold;
+	font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; font-weight:bold;
 	letter-spacing:-1px;
 	color: #414142;
 	margin-left:10px;

@@ -3,7 +3,7 @@
 
 DIV.base-layer {
   background: #9fc5f8; border: solid #333333 1px; color: #000000;
-  margin: 0.5em 12px 0.5em 12px; padding: 0; text-align: center; width: auto;
+  margin: 0.5em 12px 0.5em 12px; padding: 0; text-align: justify; width: auto;
 }
 
 DIV.table-row-head{
@@ -160,13 +160,13 @@ DIV.table-top{
 	width:759px; height:150px; overflow-y:auto;
 }
 DIV.table-profile-edit{
-	width:759px; height:60px; overflow-y:auto;
+	width:759px; height:60px; padding: 1px 2px 3px 120px; overflow-y:auto;
 }
 DIV.table-profile-edit-settings{
 	width:759px; height:180px; overflow-y:auto;
 }
 DIV.table-profile-edit-settings-for-user{
-	width:759px; height:260px; overflow-y:auto;
+	width:575px; height:260px; overflow-y:auto; padding: 1px 2px 3px 120px;
 }
 
 /* Watch out for this DIV... rule, it appears every now and then */

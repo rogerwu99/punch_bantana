@@ -342,7 +342,7 @@ body {
 
 #contentwrapper {
 	width:824px;
-//	height:575px;
+	height:860px;
 	background-color:#FFFFFF;
 //	background-image: url(../img/sidebar_stripe_repeat.gif);
 	float: left;
@@ -965,7 +965,7 @@ width:217px;
 .big_mobile {
 font-size: 10px;
 border: 1px solid #444;
-width:104px;
+width:95px;
 }
 
 .big_mobile:hover{

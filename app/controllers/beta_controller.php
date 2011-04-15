@@ -114,36 +114,38 @@ class BetaController extends AppController
 				$legal = false;
 				if (!empty($db_results1)){
 					
-					//var_dump($db_results);
-					//var_dump($db_results1);
-					//echo $db_results1['Punchcards']['current_punch_at']. ' current';
-					
-					
-						
-					//echo date('d',strtotime($db_results1['Punchcards']['current_punch_at'])).' COMPARE '.date('d');
+		//			echo	date('d',strtotime($db_results1['Punchcards']['current_punch_at'])).' current punch';
 					if (date('d',strtotime($db_results1['Punchcards']['current_punch_at']))==date('d')){
 						
 						
 						// right here i should parse by # of visits / 24 hours
 						
-						
-						
-						// simple for now -> just more than one visit is illegal
+	//					echo $db_results['Location']['max_visits']. ' max visit'; 
+					
 						if ($db_results['Location']['max_visits']>1){
 							//query the punch table and find all of today's visits
 							$db_results5=$this->Punch->find('all',array('conditions'=>array('Punch.user_id'=>$this->Auth->getUserId(),
 																							'Punch.location_id'=>$db_results['Location']['id']),
 																		'order'=>array('Punch.created DESC')));
 							$total_visits_today = 0;
+							$too_close = false;
+//						echo date('d',strtotime($db_results5[$key]['Punch']['created']));
 							foreach ($db_results5 as $key=>$value){
 								if (date('d',strtotime($db_results5[$key]['Punch']['created']))==date('d')){
 									$total_visits_today++;
+			//						echo abs(date('H')-date('H',strtotime($db_results5[$key]['Punch']['created']))).' abs';
+	
+									if(abs(date('H')-date('H',strtotime($db_results5[$key]['Punch']['created'])))<(24/$db_results['Location']['max_visits'])) {
+				//						echo abs(date('H')-date('H',strtotime($db_results5[$key]['Punch']['created']))).' abs';
+					//					echo 'in here';
+										$too_close = true;
+										break;							
+									}
 								}
 								else {
 									break;
 								}
 							}
-						//	echo $total_visits_today . 'total visits';
 							if ($db_results['Location']['max_visits'] > $total_visits_today){
 								$legal=true;
 							}
@@ -157,10 +159,9 @@ class BetaController extends AppController
 					}
 				}
 				else {
-					// first visit here
 					$legal=true;
 				}
-				if ($legal){		
+				if ($legal && !$too_close){		
 					$this->Punch->create();
 					$this->data['Punch']['user_id']=$this->Auth->getUserId();
 					$this->data['Punch']['location_id']=$db_results['Location']['id'];
@@ -172,7 +173,7 @@ class BetaController extends AppController
 				}
 				else {
 					$this->set('num_punches',$db_results1['Punchcards']['current_punch']); 
-					$this->set('message','This location only allows a maximum number of rewards per day, come back tomorrow!');
+					$this->set('message','This location only allows a maximum number of visits each day, come back tomorrow!');
 				}
 			}
 			
@@ -184,6 +185,7 @@ class BetaController extends AppController
 			$this->set('merchant',$db_results2['Merchant']['name']);
 			$this->set('name',$db_results['Location']['description']);
 			$this->set('address',$db_results['Location']['address']);
+			$this->set('too_close',$too_close);
 			
 		}
 		else { // venue doesn't exist

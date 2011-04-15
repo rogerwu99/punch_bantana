@@ -560,7 +560,7 @@ background: #fff;
 ----------------------------------------------- */
 form {
 overflow:hidden;
-padding: 0 0 0 13px;
+padding: 0 0 0 0px;
 }
 fieldset {
 border:1px solid #bbb;
@@ -732,13 +732,15 @@ padding-bottom:10px;
 .business-background{
 	background-image: url("../img/chef.jpg");
 	margin-left:60px;
+	margin-top: 30px;
+	margin-bottom:-120px;
 	width:667px;
-	height:600px;
+	height:614px;
 }
 .consumer-background{
 	background-image: url("../img/cityscape.png");
 	margin-left:60px;
-	margin-top:-395px;
+	margin-top:-415px;
 	width:667px;
 	height:512px;
 	
@@ -750,10 +752,10 @@ padding-bottom:10px;
 	display: block;
 	position: relative;
 	top: 0px;
-	left: 331px;
+	left: 315px;
 	width: 328px;
-	height: 587px;
-	padding: 5px 5px 5px 20px;
+	height: 600px;
+	padding: 5px 5px 5px 40px;
 	border: 2px solid #00BFFF;
 	background-color: white;
 	overflow: none;
@@ -768,11 +770,11 @@ padding-bottom:10px;
 	position: relative;
 	//top: 29%;
 	//left: 55%;
-	top:77px;
-	left:377px;
+	top:69px;
+	left:363px;
 	width: 305px;
-	height: 416px;
-	padding: 20px 5px 5px 5px;
+	height: 440px;
+	padding: 20px 5px 5px 35px;
 	border: 2px solid white;
 	background-color: #97FFFF;
 	overflow: none;
