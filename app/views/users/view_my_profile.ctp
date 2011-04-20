@@ -6,7 +6,7 @@
      				
            <div class="base-layer">
                     <h4 class="table-caption">&nbsp;&nbsp;&nbsp;ACTIVE REWARDS <? //echo $ajax->link('(Add)', array('controller'=>'merchants','action'=>'rewards'), array('update'=>'new_reward')); ?></h4>
-                    <h4 class="table-caption-mobile"><? echo $html->link('ACTIVE REWARDS',array('controller'=>'users','action'=>'my_rewards'));?><div style="float:right"><? echo $html->link('>',array('controller'=>'users','action'=>'my_rewards'));?></div></h4>
+                    <h4 class="table-caption-mobile"><? echo $html->link('ACTIVE REWARDS',array('controller'=>'users','action'=>'my_rewards'));?></h4>
                     <div class="table-row-head">&nbsp;
         				<div class="left-layer24">Reward</div>
 				        <div class="left-layer22">Pts</div>
@@ -63,7 +63,7 @@
 						}?>
     				</div>
  				    <br /><h4 class="table-caption">&nbsp;&nbsp;&nbsp;MY REWARDS <? //echo $ajax->link('(Add)', array('controller'=>'merchants','action'=>'locations'),array('update'=>'new_location')); ?></h4>
-                     <h4 class="table-caption-mobile"><? echo $html->link('MY REWARDS',array('controller'=>'users','action'=>'my_redeemed_rewards'));?><div style="float:right"><? echo $html->link('>',array('controller'=>'users','action'=>'my_redeemed_rewards'));?></div></h4>
+                     <h4 class="table-caption-mobile"><? echo $html->link('MY REWARDS',array('controller'=>'users','action'=>'my_redeemed_rewards'));?></h4>
                    
         			 <div class="table-row-head">&nbsp;
         				<div class="left-layer81">Location</div>
@@ -96,7 +96,7 @@
                    	</div> 
 					<br />
     				<h4 class="table-caption">&nbsp;&nbsp;&nbsp;MY SPOTS <? //echo $ajax->link('(Add)', array('controller'=>'merchants','action'=>'locations'),array('update'=>'new_location')); ?></h4>
-                     <h4 class="table-caption-mobile"><? echo $html->link('MY SPOTS',array('controller'=>'users','action'=>'my_spots'));?><div style="float:right"><? echo $html->link('>',array('controller'=>'users','action'=>'my_spots'));?></div></h4>
+                     <h4 class="table-caption-mobile"><? echo $html->link('MY SPOTS',array('controller'=>'users','action'=>'my_spots'));?></h4>
                    
         			<div class="table-row-head">&nbsp;
         				<div class="left-layer71">Name</div>

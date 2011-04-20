@@ -1,10 +1,10 @@
 <div style="margin-left:60px;">
 	<h4>Smart Rewards for the Smart Customer</h4>
-	<div class="smallercopy" style="float:right;margin-top:-35px;margin-right:-25px;">
+	<div class="smallercopy" style="float:right;margin-top:-25px;margin-right:-25px;">
 	<? echo $html->link('Merchant Login',array('controller'=>'pages','action'=>'business')); ?>
 	</div>
 </div>
-<div class="consumer-background" id="consumer" style="display:block;">
+<div class="consumer-background" id="consumer" style="display: block; margin: 10px 10px 10px 40px; width: 722px; height: 552px;">
 	<div class="lightbox_content_user" id="reg_content">
 	<? if (is_null($intro)) : ?>
 		<div id="reg_content_user">

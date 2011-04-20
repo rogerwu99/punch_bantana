@@ -81,6 +81,15 @@ class UsersController extends AppController {
 				$this->User->set($this->data);
 				if ($this->User->validates()){
 					$this->User->save();
+					
+					$this->Email->to = $email;
+        			$this->Email->replyTo = 'info@bantana.com';
+					$this->Email->subject = 'Welcome to Bantana!';
+        			$this->Email->from = 'Bantana <info@bantana.com>';
+ 			       	$this->Email->template = 'welcome';
+					$this->set('name',$name);
+					$status = $this->Email->send();
+					
 					$this->_login($username,$password);
 					$this->set('intro',true);
 				}
@@ -391,7 +400,7 @@ class UsersController extends AppController {
 							);
 				$this->set(compact('months'));
 				$this->set('dates',range(1,31));
-				$this->set('years',range(1900,(int)date('Y')-18));
+				$this->set('years',range(1900,(int)date('Y')-13));
 			}
 		}
 	}

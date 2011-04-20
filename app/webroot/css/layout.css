@@ -41,7 +41,7 @@ background:#fff;
 
 /* headings
 ----------------------------------------------- */
-h1, h2, h3,  h4, h5, h6 {line-height:1.1em; margin-bottom:.3em;}
+h1, h2, h3,  h4, h5, h6 {line-height:1.1em; margin-bottom:0;}
 h2 {margin-top:1em;}
 h5 {font-size:1.2em;}
 h6 {font-size:1em; text-transform:uppercase;}
@@ -82,7 +82,7 @@ font-size:3.2em;
 text-align:left;
 background: #fff;
 padding:.2em .3em;
-margin-bottom:0;
+margin-bottom:8px;
 border-bottom: 1px solid #444;
 color: #000;
 text-decoration: underline;
@@ -560,7 +560,7 @@ background: #fff;
 ----------------------------------------------- */
 form {
 overflow:hidden;
-padding: 0 0 0 0px;
+padding: 0px 0px 0px 15px;
 }
 fieldset {
 border:1px solid #bbb;
@@ -733,16 +733,17 @@ padding-bottom:10px;
 	background-image: url("../img/chef.jpg");
 	margin-left:60px;
 	margin-top: 30px;
-	margin-bottom:-120px;
-	width:667px;
+	margin-bottom:40px;
+	width:665px;
 	height:614px;
 }
 .consumer-background{
 	background-image: url("../img/cityscape.png");
 	margin-left:60px;
-	margin-top:-415px;
+	margin-top:-440px;
 	width:667px;
 	height:512px;
+	margin-bottom:160px;
 	
 }
 
@@ -754,7 +755,7 @@ padding-bottom:10px;
 	top: 0px;
 	left: 315px;
 	width: 328px;
-	height: 600px;
+	height: 100%;
 	padding: 5px 5px 5px 40px;
 	border: 2px solid #00BFFF;
 	background-color: white;
@@ -770,18 +771,18 @@ padding-bottom:10px;
 	position: relative;
 	//top: 29%;
 	//left: 55%;
-	top:69px;
-	left:363px;
+	top:42px;
+	left:375px;
 	width: 305px;
 	height: 440px;
-	padding: 20px 5px 5px 35px;
+	padding: 20px 5px 5px 20px;
 	border: 2px solid white;
 	background-color: #97FFFF;
 	overflow: none;
 	-moz-border-radius:25px;
 	-webkit-border-radius: 25px;
 	-khtml-border-radius: 25px;
-	-border-radius: 25px;
+	border-radius: 25px;
 	opacity:0.95;filter:alpha(opacity=85);
 }
 .lightbox_content_user_block_1 {
@@ -866,7 +867,7 @@ padding-bottom:10px;
 	top: 0%;
 	left: 0%;
 	width: 100%;
-	height: 154%;
+	height: 100%;
 	background-color: black;
 	z-index:1001;
 	-moz-opacity: 0.8;

@@ -1,5 +1,8 @@
 <div id="nww_location">
-	
+	       <? foreach($errors as $key=>$value){ ?>
+       <div class='smallercopy_err' style='color:red'> 	<? echo $errors[$key]; ?> </div>
+	   <? } ?>
+
 
 <? if (!$confirm): ?>          
   	<?php echo $form->create('Merchant'); ?>

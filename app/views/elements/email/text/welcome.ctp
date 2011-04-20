@@ -1,10 +1,9 @@
 Thank You for Signing Up, <?= $name; ?>!
 
-You can now use the username and password that you have created to log in at http://bantana.com
+You can now use the username and password that you have created to log in at http://www.bantana.com
 
-Here are a few things to get you started:
+Start earning rewards next time you see the Bantana QR Codes!
 
-Updates available via Twitter; follow us here at http://twitter.com/gobantana
 
 Thank you and welcome!
 The Bantana Team

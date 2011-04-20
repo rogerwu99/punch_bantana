@@ -3,24 +3,24 @@
 
 DIV.base-layer {
   background: #9fc5f8; border: solid #333333 1px; color: #000000;
-  margin: 0.5em 12px 0.5em 12px; padding: 0; text-align: justify; width: auto;
+  margin: 10px 20px 10px -15px; padding: 1px 1px 15px 5px; text-align: center; width: auto;
 }
 
 DIV.table-row-head{
   background: #ffffff; border: solid #000000 1px; color: #000000;
   margin-top: 0;  margin-bottom: 0; margin-left: 12px;
-  padding: 0; text-align: center; width: 759px; font-weight: bold;
+  padding: 0; text-align: center; width: 98.5%; font-weight: bold;
 }
 
 DIV.table-row-odd{
   background: #b6b6b6; border: solid #000000 1px; color: #000000;
-  margin-top: 0; margin-right: auto; margin-bottom: 0; margin-left: auto;
-  padding: 0; text-align: center; width: 96%;
+  margin: 0px;
+  padding: 0; text-align: center; width: 99.7%;
 }
 DIV.table-row-even{
   background: #cccccc; border: solid #000000 1px; color: #000000;
-  margin-top: 0; margin-right: auto; margin-bottom: 0; margin-left: auto;
-  padding: 0; text-align: center; width: 96%;
+  margin: 0px;
+  padding: 0; text-align: center; width: 99.7%;
 }
 /* Style rules for the 3 x 2 table example */
 
@@ -95,11 +95,18 @@ DIV.left-layer32 {
   border: none; float: left; margin: 0; padding: 0; width: 200px; height:150px;
 }
 
+DIV.social-settings-header {
+	text-align:left;	margin:5px -1px 0px 95px;	height:150px;	top: 30px; position: relative; text-decoration:underline;
+}
+DIV.form_name {
+  border: none; float: left; margin: 0 15px 0 -15px; padding: 0x; width: 50%; 
+}
+
 DIV.left-layer41 {
   border: none; float: left; margin: 0; padding: 0; width: 50%; 
 }
 DIV.left-layer42 {
-  border: none; float: left; margin: 0; padding: 0; width: 100%; 
+  border: none; float: left; margin: 20px 1px 3px 92px; padding: 0; width: 100%; 
 }
 DIV.left-layer51 {
   border: none; float: left; margin: 0; padding: 0; width: 30%; 
@@ -150,23 +157,24 @@ DIV.left-layer41a {
   border: none; float: left; margin: 0; padding: 0; width: 60%; 
 }
 DIV.left-layer41b {
-  border: none; float: left; margin: 0; padding: 0; width: 40%; 
+  border: none; float: left; margin: -25px 1px 1px 228px; padding: 0; width: 40%; 
 }
 
-
-
-
 DIV.table-top{
-	width:759px; height:150px; overflow-y:auto;
+	width:98.5%; height:165px; overflow-y:auto; overflow-x:hidden; position: relative; left:-3px; padding:0 0 0 15px;
 }
 DIV.table-profile-edit{
 	width:759px; height:60px; padding: 1px 2px 3px 120px; overflow-y:auto;
 }
 DIV.table-profile-edit-settings{
-	width:759px; height:180px; overflow-y:auto;
+	width:759px; height:180px; 
+	/*overflow-y:auto;*/
+	padding: 1px 2px 3px 80px;
 }
 DIV.table-profile-edit-settings-for-user{
-	width:575px; height:260px; overflow-y:auto; padding: 1px 2px 3px 120px;
+	width:575px; height:260px; 
+	/*overflow-y:auto; */
+	padding: 1px 2px 3px 120px;
 }
 
 /* Watch out for this DIV... rule, it appears every now and then */
@@ -179,7 +187,7 @@ DIV.space-line {
 
 H4.table-caption {
   background: transparent; color: #3333cc; font-family: sans-serif;
-  font-size: 14px; font-style: italic; font-weight: bold; margin: 0;
+  font-size: 14px; font-style: italic; font-weight: bold; margin: 3px 0;
   padding: 0.3em; text-align: left; width: 850px;
 }
 H4.table-caption-mobile{

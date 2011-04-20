@@ -76,40 +76,47 @@ class MerchantsController extends AppController {
 			}
 			elseif ($step==2){
 				if (!empty($this->data)){
-				$parent = $this->Auth->getUserInfo();
-				$reward = $this->data['Merchant']['reward'];
-				$points = $this->data['Merchant']['points'];
-				$start=$this->data['Merchant']['start'];
-				$start_month=$this->data['Merchant']['smonth'];
-				$start_date=$this->data['Merchant']['sdate']+1;
-				$start_year=$this->data['Merchant']['syear']+date('Y');
-				$expire=$this->data['Merchant']['expires'];
-				$expire_month=$this->data['Merchant']['emonth'];
-				$expire_date=$this->data['Merchant']['edate']+1;
-				$expire_year=$this->data['Merchant']['eyear']+date('Y');
-				$this->data=array();
-				$this->Reward->create();
-				$this->data['Reward']['description']=$reward;
-				$this->data['Reward']['threshold']=$points;
-				$this->data['Merchant']['id']=$this->Auth->getUserId();
-				if ($start=="Now") $starting = date('Ymd');
-				else $starting = date('Y-m-d',strtotime($start_year.'-'.$start_month.'-'.$start_date));
-				$this->data['Reward']['start_date']=$starting;
-			//	echo $starting. ' start date';
-				if ($expire!="No") $this->data['Reward']['end_date'] = date('Y-m-d',strtotime($expire_year.'-'.$expire_month.'-'.$expire_date));
-				
-				$this->set('confirm','true');
-				$this->Reward->save($this->data, false);
-				$results = $this->Reward->read(null,$this->Reward->id);
-				$this->set(compact('results'));
-				$this->set('saved',true);
-				$this->set('step',3);
+					$parent = $this->Auth->getUserInfo();
+					$reward = $this->data['Merchant']['reward'];
+					$points = $this->data['Merchant']['points'];
+					$start=$this->data['Merchant']['start'];
+					$start_month=$this->data['Merchant']['smonth'];
+					$start_date=$this->data['Merchant']['sdate']+1;
+					$start_year=$this->data['Merchant']['syear']+date('Y');
+					$expire=$this->data['Merchant']['expires'];
+					$expire_month=$this->data['Merchant']['emonth'];
+					$expire_date=$this->data['Merchant']['edate']+1;
+					$expire_year=$this->data['Merchant']['eyear']+date('Y');
+					$this->data=array();
+					$this->Reward->create();
+					$this->data['Reward']['description']=$reward;
+					$this->data['Reward']['threshold']=$points;
+					$this->data['Merchant']['id']=$this->Auth->getUserId();
+					if ($start=="Now") $starting = date('Ymd');
+					else $starting = date('Y-m-d',strtotime($start_year.'-'.$start_month.'-'.$start_date));
+					$this->data['Reward']['start_date']=$starting;
+				//	echo $starting. ' start date';
+					if ($expire!="No") $this->data['Reward']['end_date'] = date('Y-m-d',strtotime($expire_year.'-'.$expire_month.'-'.$expire_date));
+					$this->set('confirm','true');
+					$this->Reward->set($this->data);
+				// validate data
+					if ($this->Reward->validates()){
+						$this->Reward->save();
+						$results = $this->Reward->read(null,$this->Reward->id);
+						$this->set(compact('results'));
+						$this->set('saved',true);
+						$this->set('step',3);
+					}
+					else {
+						$this->set('errors', $this->Reward->validationErrors);
+						$this->set('step',2);
+						$this->render();
+					}
 				}
 				else {
 					$this->set('step',2);
 					$this->render();
 				}
-				
 			}
 			elseif ($step==3){
 				if (!empty($this->data)){
@@ -243,7 +250,7 @@ class MerchantsController extends AppController {
 			$this->data['Location']['description']=$name;
 			$this->data['Location']['address']=$address_raw;
 			$this->data['Location']['merchant_id']=$this->Auth->getUserId();
-			$this->data['Location']['max_visits']=$max_visits+1;
+			$this->data['Location']['max_visits']=$max_visits;
 			$url = "http://where.yahooapis.com/geocode?line1=".$address1."&line2=".urlencode($city).",+".$state."&gflags=L&flags=J&appid=cENXMi4g";
 			$address = json_decode(file_get_contents($url));
 			$lat = $address->ResultSet->Results[0]->latitude;
@@ -261,9 +268,74 @@ class MerchantsController extends AppController {
 			$this->data['Location']['qr_path']=$qr_link[2];
 			$this->set(compact('lat'));
 			$this->set(compact('long'));
-			$this->set('confirm','true');
-			$this->Location->save($this->data);
+		
 			$this->set('loc_id',$this->Location->id);
+			$this->Location->set($this->data);
+			if ($this->Location->validates()){
+				$this->Location->save();
+				$results = $this->Location->read(null,$this->Reward->id);
+				//var_dump($results);
+				$this->set('confirm','true');
+				$this->set(compact('results'));
+			}
+			else {
+				$this->set('errors', $this->Location->validationErrors);
+							$states = array(
+							"AK"=>"AK",
+							"AL"=>"AL",
+							"AR"=>"AR",
+							"AZ"=>"AZ",
+							"CA"=>"CA",
+							"CO"=>"CO",
+							"CT"=>"CT",
+							"DC"=>"DC",
+							"DE"=>"DE",
+							"FL"=>"FL",
+							"GA"=>"GA",
+							"HI"=>"HI",
+							"IA"=>"IA",
+							"ID"=>"ID",
+							"IL"=>"IL",
+							"IN"=>"IN",
+							"KS"=>"KS",
+							"KY"=>"KY",
+							"LA"=>"LA",
+							"MA"=>"MA",
+							"MD"=>"MD",	
+							"ME"=>"ME",
+							"MI"=>"MI",
+							"MN"=>"MN",
+							"MO"=>"MO",
+							"MS"=>"MS",
+							"MT"=>"MT",
+							"NC"=>"NC",
+							"ND"=>"ND",
+							"NE"=>"NE",
+							"NH"=>"NH",
+							"NJ"=>"NJ",
+							"NM"=>"NM",
+							"NV"=>"NV",
+							"NY"=>"NY",
+							"OH"=>"OH",
+							"OK"=>"OK",
+							"OR"=>"OR",
+							"PA"=>"PA",
+							"RI"=>"RI",
+							"SC"=>"SC",
+							"SD"=>"SD",
+							"TN"=>"TN",
+							"TX"=>"TX",
+							"UT"=>"UT",
+							"VA"=>"VA",
+							"VT"=>"VT",
+							"WA"=>"WA",
+							"WI"=>"WI",
+							"WV"=>"WV",
+							"WY"=>"WY"
+							);
+				$this->set(compact('states'));
+				$this->render();
+			}	
 		}
 		else {
 				$states = array(
@@ -368,7 +440,7 @@ class MerchantsController extends AppController {
 				$name = $this->data['Location']['Description'];
 				$address_raw = $this->data['Location']['Address'];
 				$zip=$this->data['Location']['Zip'];
-				$max_visits = $this->data['Location']['max_visits']+1;
+				$max_visits = $this->data['Location']['max_visits'];
 				$this->data=array();
 				$url = "http://where.yahooapis.com/geocode?line1=".urlencode($address_raw)."&line2=".$zip."&gflags=L&flags=J&appid=cENXMi4g";
 				$address = json_decode(file_get_contents($url));
@@ -383,10 +455,22 @@ class MerchantsController extends AppController {
 									   'long'=>$long,
 									   'max_visits'=>$max_visits
 									   ));
-				$this->Location->save();
-				$results = $this->Location->read(null,$id);
-				$this->set(compact('results'));
-				$this->set('editing',false);		
+				if ($this->Location->validates()){
+					$this->Location->save();
+					$results = $this->Location->read(null,$this->Reward->id);
+					$this->set(compact('results'));
+					$this->set('editing',false);	
+				}
+				else {
+					$this->set('errors', $this->Location->validationErrors);
+					$this->set('editing',true);	
+	
+				}
+	//			$this->Location->save();
+	//			$results = $this->Location->read(null,$id);
+	//			$this->set(compact('results'));
+			
+				$this->render();	
 			}
 		}
 		else {

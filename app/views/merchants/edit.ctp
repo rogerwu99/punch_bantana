@@ -3,7 +3,7 @@
      <? //var_dump($user); ?>
                  	<h4 class="table-caption">&nbsp;&nbsp;&nbsp;EDIT INFORMATION </h4>
                     <div class="table-profile-edit-settings">
-                    	<div class="left-layer41">
+                    	<div class="form_name">
         				<? echo $form->create('Merchant', array('controller'=>'merchant','action'=>'edit')); ?>
 						Contact Name:</div>
                         <div class="left-layer41">
@@ -39,8 +39,8 @@
            					<? 	echo $form->create('Merchant', array('type' => 'file', 'action'=>'edit_pic'));
 								echo $form->file('photo', array('style'=>'height:25px;')); ?>
                     	</div>
-	      				<div class="left-layer41">
-  							<?	echo $form->submit('UPDATE PHOTO!');
+	      				<div class="left-layer41" style="position:relative;left:-135px;">
+  							<?	echo $form->submit('UPLOAD');
 								echo $form->end();
 							?>
   						</div>
@@ -48,9 +48,10 @@
                     
  			  	<br />
         			
-        <div style="float:right;">
+        <div> <!-- style="float: right; position: relative; top: 20px;"> -->
 	        <div id="fade" class="black_overlay"></div>
-            <? echo $this->element('feedback',array("user_type" => "Merchant")); ?>     
+            <? //echo $this->element('feedback',array("user_type" => "Merchant")); ?> 
+           <!-- taking the feedback link out for now while I figure out the right implementation -->    
 		</div>    
         </div>
         </div> 

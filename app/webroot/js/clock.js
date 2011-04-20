@@ -1,14 +1,4 @@
-function setClock(){
-	var hour=document.getElementById('system_hour').value;
-	var minute=document.getElementById('system_minute').value;
-	var d=new Date(0,0,0,hour,minute);
-	//alert(hour);
-	//alert(d);
-	var now = document.createTextNode(d.toLocaleTimeString());
-	document.getElementById('d_time').appendChild(now);
-	//alert(now);
 
-}
 function GetCount(){
 
 	dateNow = new Date();

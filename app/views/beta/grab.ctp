@@ -12,6 +12,13 @@
             <br />This was redeemed at <span id='time'><? echo date("H:i:s",$time); ?></span> and expires in 2 hours!
 <span id="countbox"></span>
   </div>
+  <script type="text/javascript">
+
+var d=new Date(<? echo $time; ?>);
+document.getElementById('time').appendChild(document.createTextNode(d.toLocaleTimeString());
+
+
+</script> 
         <? else: ?>
         	<? echo "Ther was an error in processing your reward, please contact us with the above"; ?>
         <? endif; ?>    

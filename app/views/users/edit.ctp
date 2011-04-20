@@ -1,11 +1,11 @@
-<div id="leftcolumn_user" class="bodycopy">
+<div id="leftcolumn_user" class="bodycopy-b">
      <div class="base-layer">
                     
                  	<h4 class="table-caption">&nbsp;&nbsp;&nbsp;EDIT INFORMATION </h4>
                 	<h4 class="table-caption-mobile">&nbsp;&nbsp;&nbsp;EDIT INFORMATION </h4>
 	                
                     <div class="table-profile-edit-settings-for-user">
-                    	<div class="left-layer41">
+                    	<div class="form_name">
                         <? //var_dump($user); ?>
 						<? echo $form->create('User', array('action'=>'edit')); ?>
 						Name:</div>
@@ -40,8 +40,9 @@
 	    <? echo $form->select('syear', $years,array('selected'=>date('y',strtotime($user['birthday']))));?>
 	</div>
     
-    
-     Social Settings
+    <div class= "social-settings-header">
+     Social Settings:
+     </div>
     <br />
 	
 	<div class="smallercopy" style="margin-left:100px;float:left;"> 
@@ -51,18 +52,18 @@
 	</div>
 					    <div class="left-layer41">Facebook</div>
 						<div class="left-layer41"><?php if(empty($_Auth['User']['fb_uid'])):
-			echo $html->link($html->image("signin_facebook.gif", array('alt'=>'Login With FB', 'width'=>'150', 'height'=>'22', 'border'=>'0')),array('controller'=>'users', 'action'=>'facebookLogin/1'), array('escape'=>false));?>	            <? else: ?>
+			echo $html->link($html->image("signin_facebook.gif", array('alt'=>'Login With FB', 'style'=>'margin-left:-650px;position:relative;top:-17px;', 'width'=>'150', 'height'=>'22', 'border'=>'0')),array('controller'=>'users', 'action'=>'facebookLogin/1'), array('escape'=>false));?>	            <? else: ?>
             <? echo "Facebook Connected"; ?>	<!--	<br><br>   -->
 	
 		<?php endif;?>	</div>
         <div class="left-layer41">Twitter</div>
 						<div class="left-layer41"><?php if(empty($_Auth['User']['tw_uid'])): 
-			echo $html->link($html->image("signin_twitter.gif", array('alt'=>'Login With Twitter', 'width'=>'150', 'height'=>'22', 'border'=>'0')),array('controller'=>'users', 'action'=>'getRequestURL'),array('escape'=>false));?>
+			echo $html->link($html->image("signin_twitter.gif", array('alt'=>'Login With Twitter', 'style'=>'margin-left:-650px;position:relative;top:-17px;', 'width'=>'150', 'height'=>'22', 'border'=>'0')),array('controller'=>'users', 'action'=>'getRequestURL'),array('escape'=>false));?>
             <? else: ?>
             <? echo "Twitter Connected"; ?>	<!--	<br><br>   -->
 		<?php endif;?>	</div>
 						<div class="left-layer42">	
-                    	<?php echo $form->submit('SAVE!'); ?>
+                    	<?php echo $form->submit('SAVE'); ?>
                         <?php echo $form->end(); ?>
                         <? echo $html->link('Cancel','/users/view_my_profile'); ?>
 	
@@ -74,11 +75,11 @@
                     <div class="table-profile-edit">
         				<div class="left-layer41a">
            					<? 	echo $form->create('User', array('type' => 'file', 'action'=>'edit_pic'));
-								echo $form->file('photo', array('style'=>'height:25px;')); ?>
+								echo $form->file('photo', array('style'=>'height:25px;position:relative;left:-20px')); ?>
                     	
                         </div>
 	      				<div class="left-layer41b">
-  							<?	echo $form->submit('SAVE!');
+  							<?	echo $form->submit('UPLOAD');
 								echo $form->end();
 							?>
   						</div>
@@ -86,9 +87,10 @@
                     
  			  	<br />
         			
-        <div style="float:right;">
-	        <div id="fade" class="black_overlay"></div>
-            <? echo $this->element('feedback',array("user_type" => "User")); ?>     
+        <div  style="display: block; width: auto; height: float: left;">
+<!--	        <div id="fade" class="black_overlay" style="display: block; float: left;height: 887px; top: 51px; left: 158px; width: 851px;z-index:1;"></div>
+    -->        <? //echo $this->element('feedback',array("user_type" => "User")); ?>     
+    <!-- taking the feedback link out for now while I figure out the right implementation -->
 		</div>    
         </div>
         </div> 

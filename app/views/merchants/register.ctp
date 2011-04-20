@@ -18,7 +18,7 @@
                   <div class="smallercopy_reg">Website</div>
                   <div class='smallercopy_err' style='color:red'><?php echo $form->input('website', array('label'=>false, 'class'=>'required validate-password-confirm', 'style'=>'width:255px','title'=>'Enter the same password for confirmation')); ?></div>
                   <div class="smallercopy_reg">
-                             <? echo '<div class="smallercopy_err" style="color:red">'.$form->error('Merchant.accept').'</div><br />'; ?>
+                             <? echo '<div class="smallercopy_err" style="color:red; margin:10px 0px -20px 0px;">'.$form->error('Merchant.accept').'</div><br />'; ?>
 	<?php echo $form->checkbox('Merchant.accept', array('class'=>'required validate-one-required', 'title'=>'Please agree to terms and conditions'));?>Please read our <?php echo $html->link('Terms of Use', array('controller'=>'pages', 'action'=>'terms')); ?> and our <?php echo $html->link('Privacy Policy', array('controller'=>'pages', 'action'=>'privacy')); ?> before accepting.<br /><br />
                       </div>
                   <div class="smallercopy_reg" style="text-align:center;">
@@ -47,6 +47,9 @@
 				);
 				$dates=range(1,31);
 				$years=range((int)date('Y'),2020);
+				  foreach($errors as $key=>$value){ ?>
+       <div class='smallercopy_err' style='color:red'> 	<? echo $errors[$key]; ?> </div>
+	   <? } 
 			  echo $form->create('Merchant');?>
  	              <div class="smallercopy_reg">Enter a Description:</div>
                   <div><?php echo $form->input('reward', array('label'=>false, 'class'=>'required', 'style'=>'width:200px')); ?></div>
@@ -173,8 +176,8 @@
             <? echo $form->create('Merchant', array('action'=>'register/6')); ?>
 
             <div class="smallercopy_reg">Select a plan from the options below.<br />
-            	<input type="radio" name="data[Merchant][plan]" value="Basic" disabled="disabled"><span style="text-decoration: line-through; ">Basic Membership - $100 / month</span><br>
-				<input type="radio" name="data[Merchant][plan]" value="Pro" disabled="disabled"><span style="text-decoration: line-through; ">Pro Membership - $500 / month</span> <br>
+            	<input type="radio" name="data[Merchant][plan]" value="Basic" disabled="disabled"><span style="text-decoration: line-through; ">Basic Membership</span><br>
+				<input type="radio" name="data[Merchant][plan]" value="Pro" disabled="disabled"><span style="text-decoration: line-through; ">Pro Membership</span> <br>
 				<input type="radio" name="data[Merchant][plan]" value="Free" checked> 2 Month FREE Trial<br />
 			<span class="smallercopy">Monthly Fees per location.</span>
             </div>

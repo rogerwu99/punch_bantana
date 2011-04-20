@@ -92,6 +92,9 @@ body {
 	background-repeat: repeat-y;
 	background-position: 13px;
 	float: left;
+	position: relative;
+	height: 100%;
+	width: 105%;
 }
 
 /* Top border, corners etc */
@@ -341,8 +344,8 @@ body {
 /* Main content */
 
 #contentwrapper {
-	width:824px;
-	height:860px;
+	width:90%;
+	height:100%;
 	background-color:#FFFFFF;
 //	background-image: url(../img/sidebar_stripe_repeat.gif);
 	float: left;
@@ -353,11 +356,12 @@ body {
 
 #leftcolumn {
 	width:800px;
+	height:100%;
 	float: left;
 	padding-right: 28px;
 	padding-left: 13px;
 	padding-top: 13px;
-	margin:1px 2px 160px 4px;
+	margin:1px 2px 10px 4px;
 }
 #leftcolumn_user {
 	width:800px;
@@ -679,7 +683,7 @@ body {
 }
 
 .sidebar5 {
-	width:409px;
+	width:100%;
 	float: right;
 	margin-top: -7px;
 	padding-right: 2px;

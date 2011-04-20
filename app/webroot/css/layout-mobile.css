@@ -152,7 +152,7 @@ color: #444;
 font-weight: bold;
 width: 65%;
 -moz-border-radius: 5px;
-border-radius: 5px;
+border-radius: 2px;
 padding: 20px;
 background: #88bfe8; /* old browsers */
 background: -moz-linear-gradient(top, #88bfe8 0%, #70b0e0 100%); /* firefox */
@@ -759,17 +759,21 @@ padding-bottom:10px;
 	display: block;
 	position:absolute;
 	//position: relative;
-	margin-top:25%;
+	margin-top:18%;
 	margin-left:3%;
-	margin-right:7%;
-	width: 90%;
+	margin-right:1%;
+	width: 85%;
 	height: 440px;
-	padding: 5px;
-	border: 5px solid #666;
-	background-color: white;
+	padding: 25px 1px 1px 25px;
+	border: 2px solid white;
+	background-color: #97FFFF;
 	z-index:1002;
 	overflow: none;
-	opacity:0.85;filter:alpha(opacity=85);
+	opacity:0.95;filter:alpha(opacity=85);
+	-moz-border-radius:25px;
+	-webkit-border-radius: 25px;
+	-khtml-border-radius: 25px;
+	border-radius: 25px;
 }
 .lightbox_content_user_block_1 {
 	display: none;

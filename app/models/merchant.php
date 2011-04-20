@@ -66,7 +66,7 @@ class Merchant extends AppModel {
     		),
 		'accept' => array(
 					'rule' => array('equalTo', '1'),
-					'message' => 'Must accept terms.',
+					'message' => 'You must accept the Terms before proceeding.',
 					'on' => 'create'
 					),
 		'business_phone' => array(
