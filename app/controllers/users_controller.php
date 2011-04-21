@@ -71,9 +71,9 @@ class UsersController extends AppController {
 				$username = $this->data['User']['username']= (string) $email;
 				$this->data['User']['path']=(is_null($path)) ? 'default.png' : $path;
 				if (!is_null($fb_uid)){
-					$facebook = $this->createFacebook();
-					$session=$facebook->getSession();
-					$this->data['User']['fb_access_key'] = $session['access_token'];
+					//$facebook = $this->createFacebook();
+					//$session=$facebook->getSession();
+					//$this->data['User']['fb_access_key'] = $session['access_token'];
 					$this->data['User']['fb_uid'] = $fb_uid;
 					$this->data['User']['fb_pic_url'] = 'http://graph.facebook.com/'.$fb_uid.'/picture';
 				}
@@ -111,32 +111,34 @@ class UsersController extends AppController {
 	
 	function logout()
 	{
-		$user=$this->Auth->getUserInfo();
+		//$user=$this->Auth->getUserInfo();
 			
-		$facebook = $this->createFacebook();
-		$session=$facebook->getSession();
-		$url = $facebook->getLogoutUrl(array('req_perms' => 'email,user_birthday,user_about_me,user_location,publish_stream','next' => ROOT_URL));
+		//$facebook = $this->createFacebook();
+		//$session=$facebook->getSession();
+		//$url = $facebook->getLogoutUrl(array('req_perms' => 'email,user_birthday,user_about_me,user_location,publish_stream','next' => ROOT_URL));
 
 		$this->Session->destroy();
 		
 
-		if(!empty($session)){
+		/*if(!empty($session)){
 			$facebook->setSession(null);
 			$this->Auth->logout($url);
-		}
-		else {
+		}*/
+		//else {
 		    $this->Auth->logout();
-		}
+		//}
 	}
 	private function createConsumer() {
         return new OAuth_Consumer('3PnqSPtc9vf4jj9sXehROw', 'eY8760Xe74NupOEq4Ey9wzp1rahNo85QCXQ8dAtNCq8');
     }
 	private function createFacebook(){
-		return new Facebook(array(
+		/*return new Facebook(array(
 			'appId'=>'175485662472361',
 			'secret'=>'4b66d239e574be89813bba4457b97a36',
 			'cookie'=>true
-		));
+		));*/
+		return new OAuth_Consumer('175485662472361', '4b66d239e574be89813bba4457b97a36');
+    	
 	}
 	function getRequestURL(){
 		$consumer=$this->createConsumer();
@@ -157,7 +159,7 @@ class UsersController extends AppController {
 				$this->_login($db_results['User']['username'],$db_results['User']['password']);
 				$this->redirect('/');
 			}
-			$this->layout = 'about';
+			//$this->layout = 'about';
 		}
 		else {
 			$updated_id = $this->Auth->getUserId();
@@ -169,42 +171,83 @@ class UsersController extends AppController {
 			$this->data['User']['tw_access_secret'] =  $accessToken->secret;
 			$this->User->save($this->data);
 		}
+		$this->redirect(array('action'=>'view_my_profile'));
 	}
 	public function facebookLogin($tok=null){
-		$facebook = $this->createFacebook();
-		$session=$facebook->getSession();
-		if (is_null($tok)){
+		//$facebook = $this->createFacebook();
+		//$session=$facebook->getSession();
+		//if (is_null($tok)){
 			$full_url = ROOT_URL . '/users/fbCallback';
-		}
-		else {
-			$full_url = ROOT_URL . '/users/fbConnectCallback';
-		}
-		$login_url = $facebook->getLoginUrl(array('req_perms' => 'email,user_birthday,user_about_me,user_location,publish_stream','next' => $full_url));
-		if(!empty($session)){
-			$this->Session->write('fb_access_token',$session['access_token']);
-			$facebook_id = $facebook->getUser();
-			if(is_null($this->Auth->getUserId())){
-				$db_results = $this->User->find('first', array('conditions' => (array('User.fb_uid'=>$facebook_id,'User.fb_access_key'=>$session['access_token'])), 'fields'=>(array('User.username','User.password'))));
-
-				if (!empty($db_results)) {
-					//echo 'results not empty';
-					$this->_login($db_results['User']['username'],$db_results['User']['password']);
-					$this->redirect('/');
-				}
-				else{
-					$this->redirect($login_url);
-				}
+		//}
+		//else {
+			//$full_url = ROOT_URL . '/users/fbConnectCallback';
+		//}
+		$this->redirect('https://www.facebook.com/dialog/oauth?client_id=189267044425329&redirect_uri='.$full_url.'&scope=user_about_me,offline_access');	
+	}
+		//$login_url = $facebook->getLoginUrl(array('req_perms' => 'email,user_birthday,user_about_me,user_location,publish_stream','next' => $full_url));
+		//if(!empty($session)){
+			//$this->Session->write('fb_access_token',$session['access_token']);
+			//$facebook_id = $facebook->getUser();
+	/*	if(is_null($this->Auth->getUserId())){
+			$db_results = $this->User->find('first', array('conditions' => (array('User.fb_uid'=>$facebook_id,'User.fb_access_key'=>$session['access_token'])), 'fields'=>(array('User.username','User.password'))));
+			if (!empty($db_results)) {
+				//echo 'results not empty';
+				$this->_login($db_results['User']['username'],$db_results['User']['password']);
+				$this->redirect('/');
 			}
-			else {
+			else{
 				$this->redirect($login_url);
 			}
 		}
-		else{
+		else {
 			$this->redirect($login_url);
 		}
 	}
+		else{
+			$this->redirect($login_url);
+		}
+	}*/
+	function fbCallback(){
+		$content =file_get_contents('https://graph.facebook.com/oauth/access_token?client_id=189267044425329&redirect_uri='.ROOT_URL.'/users/fbCallback&client_secret=b127d742f40502d8a9c05b31d6acc43b&code='.$this->params['url']['code']);
+	//	var_dump($content);
+	//	$updated_id = $this->Auth->getUserId();
+	//	$this->User->read(null,$updated_id);
+//		$this->data['User']['fb_access_key'] = $content;
+		$this->Session->write('facebook_request_token', $content);
+		
+	//	$this->User->save($this->data);
+	//	$this->redirect(array('action'=>'view_my_profile'));
+		$fb_user = json_decode(file_get_contents('https://graph.facebook.com/me?' . $content));
+		//var_dump($fb_user);
+		$db_results = $this->User->find('first', array('conditions' => (array('User.fb_uid'=>$fb_user->id)), 'fields'=>(array('User.username','User.password'))));
+		// no logged in user
+		if (is_null($this->Auth->getUserId())){
+			// auth
+			if (!empty($db_results)) {
+				$this->_login($db_results['User']['username'],$db_results['User']['password']);
+				$this->redirect('/');
+			}
+			// create user
+			else {
+				$this->data['User']['fb_uid'] = (int) $fb_user->id;
+				$this->data['User']['fb_pic_url'] = 'http://graph.facebook.com/'.$fb_user->id.'/picture';
+				$this->set('fb_user',$fb_user);
+				$this->layout = 'about';
+				$this->render();
+			}
+		}
+		 // logged in so adding this
+		else {
+			$this->User->read(null,$this->Auth->getUserId());
+			$this->data['User']['fb_uid'] = (int) $fb_user->id;
+			$this->data['User']['fb_pic_url'] = 'http://graph.facebook.com/'.$fb_user->id.'/picture';
+			$this->User->set($this->data);
+			$this->User->save();
+			$this->redirect(array('action'=>'view_my_profile'));
+		}
+	}
 	
-	public function fbCallback(){
+/*	public function fbCallback(){
 		$facebook = $this->createFacebook();
 		$session=$facebook->getSession();
 		$facebook_id = $facebook->getUser();
@@ -223,17 +266,17 @@ class UsersController extends AppController {
 					catch(FacebookApiException $e){
 						error_log($e);
 					}
-					/*$this->data['User']['fb_uid'] = (int) $user->id;
+					$this->data['User']['fb_uid'] = (int) $user->id;
 					$this->data['User']['fb_pic_url'] = 'http://graph.facebook.com/'.$user->id.'/picture';
 					$this->data['User']['fb_location'] = '';
 					$this->data['User']['fb_access_key'] = $session['access_token'];
-					*/$this->set('fb_user',$fb_user);
+					$this->set('fb_user',$fb_user);
 				}
 			}
 		}
 		
 		$this->layout = 'about';
-	}
+	}*/
 	public function fbConnectCallback(){
 		$facebook = $this->createFacebook();
 		$session=$facebook->getSession();
@@ -253,10 +296,10 @@ class UsersController extends AppController {
 				$this->data['User']['fb_pic_url'] = 'http://graph.facebook.com/'.$fb_user->id.'/picture';
 			}
 			$this->User->set($this->data);
-			if ($this->User->validates()){
+			//if ($this->User->validates()){
 				$this->User->save();
 			//	$this->_login($username,$password);
-			}
+			//}
 			$this->redirect(array('action'=>'view_my_profile'));
 		}
 	}

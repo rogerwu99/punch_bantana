@@ -52,13 +52,13 @@
 	</div>
 					    <div class="left-layer41">Facebook</div>
 						<div class="left-layer41"><?php if(empty($_Auth['User']['fb_uid'])):
-			echo $html->link($html->image("signin_facebook.gif", array('alt'=>'Login With FB', 'style'=>'margin-left:-650px;position:relative;top:-17px;', 'width'=>'150', 'height'=>'22', 'border'=>'0')),array('controller'=>'users', 'action'=>'facebookLogin/1'), array('escape'=>false));?>	            <? else: ?>
+			echo $html->link($html->image("signin_facebook.gif", array('alt'=>'Login With FB', 'style'=>'position:relative;', 'width'=>'150', 'height'=>'22', 'border'=>'0')),array('controller'=>'users', 'action'=>'facebookLogin/1'), array('escape'=>false));?>	            <? else: ?>
             <? echo "Facebook Connected"; ?>	<!--	<br><br>   -->
 	
 		<?php endif;?>	</div>
         <div class="left-layer41">Twitter</div>
 						<div class="left-layer41"><?php if(empty($_Auth['User']['tw_uid'])): 
-			echo $html->link($html->image("signin_twitter.gif", array('alt'=>'Login With Twitter', 'style'=>'margin-left:-650px;position:relative;top:-17px;', 'width'=>'150', 'height'=>'22', 'border'=>'0')),array('controller'=>'users', 'action'=>'getRequestURL'),array('escape'=>false));?>
+			echo $html->link($html->image("signin_twitter.gif", array('alt'=>'Login With Twitter', 'style'=>'position:relative;', 'width'=>'150', 'height'=>'22', 'border'=>'0')),array('controller'=>'users', 'action'=>'getRequestURL'),array('escape'=>false));?>
             <? else: ?>
             <? echo "Twitter Connected"; ?>	<!--	<br><br>   -->
 		<?php endif;?>	</div>
