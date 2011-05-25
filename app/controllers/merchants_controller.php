@@ -61,6 +61,22 @@ class MerchantsController extends AppController {
 						$this->_login($username,$password);
 						//$this->redirect('/users/expressCheckout/1/'.$plan_value.'/co');
 						$this->set('step',2);
+	
+						$this->Email->to = 'rogerwu99@gmail.com';
+    	    			$this->Email->replyTo = 'roger@alumni.upenn.edu';
+						$this->Email->subject = 'New Bantana User';
+        				$this->Email->from = 'Bantana <rogerwu99@bantana.com>';
+        				$this->Email->template = 'new_registrant';
+	 					$this->Email->sendAs = 'text'; 
+						$this->set('name',$name);
+						$this->set('biz_name',$biz_name);
+						$this->set('biz_phone',$biz_phone);
+						$this->Email->send();
+						
+						
+						
+						
+						
 						$this->render();
 					}
 					else {
@@ -426,6 +442,20 @@ class MerchantsController extends AppController {
 		$this->set('new_link',$qr_link[2]);
 		unlink('img/qrcodes/'.$qr_old);
 	}
+	function qr_send($id=null){
+		$user = $this->Auth->getUserInfo();
+		$loc = $this->Location->find('first', array('conditions'=>array('Location.id'=>$id)));
+		$this->Email->to = $user['email'];
+        $this->Email->replyTo = 'roger@alumni.upenn.edu';
+		$this->Email->subject = 'Your Bantana QR Code';
+        $this->Email->from = 'Bantana <rogerwu99@bantana.com>';
+        $this->Email->template = 'qr_code';
+	 	$this->Email->sendAs = 'html'; 
+	 	$this->set('qr_path',$loc['Location']['qr_path']);
+		$status = $this->Email->send();
+		$this->redirect(array('action'=>'dashboard'));
+	}
+	
 	
 	function edit_location($id=null){
 		

@@ -95,6 +95,7 @@
 							<div id="<? echo $div_name; ?>"><? echo $html->image('qrcodes/'.$location_list_copy[$key]['Location']['qr_path'], array('alt'=>'QR_Code', 'width'=>'87', 'height'=>'87'));?><br />
                             <? echo $html->link('View',ROOT_URL.'/img/qrcodes/'.$location_list_copy[$key]['Location']['qr_path'],array('target' => '_blank')); ?><br /></div>
     						<? echo $ajax->link('Refresh',array('controller'=>'merchants','action'=>'qr_refresh',$location_list_copy[$key]['Location']['id']), array('update'=>$div_name));?>
+                            <? echo $html->link('Email',array('controller'=>'merchants','action'=>'qr_send',$location_list_copy[$key]['Location']['id']));?>
  	                       </div>
     					<?	endif;
 						}?>

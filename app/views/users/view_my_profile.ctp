@@ -25,6 +25,8 @@
 				        <?php foreach ($mer_array_no_dupes as $key=>$value){ ?>
 						<div class='table-row-odd'>&nbsp;
                         <?	echo 'Active Points at: '.$mer_array_no_dupes[$key]['Merchant']['name'].'   ';
+							//var_dump($mer_array_no_dupes[$key]);
+							//var_dump($num_points);
 							for ($i=0;$i<sizeof($num_points);$i++){
 								if ($num_points[$i]->merchant_id==$mer_array_no_dupes[$key]['Merchant']['id']){
 									for ($j=0;$j<$num_points[$i]->number;$j++){
@@ -62,8 +64,8 @@
 						}
 						}?>
     				</div>
- 				    <br /><h4 class="table-caption">&nbsp;&nbsp;&nbsp;MY REWARDS <? //echo $ajax->link('(Add)', array('controller'=>'merchants','action'=>'locations'),array('update'=>'new_location')); ?></h4>
-                     <h4 class="table-caption-mobile"><? echo $html->link('MY REWARDS',array('controller'=>'users','action'=>'my_redeemed_rewards'));?></h4>
+ 				    <br /><h4 class="table-caption">&nbsp;&nbsp;&nbsp;PAST REWARDS <? //echo $ajax->link('(Add)', array('controller'=>'merchants','action'=>'locations'),array('update'=>'new_location')); ?></h4>
+                     <h4 class="table-caption-mobile"><? echo $html->link('PAST REWARDS',array('controller'=>'users','action'=>'my_redeemed_rewards'));?></h4>
                    
         			 <div class="table-row-head">&nbsp;
         				<div class="left-layer81">Location</div>

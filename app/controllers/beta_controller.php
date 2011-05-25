@@ -213,6 +213,9 @@ class BetaController extends AppController
 			}
 //		var_dump($db_results1);
 	//	$this->redirect('/');
+	
+	
+	
 		}
 	}
 	function grab()
@@ -243,6 +246,14 @@ class BetaController extends AppController
 			$db_results2 = $this->Merchant->find('first',array('conditions'=>array('Merchant.id'=>$db_results['Location']['merchant_id'])));
 			$db_results4 = $this->Reward->find('first',array('conditions'=>array('Reward.id'=>$this->Session->read('redeem'))));
 			
+			
+			
+			
+			// what is $db_results4???
+			
+			
+			
+			
 			if ($distance <= 0.5){
 				$user = $this->Auth->getUserInfo();
 				$visit_tally = 0;
@@ -258,7 +269,6 @@ class BetaController extends AppController
 						if ($mer['Merchant']['id'] == $db_results2['Merchant']['id']){
 							$visit_tally += $db_results3[$key]['Punchcards']['current_punch'];
 							$visit_tally -= $db_results3[$key]['Punchcards']['last_redemption'];
-							
 						}
 					}
 					if ($db_results4['Reward']['threshold']<=$visit_tally){
@@ -277,6 +287,9 @@ class BetaController extends AppController
 					
 					}
 					else {
+						
+						// there's a new bug here?
+						
 						$this->set('message', 'there was an error - you do not have enough points');
 					}
 				}

@@ -73,7 +73,9 @@ class UsersController extends AppController {
 				if (!is_null($fb_uid)){
 					//$facebook = $this->createFacebook();
 					//$session=$facebook->getSession();
-					//$this->data['User']['fb_access_key'] = $session['access_token'];
+					$content = $this->Session->read('facebook_request_token');
+
+					$this->data['User']['fb_access_key'] = $content;
 					$this->data['User']['fb_uid'] = $fb_uid;
 					$this->data['User']['fb_pic_url'] = 'http://graph.facebook.com/'.$fb_uid.'/picture';
 				}
@@ -182,7 +184,7 @@ class UsersController extends AppController {
 		//else {
 			//$full_url = ROOT_URL . '/users/fbConnectCallback';
 		//}
-		$this->redirect('https://www.facebook.com/dialog/oauth?client_id=189267044425329&redirect_uri='.$full_url.'&scope=user_about_me,offline_access');	
+		$this->redirect('https://www.facebook.com/dialog/oauth?client_id=175485662472361&redirect_uri='.$full_url.'&scope=email,user_about_me,user_birthday,offline_access');	
 	}
 		//$login_url = $facebook->getLoginUrl(array('req_perms' => 'email,user_birthday,user_about_me,user_location,publish_stream','next' => $full_url));
 		//if(!empty($session)){
@@ -208,18 +210,21 @@ class UsersController extends AppController {
 		}
 	}*/
 	function fbCallback(){
-		$content =file_get_contents('https://graph.facebook.com/oauth/access_token?client_id=189267044425329&redirect_uri='.ROOT_URL.'/users/fbCallback&client_secret=b127d742f40502d8a9c05b31d6acc43b&code='.$this->params['url']['code']);
+		$content =file_get_contents('https://graph.facebook.com/oauth/access_token?client_id=175485662472361&redirect_uri='.ROOT_URL.'/users/fbCallback&client_secret=4b66d239e574be89813bba4457b97a36&code='.$this->params['url']['code']);
 	//	var_dump($content);
 	//	$updated_id = $this->Auth->getUserId();
 	//	$this->User->read(null,$updated_id);
 //		$this->data['User']['fb_access_key'] = $content;
 		$this->Session->write('facebook_request_token', $content);
 		
+			
 	//	$this->User->save($this->data);
 	//	$this->redirect(array('action'=>'view_my_profile'));
 		$fb_user = json_decode(file_get_contents('https://graph.facebook.com/me?' . $content));
 		//var_dump($fb_user);
 		$db_results = $this->User->find('first', array('conditions' => (array('User.fb_uid'=>$fb_user->id)), 'fields'=>(array('User.username','User.password'))));
+		//var_dump($db_results);
+		
 		// no logged in user
 		if (is_null($this->Auth->getUserId())){
 			// auth
@@ -231,6 +236,8 @@ class UsersController extends AppController {
 			else {
 				$this->data['User']['fb_uid'] = (int) $fb_user->id;
 				$this->data['User']['fb_pic_url'] = 'http://graph.facebook.com/'.$fb_user->id.'/picture';
+				$this->data['User']['fb_access_key'] = $content;
+
 				$this->set('fb_user',$fb_user);
 				$this->layout = 'about';
 				$this->render();
@@ -241,6 +248,8 @@ class UsersController extends AppController {
 			$this->User->read(null,$this->Auth->getUserId());
 			$this->data['User']['fb_uid'] = (int) $fb_user->id;
 			$this->data['User']['fb_pic_url'] = 'http://graph.facebook.com/'.$fb_user->id.'/picture';
+			$this->data['User']['fb_access_key'] = $content;
+
 			$this->User->set($this->data);
 			$this->User->save();
 			$this->redirect(array('action'=>'view_my_profile'));
@@ -328,6 +337,7 @@ class UsersController extends AppController {
 			$mer_array_no_dupes = array();
 			$num_points = array();
 			$dupe= false;
+			$num_points_counter = 0;
 			$db_results=$this->Punchcard->find('all',array('conditions'=>array('Punchcard.user_id'=>$user['id'])));
 			if (!empty($db_results)) {
 				foreach ($db_results as $key=>$value){
@@ -342,6 +352,8 @@ class UsersController extends AppController {
 						$visits->merchant_id = $mer['Merchant']['id'];
 						$visits->number = $db_results[$key]['Punchcard']['current_punch'];
 						$visits->location_id = $db_results[$key]['Punchcard']['location_id'];
+						//var_dump($visits);
+						//echo 'first';
 						array_push($num_points,$visits);
 					}
 					else {
@@ -357,18 +369,29 @@ class UsersController extends AppController {
 								$dupe = true;
 								break;
 							}
+					//		var_dump($num_points);
 						}
 						if (!$dupe) {
 							array_push($mer_id_array,$mer['Merchant']['id']);
 							array_push($mer_array_no_dupes,$mer);
+					//		var_dump($num_points);
+							$visits = new Object();
 							$visits->merchant_id = $mer['Merchant']['id'];
 							$visits->number = ($db_results[$key]['Punchcard']['current_punch'] - $db_results[$key]['Punchcard']['last_redemption']);
+							//var_dump($db_results[$key]);
 							 
 							$visits->location_id = $db_results[$key]['Punchcard']['location_id'];
+						//	var_dump($visits);
+							//echo 'sec';
+							//var_dump($num_points);
+							//echo '>space<<br>';
 							array_push($num_points,$visits);
+							
 						}
 					}
 					$dupe = false;
+					//var_dump($num_points);
+					//echo '<br>';		
 				}
 				$this->set('num_points',$num_points);
 				$this->set('loc_array',$loc_array);
@@ -528,8 +551,9 @@ class UsersController extends AppController {
 					if (empty($mer_id_array)){
 						array_push($mer_id_array,$mer['Merchant']['id']);
 						array_push($mer_array_no_dupes,$mer);
+						$visits = new Object();
 						$visits->merchant_id = $mer['Merchant']['id'];
-						$visits->number = $db_results[$key]['Punchcard']['current_punch'];
+						$visits->number = $db_results[$key]['Punchcard']['current_punch']-$db_results[$key]['Punchcard']['last_redemption'];
 						$visits->location_id = $db_results[$key]['Punchcard']['location_id'];
 						array_push($num_points,$visits);
 					}
@@ -550,6 +574,7 @@ class UsersController extends AppController {
 						if (!$dupe) {
 							array_push($mer_id_array,$mer['Merchant']['id']);
 							array_push($mer_array_no_dupes,$mer);
+							$visits = new Object();
 							$visits->merchant_id = $mer['Merchant']['id'];
 							$visits->number = ($db_results[$key]['Punchcard']['current_punch'] - $db_results[$key]['Punchcard']['last_redemption']);
 							 

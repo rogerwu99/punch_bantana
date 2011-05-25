@@ -5,9 +5,15 @@ NAME:
 <?php echo $name; ?>
 
 
-EMAIL: 
+Company: 
 
-<?php echo $email; ?>
+<?php echo $biz_name; ?>
+
+
+Phone:
+
+<?php echo $biz_phone; ?>
+
 
 ---------------
 

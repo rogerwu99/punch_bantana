@@ -27,7 +27,7 @@
 	    </div> 
 	<div class="lightbox_content_user_block_3">
 		Share with Friends!<br />
-		<span class="smallercopy_user_home">Let your friends know what great rewards you are earnings via Facebook or Twitter!<br /><br />
+		<span class="smallercopy_user_home">Let your friends know what great rewards you are earning via Facebook or Twitter!<br /><br />
              <? echo $html->image('Twitter-icon.png',array('alt'=>'Twitter','width'=>30,'height'=>30)); ?>
         <? echo $html->image('Facebook-icon.png',array('alt'=>'Facebook','width'=>30,'height'=>30)); ?>
         <? echo $html->image('foursquare-icon.png',array('alt'=>'Foursquare','width'=>30,'height'=>30)); ?>

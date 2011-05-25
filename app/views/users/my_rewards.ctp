@@ -20,6 +20,8 @@
 				        <?php foreach ($mer_array_no_dupes as $key=>$value){ ?>
 						<div class='table-row-odd'>&nbsp;
                         <?	echo 'Active Points at: '.$mer_array_no_dupes[$key]['Merchant']['name'].'   ';
+							//var_dump($mer_array_no_dupes[$key]);
+							var_dump($num_points);
 							for ($i=0;$i<sizeof($num_points);$i++){
 								if ($num_points[$i]->merchant_id==$mer_array_no_dupes[$key]['Merchant']['id']){
 									for ($j=0;$j<$num_points[$i]->number;$j++){
